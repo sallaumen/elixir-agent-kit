@@ -25,8 +25,19 @@ for skill_id, mode, description in rows:
     if f"`{skill_id}`" not in (ROOT / "docs/provenance.md").read_text():
         errors.append(f"Provenance missing: {skill_id}")
 
+cases = json.loads((ROOT / "evals/routing.json").read_text())["cases"]
+case_ids = [case["id"] for case in cases]
+if len(case_ids) != len(set(case_ids)):
+    errors.append("Duplicate evaluation IDs")
+for case in cases:
+    targets = [case["expected_primary"]] + case["allowed_alternatives"]
+    if not set(targets) <= set(ids) | {"NONE", "EVOLUTION"}:
+        errors.append(f"Unknown evaluation route: {case['id']}")
+    if not all(case[field] for field in ["request", "success_signals", "failure_signals"]):
+        errors.append(f"Incomplete evaluation case: {case['id']}")
+
 links = 0
-paths = list(LIBRARY.rglob("*.md")) + list((ROOT / "docs").rglob("*.md")) + list(ROOT.glob("*.md"))
+paths = list(LIBRARY.rglob("*.md")) + list((ROOT / "docs").rglob("*.md")) + list(ROOT.glob("*.md")) + list((ROOT / "evals").glob("*.md"))
 for path in paths:
     text = path.read_text()
     for target in re.findall(r'\]\(([^)]+)\)', text):

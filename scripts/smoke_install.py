@@ -6,10 +6,12 @@ import os
 from pathlib import Path
 import subprocess
 import tempfile
+import re
+from urllib.parse import unquote
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--git-url", help="Fetch a real published Git dependency instead of the local package")
-parser.add_argument("--ref", default="v0.1.1")
+parser.add_argument("--ref", default="v0.2.0")
 args = parser.parse_args()
 package = Path(__file__).resolve().parents[1]
 
@@ -53,6 +55,14 @@ end
     run(root, "mix", "agent_kit.install")
     run(root, "mix", "agent_kit.check")
     installed = snapshot(root)
+    managed = set(installed) - set(before)
+    assert managed == {".elixir-agent-kit/START.md", ".elixir-agent-kit/state.tsv", "CLAUDE.md"}, managed
+    index = root / ".elixir-agent-kit/START.md"
+    for target in re.findall(r'\]\(([^)]+)\)', index.read_text()):
+        assert (index.parent / unquote(target)).is_file(), target
+    assert not (root / ".agents").exists()
+    assert not (root / ".claude").exists()
+    assert not (root / ".elixir-agent-kit/library").exists()
     output = run(root, "mix", "agent_kit.install")
     assert "no changes needed" in output
     assert snapshot(root) == installed

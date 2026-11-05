@@ -25,6 +25,8 @@ The requested outcome, affected flow or diff, project instructions, relevant evi
 
 4. Track completed, blocked and deferred work separately. A worker report is evidence to inspect, not proof of an integrated result.
 
+Default to at most two execution fronts when delegation is authorized; expand only with demonstrated independence and capacity. Distinguish missing configuration from broken features. Set removal criteria for temporary compatibility paths. Rolling back code does not undo stored data or external effects.
+
 ## Completion
 
 A delivery map, validated integrated changes within the mandate, and a handoff identifying remaining dependencies. Coordination does not grant permission to publish or deploy.

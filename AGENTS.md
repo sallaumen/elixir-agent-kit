@@ -1,8 +1,9 @@
 # Elixir Agent Kit contributor instructions
 
 Read README.md, CONTRIBUTING.md and docs/architecture.md before changing behavior.
-Canonical public workflows live in priv/library; generated consumer files are not
-sources. Preserve project-local instructions and refuse destructive conflicts.
+Canonical public workflows live in priv/library; generated consumer indexes are not
+sources. Consumers read library bodies from their Mix dependency, never copied
+workflow files or per-skill wrappers. Preserve project-local instructions and refuse destructive conflicts.
 Do not add model calls, telemetry, services or global client configuration.
 
 Run the checks documented in CONTRIBUTING.md. Use isolated temporary projects for

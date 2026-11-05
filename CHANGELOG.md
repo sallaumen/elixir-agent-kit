@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.0
+
+- Replace copied snapshots and per-skill wrappers with a small dependency-backed index and instruction blocks. Fresh checkouts need `mix deps.get`; native per-skill registration is removed.
+- Safely migrate 0.1 ownership records, preserving local instructions and refusing modified generated content.
+- Add explicit `mix agent_kit.outdated` stable-tag discovery; offline integrity checks retain their meaning.
+- Establish shared-source evolution, reusable templates and 29 evaluator-only routing cases.
+- Preserve effect-order and bounded-delivery refinements from the original library.
+
+
 ## 0.1.1 — 2026-11-05
 
 - Include the MIT license in installed library snapshots so committed copies retain attribution.

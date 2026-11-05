@@ -10,7 +10,7 @@ defmodule ElixirAgentKit.Installer do
     safe_path!(root, @state)
     previous = read_state(root)
     config = configuration(opts, previous)
-    desired = if action == :uninstall, do: %{}, else: files(config)
+    desired = if action == :uninstall, do: %{}, else: files(config, root, opts)
     entries = if previous, do: previous.entries, else: %{}
     changes = plan(root, desired, entries, action)
     state = if action == :uninstall, do: nil, else: encode_state(config, desired, root, entries)
@@ -52,65 +52,48 @@ defmodule ElixirAgentKit.Installer do
 
   defp normalize(_), do: fail!("agents and skills must be lists")
 
-  defp files(config) do
-    library = ElixirAgentKit.library_path()
+  defp files(config, root, opts) do
+    library =
+      opts
+      |> Keyword.get(:library_path, Path.join(root, "deps/elixir_agent_kit/priv/library"))
+      |> Path.expand()
 
-    payload =
-      library
-      |> Path.join("**/*")
-      |> Path.wildcard(match_dot: true)
-      |> Enum.filter(&File.regular?/1)
-      |> Map.new(fn path ->
-        {".elixir-agent-kit/library/" <> Path.relative_to(path, library),
-         {:file, File.read!(path)}}
-      end)
+    # External path dependencies keep their explicit local location.
+    target =
+      if String.starts_with?(library, root <> "/"),
+        do: "../" <> Path.relative_to(library, root),
+        else: library
 
-    catalog =
-      Enum.filter(ElixirAgentKit.catalog(), &(config.skills == ["all"] or &1.id in config.skills))
-
-    start = start_document(catalog)
-    payload = Map.put(payload, ".elixir-agent-kit/START.md", {:file, start})
+    payload = %{".elixir-agent-kit/START.md" => {:file, start_document(config, target)}}
 
     Enum.reduce(config.agents, payload, fn agent, acc ->
-      {instructions, directory} =
-        case agent do
-          "codex" -> {"AGENTS.md", ".agents/skills"}
-          "claude" -> {"CLAUDE.md", ".claude/skills"}
-          "generic" -> {"AGENTS.md", nil}
-        end
-
-      acc = Map.put(acc, instructions, {:block, block()})
-
-      if directory do
-        Enum.reduce(catalog, acc, fn skill, files ->
-          path = directory <> "/eak-" <> skill.id <> "/SKILL.md"
-          Map.put(files, path, {:file, wrapper(skill)})
-        end)
-      else
-        acc
-      end
+      instructions = if agent == "claude", do: "CLAUDE.md", else: "AGENTS.md"
+      Map.put(acc, instructions, {:block, block()})
     end)
   end
 
-  defp start_document(catalog) do
-    rows =
-      Enum.map_join(catalog, "\n", fn s ->
-        "- [#{s.id}](library/skills/#{s.id}/SKILL.md): #{s.description}"
-      end)
+  defp start_document(config, target) do
+    selection =
+      if config.skills == ["all"],
+        do: "Choose the smallest relevant workflow from the catalog.",
+        else: "Enabled workflow IDs: " <> Enum.map_join(config.skills, ", ", &"`#{&1}`") <> "."
+
+    # Markdown destinations need encoding for spaces and parentheses in local paths.
+    target =
+      URI.encode(target, &(&1 in ?a..?z or &1 in ?A..?Z or &1 in ?0..?9 or &1 in ~c"/-._~:"))
 
     """
     # Elixir Agent Kit #{ElixirAgentKit.version()}
 
-    Read the [shared contract](library/CONTRACT.md) before using a workflow.
-    Project instructions and the user's authorized scope govern the work.
-    Choose the smallest relevant workflow below; do not load the whole catalog.
-    Use the [Elixir context](library/ELIXIR.md) only for technologies present in this project.
-    Skills are guidance, not permission to publish, merge, deploy or call paid models.
-    For a handoff, use the [handoff template](library/HANDOFF.md).
-
-    ## Enabled workflows
-
-    #{rows}
+    Read the [shared contract](#{target}/CONTRACT.md), then select from the
+    [workflow catalog](#{target}/CATALOG.md). #{selection}
+    Read workflow bodies from the dependency; do not copy them into this project.
+    Use the [Elixir context](#{target}/ELIXIR.md) only for technologies present here.
+    Follow [practice evolution](#{target}/EVOLUTION.md) for reusable improvements.
+    Project rules and the user's authorized scope govern the work.
+    If a target is missing, run `mix deps.get` in this checkout before using the kit.
+    If your client cannot read ignored dependency files, report that limitation;
+    do not claim the practices were loaded. Do not edit this generated index.
     """
   end
 
@@ -121,22 +104,6 @@ defmodule ElixirAgentKit.Installer do
       "Select the relevant workflow and read its shared contract. Preserve this project's rules.\n" <>
       "If the files are missing, report the missing setup; do not claim the practices were applied.\n" <>
       @finish
-  end
-
-  defp wrapper(skill) do
-    """
-    ---
-    name: eak-#{skill.id}
-    description: "#{skill.description}"
-    ---
-
-    # #{skill.id}
-
-    Read the [shared contract](../../../.elixir-agent-kit/library/CONTRACT.md),
-    then the [#{skill.id} workflow](../../../.elixir-agent-kit/library/skills/#{skill.id}/SKILL.md).
-    These paths are relative to this file. Default mode: `#{skill.mode}`.
-    Local project instructions and the user's scope take precedence.
-    """
   end
 
   defp plan(root, desired, previous, action) do
