@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.1 — 2026-11-05
+
+- Include the MIT license in installed library snapshots so committed copies retain attribution.
+- Update installation examples to the patch release.
+
 ## 0.1.0 — 2026-11-05
 
 Initial public release.

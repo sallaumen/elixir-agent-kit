@@ -11,7 +11,7 @@ Adicione às dependências existentes do `mix.exs`:
 ```elixir
 {:elixir_agent_kit,
  git: "https://github.com/sallaumen/elixir-agent-kit.git",
- tag: "v0.1.0",
+ tag: "v0.1.1",
  only: [:dev, :test],
  runtime: false}
 ```

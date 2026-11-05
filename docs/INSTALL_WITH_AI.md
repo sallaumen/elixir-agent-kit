@@ -6,12 +6,12 @@ token or model API key. The agent's own account/access is separate.
 
 ---
 
-Install Elixir Agent Kit v0.1.0 in this Elixir project and verify the setup.
+Install Elixir Agent Kit v0.1.1 in this Elixir project and verify the setup.
 
 Read the installation guide at
-https://github.com/sallaumen/elixir-agent-kit/blob/v0.1.0/README.md
+https://github.com/sallaumen/elixir-agent-kit/blob/v0.1.1/README.md
 and the client compatibility notes at
-https://github.com/sallaumen/elixir-agent-kit/blob/v0.1.0/docs/compatibility.md.
+https://github.com/sallaumen/elixir-agent-kit/blob/v0.1.1/docs/compatibility.md.
 Use the actual documentation for this release. If it cannot be retrieved, report
 that limitation and do not invent commands or a successful installation.
 
@@ -25,7 +25,7 @@ that limitation and do not invent commands or a successful installation.
    ```elixir
    {:elixir_agent_kit,
     git: "https://github.com/sallaumen/elixir-agent-kit.git",
-    tag: "v0.1.0",
+    tag: "v0.1.1",
     only: [:dev, :test],
     runtime: false}
    ```

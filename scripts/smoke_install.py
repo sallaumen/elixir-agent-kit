@@ -9,7 +9,7 @@ import tempfile
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--git-url", help="Fetch a real published Git dependency instead of the local package")
-parser.add_argument("--ref", default="v0.1.0")
+parser.add_argument("--ref", default="v0.1.1")
 args = parser.parse_args()
 package = Path(__file__).resolve().parents[1]
 

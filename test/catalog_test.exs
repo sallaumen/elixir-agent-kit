@@ -27,6 +27,12 @@ defmodule ElixirAgentKit.CatalogTest do
     end
   end
 
+  test "the distributed snapshot carries its license notice" do
+    license = File.read!(Path.join(ElixirAgentKit.library_path(), "LICENSE"))
+    assert license =~ "MIT License"
+    assert license =~ "Copyright (c) 2026 Lucas Tavano"
+  end
+
   test "review and acceptance workflows preserve read-only defaults" do
     catalog = Map.new(ElixirAgentKit.catalog(), &{&1.id, &1.mode})
     assert catalog["code-review"] == "review"
