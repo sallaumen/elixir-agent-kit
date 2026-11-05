@@ -19,6 +19,8 @@ jobs:
             otp: '27.3'
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: erlef/setup-beam@v1
         with:
           elixir-version: ${{ matrix.elixir }}
@@ -26,6 +28,10 @@ jobs:
       - run: mix check
       - run: python3 scripts/check_library.py
       - run: python3 scripts/smoke_install.py
+      - name: Git consumer relocation and custom dependency path
+        run: |
+          git branch agent-kit-ci-consumer "$GITHUB_SHA"
+          python3 scripts/smoke_install.py --git-url "$GITHUB_WORKSPACE" --ref "$GITHUB_SHA" --deps-path "vendor/deps (shared)"
       - run: python3 scripts/smoke_migration.py
       - run: mix local.hex --force
       - run: mix hex.build

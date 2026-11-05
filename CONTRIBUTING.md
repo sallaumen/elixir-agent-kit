@@ -47,6 +47,17 @@ happy path. No forced overwrite, hidden model calls or global client mutations.
 ## Validation and releases
 
 CI runs the same local checks, plus the declared minimum/current runtime matrix.
+It also installs the exact tested revision as a Git dependency in a disposable
+consumer with a custom dependency directory containing spaces and parentheses,
+moves the consumer to another path, and refetches dependencies. The committed
+index must still resolve without being regenerated. To reproduce after committing:
+
+```sh
+python3 scripts/smoke_install.py --git-url "$(pwd)" --ref "$(git rev-parse HEAD)" --deps-path "vendor/deps (shared)"
+```
+
+This uses a local Git clone; the separate v0.1.1 migration smoke needs network access.
+
 If Actions is unavailable due to account or runner problems, run every local gate,
 record the exact environment and limitation, and do not claim remote validation.
 
