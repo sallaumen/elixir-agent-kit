@@ -1,78 +1,50 @@
-# Install with an AI coding agent
+# Install or migrate with an AI agent
 
-Copy the prompt below into a coding agent with access to the target Elixir
-repository. The setup uses the public GitHub release and requires no download
-token or model API key. The agent's own account/access is separate.
+Copy the prompt below into an agent with filesystem and terminal access to the
+consuming Elixir project. Review the resulting diff and evidence under your
+project's existing delivery policy. The prompt grants no new paid calls or deploys.
 
----
+```text
+Install or migrate Elixir Agent Kit v0.2.0 in this Elixir project using its
+reference-only layout. Read the project's instructions and the versioned guide:
+https://github.com/sallaumen/elixir-agent-kit/blob/v0.2.0/README.md
+and compatibility:
+https://github.com/sallaumen/elixir-agent-kit/blob/v0.2.0/docs/compatibility.md
 
-Install Elixir Agent Kit v0.1.1 in this Elixir project and verify the setup.
-
-Read the installation guide at
-https://github.com/sallaumen/elixir-agent-kit/blob/v0.1.1/README.md
-and the client compatibility notes at
-https://github.com/sallaumen/elixir-agent-kit/blob/v0.1.1/docs/compatibility.md.
-Use the actual documentation for this release. If it cannot be retrieved, report
-that limitation and do not invent commands or a successful installation.
-
-1. Read this project's instructions, `mix.exs`, contribution rules and validation
-   commands. Inspect the working tree and preserve unrelated work. Determine the
-   Elixir/OTP versions and the coding-agent tools actually used here. Ask only for
-   client selection or another material choice that cannot be established locally.
-
-2. Add the dependency without replacing the existing dependencies:
-
-   ```elixir
+1. Inspect the working tree, Mix project, existing instruction files, dependency
+   aliases and any previous .elixir-agent-kit/state.tsv. Preserve unrelated work;
+   use an isolated branch/worktree under this project's rules.
+2. In the existing deps/0 add or update exactly one dependency:
    {:elixir_agent_kit,
     git: "https://github.com/sallaumen/elixir-agent-kit.git",
-    tag: "v0.1.1",
-    only: [:dev, :test],
-    runtime: false}
-   ```
-
-3. Add an `:elixir_agent_kit` key to the existing `project/0` configuration.
-   Use `agents: [:codex, :claude, :generic]` only if all are desired; otherwise
-   select the relevant adapters. Use `skills: :all` initially unless the project
-   needs a narrower set. `:generic` means a file-reading harness, not a guarantee
-   of automatic DeepSeek integration.
-
-4. Fetch dependencies with `mix deps.get`. Never embed credentials in source,
-   URLs or chat. Do not run database resets, seeds, application startup or unrelated
-   upgrades as part of this installation.
-
-5. Run `mix agent_kit.install --dry-run`, inspect collisions, and run
-   `mix agent_kit.install`. Preserve existing `AGENTS.md` and `CLAUDE.md` content.
-   If managed-content conflicts occur, preserve edits and follow the documented
-   recovery procedure. Do not delete state or force an overwrite.
-
-6. Run `mix agent_kit.check`, then run install again and verify that it reports
-   no changes. Run the appropriate project checks. Add a read-only kit check to
-   the existing CI when within this task's scope; do not replace existing gates.
-
-7. Inspect the generated entry points and resolve their links to the shared
-   contract and selected workflows. Commit-ready output should include `mix.exs`,
-   `mix.lock`, the local library snapshot, its state record, and selected agent
-   entry points. Stage only the files belonging to this change.
-
-8. For isolated workers, ensure the guidance is in their checkout and identify
-   how their harness loads it. Test a fresh session if available. If a client is
-   unavailable, report “files installed; live discovery not verified” rather than
-   declaring its integration complete. Do not launch paid model calls without
-   corresponding authorization.
-
-9. Document update and removal commands in the project's normal setup guide.
-   Report the installed version, selected adapters, changed files, checks and
-   any remaining limitations. Separate structural verification from observed
-   model behavior.
-
-Complete the authorized local setup. Publishing, merging and deployment follow
-this project's rules and the user's existing authorization.
-
----
-
-## Expected outcome
-
-A second install makes no changes, `mix agent_kit.check` passes, project-owned
-instructions remain intact, and the report states which clients were actually
-verified. Review the diff before committing. See the release's README for updates
-and safe removal.
+    tag: "v0.2.0", only: [:dev, :test], runtime: false}
+   It is public: no token in source. Do not claim it is published to Hex.
+3. In project/0 set elixir_agent_kit: [agents: [:codex, :claude, :generic], skills: :all],
+   unless this project already has a deliberately narrower selection.
+4. Fetch dependencies (deps.get for new install; deps.update elixir_agent_kit for
+   upgrade). Inspect local aliases before executing commands. No application,
+   database or model needs to start for this setup.
+5. Run mix agent_kit.sync --dry-run, inspect the changes, then mix agent_kit.sync.
+   For a 0.1 installation this removes its unmodified recorded library copies and
+   per-skill wrappers. Do not delete by glob or erase the ownership manifest.
+   If edited managed content blocks migration, preserve the edits as project rules
+   or upstream proposals and restore only their recorded originals before retrying.
+6. Verify the only kit-managed content remaining is the small START.md index,
+   state.tsv and bounded blocks in AGENTS.md/CLAUDE.md. Preserve other tools' skills
+   and all local instructions. Do not copy workflow bodies or register per-skill
+   files. Library text must be read directly from the Mix dependency.
+7. Run mix agent_kit.check and verify every index link resolves to the downloaded
+   library. Verify a second sync makes no changes. Add check to the appropriate
+   existing local/CI gate after fetching dependencies; never auto-sync in CI.
+8. Update this project's setup instructions: a fresh checkout needs mix deps.get;
+   clients must read ignored dependency files directly. For DeepSeek, confirm the
+   harness loads AGENTS.md or the index in its actual executor worktree. A model
+   name does not establish compatibility. Do not claim live compliance from file checks.
+9. Explain maintenance: reusable lessons are proposed upstream through the kit's
+   EVOLUTION.md; product-specific rules remain local. Use mix agent_kit.outdated
+   explicitly to discover stable releases; no background or unpinned update.
+10. Run project-required checks, inspect the diff and stage files by name. Commit
+    dependency, lock, index/state, references and removal of obsolete owned files
+    together. Follow existing PR/merge authority. Report exact files/counts,
+    validation, selected version, any blocked steps and unverified live clients.
+```

@@ -24,6 +24,7 @@ defmodule ElixirAgentKit.CLI do
       |> override(:agents, flags[:agents])
       |> override(:skills, flags[:skills])
       |> Keyword.put(:dry_run, flags[:dry_run] || false)
+      |> Keyword.put(:library_path, library_path())
 
     case ElixirAgentKit.Installer.run(action, File.cwd!(), opts) do
       {:ok, []} ->
@@ -43,6 +44,13 @@ defmodule ElixirAgentKit.CLI do
     end
   rescue
     error in ArgumentError -> Mix.raise(Exception.message(error))
+  end
+
+  defp library_path do
+    case Mix.Project.deps_paths()[:elixir_agent_kit] do
+      nil -> ElixirAgentKit.library_path()
+      path -> Path.join(path, "priv/library")
+    end
   end
 
   defp override(opts, _key, nil), do: opts

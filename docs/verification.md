@@ -1,3 +1,6 @@
+> Historical record for the initial 0.1 release. The 0.2 reference layout replaces
+> snapshots and native wrappers; see [compatibility](compatibility.md) for current behavior.
+
 # Initial release verification
 
 Verified locally on 2026-11-05:

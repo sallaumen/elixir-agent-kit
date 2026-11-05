@@ -25,6 +25,8 @@ The requested outcome, affected flow or diff, project instructions, relevant evi
 
 4. Compare the before and after call paths. The caller should express a coherent operation without forcing the reader to chase a chain of trivial wrappers. Test observable behavior and effect boundaries.
 
+Preserve effect order, count, error handling and transaction boundaries while extracting calculations. Actions, calculations and data are analytical lenses, not three mandatory directories. Do not create sprawling parameter bundles just to claim purity; keep co-changing details together.
+
 ## Completion
 
 A clearer operation with justified abstraction boundaries and preserved behavior. Whole-system domain ownership belongs to architecture-review.

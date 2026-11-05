@@ -28,14 +28,68 @@ defmodule ElixirAgentKit.InstallerTest do
     |> Map.new(&{Path.relative_to(&1, root), File.read!(&1)})
   end
 
-  test "installs self-contained guidance, all native wrappers and round trips", %{root: root} do
+  defp legacy_install(root) do
+    Installer.run(:install, root, agents: [:codex, :claude])
+
+    paths = [
+      ".agents/skills/eak-debugging/SKILL.md",
+      ".claude/skills/eak-debugging/SKILL.md",
+      ".elixir-agent-kit/library/CONTRACT.md"
+    ]
+
+    hash = :crypto.hash(:sha256, "old generated content") |> Base.encode16(case: :lower)
+
+    records =
+      Enum.map_join(paths, "", fn path ->
+        put(root, path, "old generated content")
+        "file\t#{path}\t#{hash}\tcreated\n"
+      end)
+
+    File.write!(Path.join(root, ".elixir-agent-kit/state.tsv"), records, [:append])
+  end
+
+  test "migration removes legacy payload and wrappers but preserves local files", %{root: root} do
+    legacy_install(root)
+    put(root, ".agents/skills/my-own/SKILL.md", "keep")
+    put(root, ".elixir-agent-kit/library/local-notes.md", "keep")
+    before = snapshot(root)
+    assert {:ok, [_ | _]} = Installer.run(:sync, root, dry_run: true)
+    assert snapshot(root) == before
+    assert {:ok, _} = Installer.run(:sync, root)
+    refute File.exists?(Path.join(root, ".elixir-agent-kit/library/CONTRACT.md"))
+    assert Path.wildcard(Path.join(root, ".agents/skills/eak-*/SKILL.md")) == []
+    assert Path.wildcard(Path.join(root, ".claude/skills/eak-*/SKILL.md")) == []
+    assert get(root, ".agents/skills/my-own/SKILL.md") == "keep"
+    assert get(root, ".elixir-agent-kit/library/local-notes.md") == "keep"
+    assert {:ok, []} = Installer.run(:check, root)
+  end
+
+  test "external path dependencies and spaces are encoded in references", %{root: root} do
+    Installer.run(:install, root, library_path: "/tmp/my library(1)/priv/library")
+
+    assert get(root, ".elixir-agent-kit/START.md") =~
+             "/tmp/my%20library%281%29/priv/library/CONTRACT.md"
+  end
+
+  test "installs only references and round trips", %{root: root} do
     original = "# Project\nKeep this exact text.\n"
     put(root, "AGENTS.md", original)
     opts = [agents: [:codex, :claude, :generic]]
     assert {:ok, paths} = Installer.run(:install, root, opts)
     assert "CLAUDE.md" in paths
     assert get(root, "AGENTS.md") =~ original
-    assert length(Path.wildcard(Path.join(root, ".agents/skills/*/SKILL.md"))) == 33
+
+    assert Enum.sort(Map.keys(snapshot(root))) ==
+             [
+               ".elixir-agent-kit/START.md",
+               ".elixir-agent-kit/state.tsv",
+               "AGENTS.md",
+               "CLAUDE.md"
+             ]
+
+    assert get(root, ".elixir-agent-kit/START.md") =~
+             "../deps/elixir_agent_kit/priv/library/CONTRACT.md"
+
     assert {:ok, []} = Installer.run(:check, root)
     assert {:ok, []} = Installer.run(:install, root, opts)
     assert {:ok, _} = Installer.run(:uninstall, root)
@@ -60,7 +114,7 @@ defmodule ElixirAgentKit.InstallerTest do
 
   test "local managed edits block all writes, including uninstall", %{root: root} do
     Installer.run(:install, root)
-    put(root, ".elixir-agent-kit/library/CONTRACT.md", "local change")
+    put(root, ".elixir-agent-kit/START.md", "local change")
     before = snapshot(root)
 
     for action <- [:sync, :uninstall] do
@@ -69,12 +123,12 @@ defmodule ElixirAgentKit.InstallerTest do
     end
 
     assert {:drift, paths} = Installer.run(:check, root)
-    assert ".elixir-agent-kit/library/CONTRACT.md" in paths
+    assert ".elixir-agent-kit/START.md" in paths
     assert snapshot(root) == before
   end
 
   test "unmanaged collision refuses the entire install", %{root: root} do
-    put(root, ".agents/skills/eak-debugging/SKILL.md", "mine")
+    put(root, ".elixir-agent-kit/START.md", "mine")
     before = snapshot(root)
 
     assert_raise ArgumentError, ~r/unmanaged/, fn ->
@@ -115,20 +169,20 @@ defmodule ElixirAgentKit.InstallerTest do
     end
   end
 
-  test "changing selection prunes only previously owned wrappers", %{root: root} do
+  test "changing selection removes only owned instructions", %{root: root} do
     Installer.run(:install, root, agents: [:codex, :claude])
     put(root, ".agents/skills/my-own/SKILL.md", "keep")
     assert {:ok, _} = Installer.run(:sync, root, agents: [:codex], skills: ["debugging"])
     assert Path.wildcard(Path.join(root, ".claude/skills/*/SKILL.md")) == []
     assert get(root, ".agents/skills/my-own/SKILL.md") == "keep"
-    assert length(Path.wildcard(Path.join(root, ".agents/skills/eak-*/SKILL.md"))) == 1
-    assert get(root, ".elixir-agent-kit/START.md") =~ "[debugging]"
-    refute get(root, ".elixir-agent-kit/START.md") =~ "[code-review]"
+    assert Path.wildcard(Path.join(root, ".agents/skills/eak-*/SKILL.md")) == []
+    assert get(root, ".elixir-agent-kit/START.md") =~ "`debugging`"
+    refute get(root, ".elixir-agent-kit/START.md") =~ "`code-review`"
     assert {:ok, []} = Installer.run(:check, root)
   end
 
   test "an edited stale wrapper blocks pruning", %{root: root} do
-    Installer.run(:install, root, agents: [:codex])
+    legacy_install(root)
     put(root, ".agents/skills/eak-debugging/SKILL.md", "preserve")
     before = snapshot(root)
 
@@ -141,7 +195,7 @@ defmodule ElixirAgentKit.InstallerTest do
 
   test "deleted managed files are restored on sync", %{root: root} do
     Installer.run(:install, root)
-    File.rm!(Path.join(root, ".elixir-agent-kit/library/CONTRACT.md"))
+    File.rm!(Path.join(root, ".elixir-agent-kit/START.md"))
     assert {:drift, _} = Installer.run(:check, root)
     assert {:ok, _} = Installer.run(:sync, root)
     assert {:ok, []} = Installer.run(:check, root)
@@ -208,6 +262,13 @@ defmodule ElixirAgentKit.InstallerTest do
   end
 
   test "all installed local Markdown references resolve", %{root: root} do
+    File.mkdir_p!(Path.join(root, "deps/elixir_agent_kit/priv"))
+
+    File.cp_r!(
+      ElixirAgentKit.library_path(),
+      Path.join(root, "deps/elixir_agent_kit/priv/library")
+    )
+
     Installer.run(:install, root, agents: [:codex, :claude, :generic])
 
     for {path, contents} <- snapshot(root),

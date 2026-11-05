@@ -1,50 +1,33 @@
-# Client compatibility and evaluation
+# Client compatibility and verification
 
-Elixir Agent Kit distributes instructions. The host tool determines discovery,
-permissions, context loading and execution. GPT, Claude and DeepSeek are model
-families; model selection alone does not prove client integration.
+Version 0.2 routes through project instruction files; it does not register native
+per-workflow skills or slash commands. The installer never configures clients
+globally or invokes models.
 
-| Adapter | Project files | Basis | Verification boundary |
-|---|---|---|---|
-| `codex` | `AGENTS.md`, `.agents/skills/eak-*/SKILL.md` | [Codex repository skills](https://learn.chatgpt.com/docs/build-skills) | Generated format, paths and links tested; live session behavior not certified. |
-| `claude` | `CLAUDE.md`, `.claude/skills/eak-*/SKILL.md` | [Claude Code project skills](https://code.claude.com/docs/en/skills) | Generated format, paths and links tested; live session behavior not certified. |
-| `generic` | `AGENTS.md` | Explicit file-reading integration | Harness must load the entry point; no automatic model-specific hook. |
+| Client | Entry point | Required capability |
+|---|---|---|
+| Codex | `AGENTS.md` | Read project instructions and follow links into the dependency. |
+| Claude Code | `CLAUDE.md` | Read project instructions and follow links into the dependency. |
+| Generic harness, including DeepSeek-backed executors | `AGENTS.md` or explicit index loading | Configure the harness to load instructions in its actual working checkout. |
 
-The local snapshot is `.elixir-agent-kit/`. Native entry points link to that
-snapshot, so a client must be allowed to read project files outside its skill
-folder. Clients that require fully sandboxed skill bundles need a separate
-adapter; do not claim compatibility merely because they accept `SKILL.md`.
+The default library path is `deps/elixir_agent_kit/priv/library/`. Dependencies must
+be fetched first. Git ignores this path in most projects, so filename search may
+omit it; direct filesystem reading must still be available. If the client cannot
+read it, report the limitation and configure permitted file access before claiming
+setup complete. Do not silently copy the whole library as a workaround.
 
-Client versions and policies can change discovery. Restart or open a new session
-and inspect the client's available skills. Hosted chat interfaces do not
-necessarily see repository files. This package does not upload content to accounts.
+## Fresh-session verification
 
-## DeepSeek and isolated workers
+1. Fetch dependencies and run `mix agent_kit.check` in the actual checkout.
+2. Start a fresh client session; ask it to read project instructions, follow
+   `.elixir-agent-kit/START.md`, and select `code-review` for a read-only diff.
+3. Ask it to name the contract and selected workflow files it actually read.
+4. Observe that only relevant guidance is loaded, local scope is respected and
+   the review does not become an unsolicited edit or publication.
+5. Record package revision, client/harness version, paths and observed behavior.
 
-Configure the actual harness to read project `AGENTS.md` or explicitly supply
-`.elixir-agent-kit/START.md` as the initial project instruction. Each worktree
-must contain the committed snapshot or run installation locally. Do not assume
-the checkout hosting a dashboard is the checkout used by its worker.
-
-No global harness settings or provider credentials are modified. If the harness
-cannot load these files, report the unsupported integration and identify its
-supported instruction mechanism before writing a new adapter.
-
-## Reproducible client evaluation
-
-Use a disposable project and a fresh client session. Record the client version,
-model, package version, task and observed evidence. Do not include secrets.
-
-1. **Discovery:** ask the client to find the architecture workflow and name the
-   contract and workflow files it read. Verify the actual reads if logs are available.
-2. **Routing:** request a read-only diff review. Expect `code-review`, not a broad
-   architecture rewrite. Confirm the client preserves the requested read-only mode.
-3. **Execution:** provide a small reproducible bug in a fixture. Expect evidence,
-   a bounded change when authorized, and a relevant regression check.
-4. **Restraint:** request a simple text correction. Expect a proportional response,
-   not all 33 workflows or unnecessary delegated tasks.
-5. **Handoff:** ask for verified results and limitations. Check that commands and
-   outcomes match the tool transcript.
-
-Passing `mix agent_kit.check` establishes installation consistency, not those
-behavioral criteria. No paid model evaluation is part of the automated test suite.
+Repeat in isolated executor worktrees; a parent session's access proves nothing
+about a worker. Filesystem and Mix smoke tests verify links, preservation,
+migration, exclusion from production and repeatability. They do not prove live
+client discovery or model compliance. Evaluator-only scenarios live in `evals/`
+in the source repository, not in the installed index.

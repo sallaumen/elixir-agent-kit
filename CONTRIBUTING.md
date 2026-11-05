@@ -12,6 +12,7 @@ Use Elixir 1.15+ with a compatible Erlang/OTP. No database or API key is needed.
 mix check
 python3 scripts/check_library.py
 python3 scripts/smoke_install.py
+python3 scripts/smoke_migration.py
 mix hex.build
 ```
 
@@ -19,10 +20,17 @@ mix hex.build
 in the test environment. The library check validates metadata, provenance coverage
 and local Markdown references. The smoke test builds a disposable consuming Mix
 project, installs from a local path, checks repeatability, and uninstalls. It cleans
-up its temporary project. `mix hex.build` creates a local tarball; it does not publish.
+up its temporary project. The migration smoke fetches public v0.1.1 over the
+network and checks migration, conflict refusal and preservation in a disposable project. `mix hex.build` creates a local tarball; it does not publish.
 
 Use branches and pull requests after initial repository bootstrap. Stage only the
 files you changed. Avoid unrelated refactors and preserve other contributors' work.
+
+## Source ownership
+
+Edit reusable guidance only in `priv/library/`. Applications contribute sanitized,
+evidence-backed improvements through [the evolution policy](priv/library/EVOLUTION.md).
+Keep product rules in their application and never edit a downloaded dependency.
 
 ## Workflow changes
 
@@ -30,6 +38,7 @@ Start with a specific trigger and compare neighboring workflows. Preserve the
 shared contract rather than copying its rules into every skill. Use standard
 `name` and `description` frontmatter, a clear mode, workflow and completion test.
 Update `priv/library/catalog.tsv`, `CATALOG.md`, provenance and relevant tests.
+Keep routing cases in `evals/`; never ship evaluator answers as workflow context.
 Do not add a skill merely for a synonym of an existing workflow.
 
 For installer changes, cover preservation and failure behavior as well as the

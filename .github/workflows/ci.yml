@@ -26,5 +26,6 @@ jobs:
       - run: mix check
       - run: python3 scripts/check_library.py
       - run: python3 scripts/smoke_install.py
+      - run: python3 scripts/smoke_migration.py
       - run: mix local.hex --force
       - run: mix hex.build

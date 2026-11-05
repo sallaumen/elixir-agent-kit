@@ -44,3 +44,9 @@ Follow the consuming project's policy for unavailable CI. Local evidence is not 
 Lead with the outcome and remaining limitations. Record the selected workflow and package version when relevant, changed files, key decisions, actual checks, unresolved risks and the next step. Distinguish proposed, implemented, locally validated, integrated and published work. Use [HANDOFF.md](HANDOFF.md) for substantial handoffs.
 
 Load only the selected workflow and necessary references. The catalog is a routing aid, not a requirement to read every skill on every task.
+
+## Improve the shared source
+
+Follow [EVOLUTION.md](EVOLUTION.md) when a task exposes a reusable improvement.
+Keep application-specific rules local and propose shared changes upstream; do not
+edit dependency downloads or generated consumer files.

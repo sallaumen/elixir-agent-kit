@@ -1,58 +1,54 @@
 # Architecture
 
-## Distribution boundary
+## Distribution and ownership
 
-One Mix project contains CLI tasks, an installer and a self-contained `priv/library`
-payload. There is no application callback, supervision tree, database, model client
-or third-party runtime dependency. `:crypto` supplies SHA-256 checksums.
+One Mix project contains CLI tasks, an installer and canonical `priv/library/`
+guidance. No application callback, supervision tree, database, model client or
+third-party dependency is installed. `:crypto` supplies ownership checksums.
 
-Consumers pin a Git tag and commit `mix.lock`. The installed snapshot is checked
-in so guidance can be read before running Mix. Each package version owns its
-payload; there is no runtime download of prompts and no background update.
+Consumers pin an immutable tag and commit the lockfile. Mix downloads the source;
+agents read it directly from the dependency. `catalog.tsv` owns workflow metadata,
+`CATALOG.md` is the human index and `skills/` contains the workflow bodies. Shared
+improvements go upstream through [the evolution policy](../priv/library/EVOLUTION.md).
+Product-specific contracts stay with their applications.
 
-The current public workflows are an English community adaptation. They are not
-live mirrors of an application repository; changes are reviewed here. See
-[provenance](provenance.md) for the original-to-public mapping.
+## Reference-only installation
 
-## Source and generated content
+The installer writes a small `START.md`, a state file, and bounded blocks in
+`AGENTS.md` and/or `CLAUDE.md`. It creates no library copies or native skill wrappers.
+Configuration selects instruction adapters and workflow IDs for routing. It does
+not prevent reading other workflows. Clients must load project instructions and
+be able to read the ignored dependency directory after `mix deps.get`.
 
-Canonical workflow bodies live in `priv/library/skills/`; `catalog.tsv` stores
-selection metadata. `CATALOG.md` is the human index. Tests validate unique IDs,
-required sections and installed local links. Keep catalog metadata and skill
-frontmatter aligned when contributing.
+Mix resolves custom dependency paths. Git dependencies normally generate relative,
+portable links; an external local path dependency needs a machine-local absolute
+link and resync after relocation. Markdown destinations encode special characters.
 
-The installer copies the whole library and generates a selected `START.md`,
-short native skill entry points and managed instruction blocks. It stores schema,
-version, adapter selection, skill selection, ownership and SHA-256 checksums in
-`.elixir-agent-kit/state.tsv`. The manifest is parsed as data, never evaluated.
-Selection is a discovery preference, not a confidentiality boundary.
+`outdated` is an explicit network read using Git to list official stable version
+tags; it never updates files. `check` remains offline. Neither command is a
+background monitor. A failed remote query means freshness is unknown.
 
-## Reconciliation and preservation
+## Reconciliation and migration
 
-`install` and `sync` share one reconciliation path. Desired and previous inventory
-are compared before writes. Unknown collisions, modified owned content, malformed
-markers, unsafe paths and symlinked outputs cause an error. Unchanged files are
-not rewritten. Removing an adapter or selection prunes only its unmodified owned
-entry points. Local text before and after instruction blocks is preserved exactly.
+`install` and `sync` reconcile desired and previously owned paths before writing.
+Schema 1 state stores package version, adapter/skill selection, path, kind,
+SHA-256 and origin. It remains compatible with 0.1 ownership records so migration
+can remove obsolete copied payload and wrappers safely. State is data, not code.
 
-`check` compares current content with the configured package without writing.
-`uninstall` removes recorded content only after preflight. Unrelated files and
-pre-existing empty instruction files remain. Empty directories may remain.
+Unknown collisions, modified owned content, malformed markers/state, unsafe paths
+or symlinked outputs cause an error. Local text outside managed blocks survives.
+Unmodified obsolete owned files are removed; unowned files and pre-existing empty
+instruction files survive. Empty directories may remain. `uninstall` uses the
+same preflight; `check` reports drift without writes.
 
-This is a single-writer development tool, not an adversarial concurrent filesystem
-transaction. Filesystem errors or interruption during writes can leave partial
-output; restore the last committed snapshot and state before retrying. Ownership
-records detect drift, not malicious changes to both content and the manifest.
+This is a single-writer development tool, not a concurrent filesystem transaction.
+Interrupted writes require restoring the previous state and generated content
+from version control. Checksums detect accidental drift, not an attacker changing
+both files and ownership records.
 
-## Relationship to usage_rules
+## Other rule installers
 
-[UsageRules](https://usage-rules.hexdocs.pm/readme.html) is an existing Elixir tool
-for distributing dependency rules and skills. This initial implementation uses a
-small direct installer to keep one ownership manifest across multiple client
-locations and the shared library snapshot, with no third-party dependencies.
-It does not replace UsageRules' dependency documentation or search capabilities.
-
-Both tools can coexist if they own separate files/sections. Do not configure
-another tool to overwrite this kit's managed entries. A future adapter can use
-UsageRules' package-skills interface once shared-contract paths and ownership
-semantics are covered by integration tests.
+[UsageRules](https://usage-rules.hexdocs.pm/readme.html) and project-specific skill
+installers can coexist when they own separate files or blocks. Do not configure
+another installer to overwrite this kit's managed references. The kit does not
+replace dependency API documentation or a client's search tools.

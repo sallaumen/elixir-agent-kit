@@ -2,58 +2,36 @@
 
 **Shared coding practices for AI agents, versioned with your Elixir project.**
 
-Install 33 focused workflows with Mix. Give Codex, Claude Code and file-reading
-agent harnesses a common contract for architecture, debugging, testing, review,
-UI work and delivery—without starting a service or calling a model.
+33 focused workflows for architecture, debugging, testing, review, UI and delivery.
+Install with Mix; agents read the library directly from the dependency. No copied
+skill library, service, model calls or production dependency.
 
-[Quick start](#quick-start) · [Workflow catalog](priv/library/CATALOG.md) ·
+[Quick start](#quick-start) · [Catalog](priv/library/CATALOG.md) ·
 [Install with an AI agent](docs/INSTALL_WITH_AI.md) ·
 [Português](docs/README.pt-BR.md) · [Contributing](CONTRIBUTING.md)
 
-## What you get
-
-- 33 English workflows with clear triggers, modes and completion criteria.
-- A shared execution contract and conditional Elixir/Phoenix/Ecto/Oban guidance.
-- Native `SKILL.md` entry points for Codex and Claude Code; `AGENTS.md` routing for other harnesses.
-- Project-local install, sync, read-only drift checks and conservative uninstall.
-- SHA-256 ownership records, conflict detection and preservation of local instructions.
-- Zero third-party Elixir dependencies. No API keys, model calls, telemetry or application startup.
-
-This is a development tool. It does not execute skills, enforce model behavior,
-or orchestrate agents. Installing files is not proof that a client loaded them.
-See [compatibility and verification](docs/compatibility.md).
-
 ## Quick start
 
-Requires Elixir 1.15+ and its supported Erlang/OTP runtime. Git is needed to fetch
-the dependency. Version 0.1.1 is distributed through GitHub; it is **not published
-to Hex**. The repository is public, so downloading it does not require a token.
+Requires Elixir 1.15+, compatible Erlang/OTP and Git. Version 0.2.0 is distributed
+through public GitHub tags, **not Hex**. No token is required.
 
-Add to your existing `deps/0` in `mix.exs`:
+Add to your existing `deps/0`:
 
 ```elixir
 {:elixir_agent_kit,
  git: "https://github.com/sallaumen/elixir-agent-kit.git",
- tag: "v0.1.1",
+ tag: "v0.2.0",
  only: [:dev, :test],
  runtime: false}
 ```
 
-Add this key to the keyword list returned by your existing `project/0`:
+Add to the keyword list returned by your existing `project/0`:
 
 ```elixir
-elixir_agent_kit: [
-  agents: [:codex, :claude, :generic],
-  skills: :all
-]
+elixir_agent_kit: [agents: [:codex, :claude, :generic], skills: :all]
 ```
 
-Choose only the clients you use. `:generic` writes an `AGENTS.md` entry;
-`:codex` writes that entry plus `.agents/skills/eak-*/SKILL.md`;
-`:claude` writes `CLAUDE.md` plus `.claude/skills/eak-*/SKILL.md`.
-Selecting both `:codex` and `:generic` does not duplicate the entry.
-
-Run from the project's Mix root:
+Run from the Mix project root, after checking for project aliases with extra effects:
 
 ```sh
 mix deps.get
@@ -62,98 +40,99 @@ mix agent_kit.install
 mix agent_kit.check
 ```
 
-No `mix setup`, database setup or application server is required by the kit.
-A consuming project may define its own command aliases with additional effects;
-inspect those before running them.
+The kit needs no database, app server or `mix setup`. Commit `mix.exs`, `mix.lock`,
+the generated index/state and instruction blocks. Do not commit `deps/`.
 
-Review and commit the dependency, `mix.lock`, the managed sections of your agent
-instructions, `.elixir-agent-kit/`, and the selected client skill files. Committing
-the snapshot makes guidance available in fresh worktrees before dependencies are
-fetched. Do not edit generated content: put local additions outside the managed
-sections or in separate project documents.
+## What remains in your project
 
-Start a new client session in that checkout and ask it to select a workflow from
-`.elixir-agent-kit/START.md`, read the contract, and explain which files it read.
-For example: “Use eak-code-review to review this diff; remain read-only.”
+| Path | Purpose |
+|---|---|
+| `.elixir-agent-kit/START.md` | Small index pointing to the dependency's contract and catalog. |
+| `.elixir-agent-kit/state.tsv` | Version, selection and checksums of files/blocks owned by the installer. |
+| `AGENTS.md` | A bounded reference block for Codex and generic harnesses. |
+| `CLAUDE.md` | A bounded reference block for Claude Code. |
 
-## Choose a smaller set
+Existing project instructions outside those blocks remain unchanged. No workflow
+bodies are copied into the project and no per-skill files are created in `.agents`
+or `.claude`. The library stays in `deps/elixir_agent_kit/priv/library/` for a
+standard Git dependency. Custom dependency paths are resolved by Mix; external
+local path dependencies produce local absolute links and need resync after moving.
 
-The full library is a self-contained reference snapshot. Selection controls the
-entry points and the enabled list, not an access-control boundary:
+`:codex` and `:generic` share the same `AGENTS.md` block; `:claude` selects
+`CLAUDE.md`. These are instruction-file adapters, not model integrations. This
+version does **not** register individual native skills or slash commands.
 
-```elixir
-elixir_agent_kit: [
-  agents: [:codex, :claude],
-  skills: ["architecture-review", "debugging", "code-review", "delivery-validation"]
-]
-```
+A fresh checkout must run `mix deps.get` before reading the practices. A client
+must be able to read ignored dependency files. Ask a fresh session to read
+`AGENTS.md` or `CLAUDE.md`, follow the index, select a workflow and name the files
+it actually read. A DeepSeek-backed harness must load these files in its actual
+checkout; the model name alone does not establish support. See
+[compatibility](docs/compatibility.md).
 
-Discover IDs with `mix agent_kit.list`. Run `mix agent_kit.sync` after changing
-configuration. Without project configuration, the default is `:generic` and all
-skills; later invocations reuse the saved selection. CLI flags override project
-configuration for that invocation; prefer persistent project configuration for teams.
+## Selection and commands
 
-## Commands
+The default is `:generic` with all skills. To narrow discovery, set
+`skills: ["debugging", "code-review"]` in project configuration and sync.
+Selection is guidance in the index, not an access-control boundary. With no
+project configuration, subsequent commands reuse the recorded selection.
 
 | Command | Effect |
 |---|---|
-| `mix agent_kit.list` | Prints workflow IDs, default modes and triggers. |
-| `mix agent_kit.install` | Creates or synchronizes managed guidance after checking every planned path. |
-| `mix agent_kit.sync` | Same reconciliation as install, including removal of stale owned entry points. |
-| `mix agent_kit.check` | Read-only comparison against the package and configuration; exits nonzero on drift. |
-| `mix agent_kit.uninstall` | Removes unmodified managed content and its state record; retains unrelated content. |
+| `mix agent_kit.list` | Prints workflow IDs, modes and triggers. |
+| `mix agent_kit.install` | Creates or synchronizes references after conflict preflight. |
+| `mix agent_kit.sync` | Same reconciliation, including removal of unmodified legacy generated files. |
+| `mix agent_kit.check` | Offline, read-only comparison against the loaded package and configuration; fails on drift. |
+| `mix agent_kit.outdated` | Queries public stable Git tags; reports the loaded and latest versions without changing files. |
+| `mix agent_kit.outdated --check` | Also fails when a newer stable tag exists; network failures always fail. |
+| `mix agent_kit.uninstall` | Removes owned unmodified references and state, preserving local content. |
 
-Mutation tasks accept `--dry-run`. All reconciliation tasks accept
-`--agents codex,claude,generic` and `--skills debugging,code-review`.
-Unknown arguments are errors. Run uninstall **before** removing the dependency.
-Empty generated directories may remain; existing empty instruction files are preserved.
+Reconciliation tasks accept `--agents codex,claude,generic` and `--skills ID,ID`;
+mutation tasks also accept `--dry-run`. Unknown arguments fail. Prefer persistent
+project configuration over invocation-only flags. Run uninstall before removing
+the dependency. No task starts your application or calls a model.
 
-## Update and recover
+## Upgrade from 0.1 or adopt a later release
 
-1. Read the target release's [changelog](CHANGELOG.md).
-2. Change the tag in `mix.exs`, then run `mix deps.update elixir_agent_kit`.
-3. Run `mix agent_kit.sync --dry-run`, inspect the plan, then run `mix agent_kit.sync`.
-4. Run `mix agent_kit.check` and the project's required checks; review and commit the diff.
+1. Read the release's [changelog](CHANGELOG.md). Optionally query `mix agent_kit.outdated`.
+2. Change the pinned tag in `mix.exs`; run `mix deps.update elixir_agent_kit`.
+3. Run `mix agent_kit.sync --dry-run` and inspect the plan, then `mix agent_kit.sync`.
+4. Run `mix agent_kit.check` and project-required checks; review and commit the diff.
 
-Unmanaged collisions and edited managed content stop mutations before any writes.
-There is no `--force` overwrite switch. Move intentional additions into a local
-project document, preserve your edits in version control, and restore the managed
-file to its recorded version before syncing. For malformed or lost state, restore
-the snapshot and `.elixir-agent-kit/state.tsv` together from version control;
-do not delete the state file to bypass a conflict.
+For a 0.1 installation, sync removes the recorded `.elixir-agent-kit/library/`
+files and `.agents/skills/eak-*` / `.claude/skills/eak-*` wrappers. This is a
+migration to dependency references, not a second installation. Unowned files
+survive; empty directories may remain. Do not remove similarly named user files
+by glob or discard the ownership state before migrating.
 
-All output paths are project-relative. Symlinked output paths are refused.
-Conflict preflight is not a filesystem transaction: do not run two installers
-concurrently. An interrupted write or filesystem failure may require restoring
-the previous committed snapshot before retrying.
+Modified managed files, unknown collisions, malformed markers/state and symlinked
+outputs block mutation before any writes. Preserve edits as local instructions or
+an upstream proposal, restore their recorded originals from Git, then retry.
+There is no force switch. Restore the state and generated files together after
+an interrupted write; preflight is not a filesystem transaction. Use one writer.
 
-## CI and isolated executors
+## Keep one shared source
 
-After fetching dependencies, run `mix agent_kit.check` in `dev` or `test`.
-Keep it read-only in CI; a stale snapshot should produce a reviewable change.
-The dependency is excluded from production through `only: [:dev, :test]`.
+Reusable improvements belong in this repository's `priv/library/`. Product rules
+stay in the consuming project. Use the [evolution policy](priv/library/EVOLUTION.md)
+and [proposal template](priv/library/templates/practice-proposal.md) to send a
+sanitized lesson upstream, release it, and adopt it in each application through a
+pinned update PR. Do not edit `deps/` or generated files as a source.
 
-Each isolated executor needs the committed snapshot or its own install step in
-its checkout. For a DeepSeek-backed harness, use `:generic` and explicitly configure
-the harness to read `AGENTS.md` or `.elixir-agent-kit/START.md`; the model name does
-not determine its file-loading behavior. No global client configuration is changed.
+Use `mix agent_kit.check` in development/CI after fetching dependencies. It checks
+installation consistency, **not** latest-release freshness. Use `outdated` in an
+explicit dependency-maintenance routine; no scheduler or silent auto-update is
+installed. All consumers can share an editable source while adopting versions at
+different times. See [architecture](docs/architecture.md).
 
-## Why a separate package?
+## Community and validation
 
-Practices should travel with a project revision and remain inspectable in Git.
-The library is independent of any application, database, account or provider.
-The installer owns only identified files and bounded instruction sections.
-See [architecture](docs/architecture.md) for the design and the relationship to
-[`usage_rules`](https://usage-rules.hexdocs.pm/readme.html).
+Zero third-party Elixir dependencies. No telemetry, global client configuration
+or credential requirements. This tool supplies guidance; it does not enforce
+model behavior. Structural tests and consumer smoke tests do not certify that a
+live client followed the practices.
 
-## Community and status
-
-This is an initial `0.1.1` release. Filesystem and packaging behavior are tested;
-model compliance and live client execution are not certified. Contributions that
-improve workflow clarity, portability and reproducible client evaluations are welcome.
-
-- [Contributing and local checks](CONTRIBUTING.md)
-- [Compatibility and evaluation procedure](docs/compatibility.md)
+- [Contribution process and checks](CONTRIBUTING.md)
+- [Compatibility and live evaluation](docs/compatibility.md)
 - [Security reporting](SECURITY.md)
 - [Workflow provenance](docs/provenance.md)
 - [MIT license](LICENSE)
