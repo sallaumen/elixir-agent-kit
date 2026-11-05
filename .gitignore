@@ -1,0 +1,7 @@
+/_build/
+/deps/
+/cover/
+/doc/
+/elixir_agent_kit-*.tar
+/erl_crash.dump
+.DS_Store
