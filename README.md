@@ -26,7 +26,7 @@ See [compatibility and verification](docs/compatibility.md).
 ## Quick start
 
 Requires Elixir 1.15+ and its supported Erlang/OTP runtime. Git is needed to fetch
-the dependency. Version 0.1.0 is distributed through GitHub; it is **not published
+the dependency. Version 0.1.1 is distributed through GitHub; it is **not published
 to Hex**. The repository is public, so downloading it does not require a token.
 
 Add to your existing `deps/0` in `mix.exs`:
@@ -34,7 +34,7 @@ Add to your existing `deps/0` in `mix.exs`:
 ```elixir
 {:elixir_agent_kit,
  git: "https://github.com/sallaumen/elixir-agent-kit.git",
- tag: "v0.1.0",
+ tag: "v0.1.1",
  only: [:dev, :test],
  runtime: false}
 ```
@@ -148,7 +148,7 @@ See [architecture](docs/architecture.md) for the design and the relationship to
 
 ## Community and status
 
-This is an initial `0.1.0` release. Filesystem and packaging behavior are tested;
+This is an initial `0.1.1` release. Filesystem and packaging behavior are tested;
 model compliance and live client execution are not certified. Contributions that
 improve workflow clarity, portability and reproducible client evaluations are welcome.
 
