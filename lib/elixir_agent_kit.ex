@@ -13,6 +13,14 @@ defmodule ElixirAgentKit do
     Application.app_dir(:elixir_agent_kit, "priv/library")
   end
 
+  @areas [
+    {"frontend", "Frontend and user experience"},
+    {"backend", "Backend and data"},
+    {"cross-cutting", "Cross-cutting engineering"},
+    {"delivery", "Delivery and build"}
+  ]
+  def areas, do: @areas
+
   def catalog do
     library_path()
     |> Path.join("catalog.tsv")

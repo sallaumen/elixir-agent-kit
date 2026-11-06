@@ -81,6 +81,8 @@ defmodule ElixirAgentKit.InstallerTest do
 
     assert Enum.sort(Map.keys(snapshot(root))) ==
              [
+               ".agents/skills/elixir-agent-kit/SKILL.md",
+               ".claude/skills/elixir-agent-kit/SKILL.md",
                ".elixir-agent-kit/START.md",
                ".elixir-agent-kit/state.tsv",
                "AGENTS.md",
@@ -90,11 +92,20 @@ defmodule ElixirAgentKit.InstallerTest do
     assert get(root, ".elixir-agent-kit/START.md") =~
              "../deps/elixir_agent_kit/priv/library/CONTRACT.md"
 
+    pointer = get(root, ".claude/skills/elixir-agent-kit/SKILL.md")
+    assert pointer =~ "name: elixir-agent-kit\n"
+    assert pointer =~ "../../../deps/elixir_agent_kit/priv/library/skills/debugging/SKILL.md"
+    assert pointer =~ "## Delivery and build"
+    refute pointer =~ "## Inputs to inspect"
+    assert pointer == get(root, ".agents/skills/elixir-agent-kit/SKILL.md")
+
     assert {:ok, []} = Installer.run(:check, root)
     assert {:ok, []} = Installer.run(:install, root, opts)
     assert {:ok, _} = Installer.run(:uninstall, root)
     assert get(root, "AGENTS.md") == original
     refute File.exists?(Path.join(root, "CLAUDE.md"))
+    refute File.exists?(Path.join(root, ".claude"))
+    refute File.exists?(Path.join(root, ".agents"))
     assert snapshot(root) == %{"AGENTS.md" => original}
     assert {:ok, []} = Installer.run(:uninstall, root)
   end
@@ -211,7 +222,31 @@ defmodule ElixirAgentKit.InstallerTest do
     assert Path.wildcard(Path.join(root, ".agents/skills/eak-*/SKILL.md")) == []
     assert get(root, ".elixir-agent-kit/START.md") =~ "`debugging`"
     refute get(root, ".elixir-agent-kit/START.md") =~ "`code-review`"
+    pointer = get(root, ".agents/skills/elixir-agent-kit/SKILL.md")
+    assert pointer =~ "skills/debugging/SKILL.md"
+    refute pointer =~ "skills/code-review/SKILL.md"
+    refute pointer =~ "## Frontend"
     assert {:ok, []} = Installer.run(:check, root)
+  end
+
+  test "a pre-existing skill with the pointer's name blocks installation", %{root: root} do
+    put(root, ".claude/skills/elixir-agent-kit/SKILL.md", "mine")
+    put(root, ".claude/settings.json", "{}")
+    before = snapshot(root)
+
+    assert_raise ArgumentError, ~r/unmanaged/, fn ->
+      Installer.run(:install, root, agents: [:claude])
+    end
+
+    assert snapshot(root) == before
+  end
+
+  test "uninstall keeps a skills directory that still has other content", %{root: root} do
+    Installer.run(:install, root, agents: [:codex])
+    put(root, ".agents/skills/my-own/SKILL.md", "keep")
+    Installer.run(:uninstall, root)
+    assert get(root, ".agents/skills/my-own/SKILL.md") == "keep"
+    refute File.exists?(Path.join(root, ".agents/skills/elixir-agent-kit"))
   end
 
   test "an edited stale wrapper blocks pruning", %{root: root} do

@@ -30,8 +30,10 @@ https://github.com/sallaumen/elixir-agent-kit/blob/v0.4.0/docs/compatibility.md
    If edited managed content blocks migration, preserve the edits as project rules
    or upstream proposals and restore only their recorded originals before retrying.
 6. Verify the only kit-managed content remaining is the small START.md index,
-   state.tsv and bounded blocks in AGENTS.md/CLAUDE.md. Preserve other tools' skills
-   and all local instructions. Do not copy workflow bodies or register per-skill
+   state.tsv, bounded blocks in AGENTS.md/CLAUDE.md and, for :claude and :codex,
+   one generated pointer skill each (.claude/skills/elixir-agent-kit/SKILL.md,
+   .agents/skills/elixir-agent-kit/SKILL.md). Preserve other tools' skills and
+   all local instructions. Do not copy workflow bodies or register per-workflow
    files. Library text must be read directly from the Mix dependency.
 7. Run mix agent_kit.check and verify every index link resolves to the downloaded
    library. Verify a second sync makes no changes. Add check to the appropriate

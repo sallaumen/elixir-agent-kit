@@ -1,13 +1,13 @@
 # Client compatibility and verification
 
-Version 0.2 routes through project instruction files; it does not register native
-per-workflow skills or slash commands. The installer never configures clients
-globally or invokes models.
+The kit routes through project instruction files plus one generated pointer skill
+per native client; it registers no per-workflow skills or slash commands. The
+installer never configures clients globally or invokes models.
 
 | Client | Entry point | Required capability |
 |---|---|---|
-| Codex | `AGENTS.md` | Read project instructions and follow links into the dependency. |
-| Claude Code | `CLAUDE.md`, importing `AGENTS.md` when present | Read project instructions and follow links into the dependency. Claude Code ignores `AGENTS.md` once a `CLAUDE.md` exists, so the generated block imports it. |
+| Codex | `AGENTS.md` and `.agents/skills/elixir-agent-kit/SKILL.md` | Read project instructions and follow links into the dependency. |
+| Claude Code | `CLAUDE.md` (importing `AGENTS.md` when present) and `.claude/skills/elixir-agent-kit/SKILL.md` | Read project instructions and follow links into the dependency. Claude Code ignores `AGENTS.md` once a `CLAUDE.md` exists, so the generated block imports it; it discovers skills only under `.claude/skills`, which is why the pointer exists. |
 | Generic harness, including DeepSeek-backed executors | `AGENTS.md` or explicit index loading | Configure the harness to load instructions in its actual working checkout. |
 
 The default library path is `deps/elixir_agent_kit/priv/library/`. Dependencies must
