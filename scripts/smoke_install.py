@@ -66,27 +66,33 @@ end
     run(root, "mix", "agent_kit.check")
     installed = snapshot(root)
     managed = set(installed) - set(before)
-    assert managed == {".elixir-agent-kit/START.md", ".elixir-agent-kit/state.tsv", "CLAUDE.md"}, managed
-    index = root / ".elixir-agent-kit/START.md"
-    for target in re.findall(r'\]\(([^)]+)\)', index.read_text()):
-        assert (index.parent / unquote(target)).is_file(), target
+    pointers = {".agents/skills/elixir-agent-kit/SKILL.md", ".claude/skills/elixir-agent-kit/SKILL.md"}
+    assert managed == {".elixir-agent-kit/START.md", ".elixir-agent-kit/state.tsv", "CLAUDE.md"} | pointers, managed
+    generated = [root / ".elixir-agent-kit/START.md"] + [root / p for p in sorted(pointers)]
+    for index in generated:
+        for target in re.findall(r'\]\(([^)]+)\)', index.read_text()):
+            assert (index.parent / unquote(target)).is_file(), (index.name, target)
     assert "\n@AGENTS.md\n" in (root / "CLAUDE.md").read_text(), "Claude block must import the managed AGENTS.md"
     assert "START.md" in (root / "AGENTS.md").read_text() and original in (root / "AGENTS.md").read_text()
-    assert not (root / ".agents").exists()
-    assert not (root / ".claude").exists()
+    for p in pointers:
+        text = (root / p).read_text()
+        assert text.startswith("---\nname: elixir-agent-kit\n") and "## Inputs to inspect" not in text, p
+    assert len(list((root / ".agents/skills").iterdir())) == 1 and len(list((root / ".claude/skills").iterdir())) == 1
     assert not (root / ".elixir-agent-kit/library").exists()
     output = run(root, "mix", "agent_kit.install")
     assert "no changes needed" in output
     assert snapshot(root) == installed
     if args.git_url:
-        assert all(not Path(unquote(target)).is_absolute()
-                   for target in re.findall(r'\]\(([^)]+)\)', index.read_text()))
+        for index in generated:
+            assert all(not Path(unquote(target)).is_absolute()
+                       for target in re.findall(r'\]\(([^)]+)\)', index.read_text())), index.name
         root = root.rename(Path(tmp) / "relocated consumer")
         run(root, "mix", "agent_kit.check")
         assert snapshot(root) == installed, "relocation changed generated references"
-        index = root / ".elixir-agent-kit/START.md"
-        for target in re.findall(r'\]\(([^)]+)\)', index.read_text()):
-            assert (index.parent / unquote(target)).is_file(), target
+        generated = [root / ".elixir-agent-kit/START.md"] + [root / p for p in sorted(pointers)]
+        for index in generated:
+            for target in re.findall(r'\]\(([^)]+)\)', index.read_text()):
+                assert (index.parent / unquote(target)).is_file(), (index.name, target)
         # A fresh dependency download must restore access without regenerating guidance.
         shutil.rmtree(root / args.deps_path)
         run(root, "mix", "deps.get")
@@ -99,6 +105,7 @@ end
     run(root, "mix", "agent_kit.uninstall")
     assert (root / "AGENTS.md").read_text() == original
     assert not (root / ".elixir-agent-kit/state.tsv").exists()
+    assert not (root / ".agents").exists() and not (root / ".claude").exists(), "uninstall left empty skill directories"
     assert snapshot(root) == before, "uninstall did not restore consumer files"
     if args.git_url:
         print(f"OK: relative Git references survive relocation and dependency refetch ({args.deps_path}).")

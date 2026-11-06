@@ -5,12 +5,7 @@ defmodule Mix.Tasks.AgentKit.List do
 
   @impl true
   def run([]) do
-    for {area, title} <- [
-          {"frontend", "Frontend and user experience"},
-          {"backend", "Backend and data"},
-          {"cross-cutting", "Cross-cutting engineering"},
-          {"delivery", "Delivery and build"}
-        ] do
+    for {area, title} <- ElixirAgentKit.areas() do
       Mix.shell().info("\n#{title}:")
 
       ElixirAgentKit.catalog()

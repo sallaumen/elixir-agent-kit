@@ -57,5 +57,6 @@ bypass a conflict. Unowned files and surrounding local instruction text survive.
 
 A fresh checkout must run `mix deps.get` before agents can read the library. The
 client must be able to read dependency files even when Git ignores `deps/`; verify
-that in a fresh session. This layout does not register individual native skills or
-slash commands. It routes through project instructions to the dependency catalog.
+that in a fresh session. This layout registers no per-workflow native skills or
+slash commands: it routes through project instructions and one generated pointer
+skill per client to the dependency catalog.

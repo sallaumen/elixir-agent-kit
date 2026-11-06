@@ -53,19 +53,26 @@ the generated index/state and instruction blocks. Do not commit `deps/`.
 | `.elixir-agent-kit/state.tsv` | Version, selection and checksums of files/blocks owned by the installer. |
 | `AGENTS.md` | A bounded reference block for Codex and generic harnesses. |
 | `CLAUDE.md` | A bounded block for Claude Code. When the kit also manages `AGENTS.md`, or the project already has one, the block imports it with `@AGENTS.md` instead of repeating the reference. |
+| `.claude/skills/elixir-agent-kit/SKILL.md` | One generated skill for Claude Code's native discovery (`:claude`): a description, the catalog filtered by your selection and links into the dependency. |
+| `.agents/skills/elixir-agent-kit/SKILL.md` | The same generated skill for Codex (`:codex`). |
 
 Existing project instructions outside those blocks remain unchanged. No workflow
-bodies are copied into the project and no per-skill files are created in `.agents`
-or `.claude`. The library stays in `deps/elixir_agent_kit/priv/library/` for a
-standard Git dependency. Custom dependency paths are resolved by Mix; external
-local path dependencies produce local absolute links and need resync after moving.
+bodies are copied into the project: the two generated skills hold only the
+catalog and links, so a client that scans its native skill directory finds the
+kit without a second copy of any practice. The library stays in
+`deps/elixir_agent_kit/priv/library/` for a standard Git dependency. Custom
+dependency paths are resolved by Mix; external local path dependencies produce
+local absolute links and need resync after moving.
 
 `:codex` and `:generic` share the same `AGENTS.md` block; `:claude` selects
 `CLAUDE.md`. Claude Code reads `AGENTS.md` only while no `CLAUDE.md` applies, so
 the Claude block imports `AGENTS.md` whenever that file is managed or already
-exists; adding `AGENTS.md` later shows as drift until you sync. These are
-instruction-file adapters, not model integrations. This version does **not**
-register individual native skills or slash commands.
+exists; adding `AGENTS.md` later shows as drift until you sync. `:claude` and
+`:codex` also generate one pointer skill each in the client's native skill
+directory; `:generic` relies on `AGENTS.md` alone. These are instruction-file
+adapters, not model integrations: no per-workflow skills or slash commands are
+registered, and a pre-existing skill named `elixir-agent-kit` blocks installation
+until you rename it.
 
 A fresh checkout must run `mix deps.get` before reading the practices. A client
 must be able to read ignored dependency files. Ask a fresh session to read

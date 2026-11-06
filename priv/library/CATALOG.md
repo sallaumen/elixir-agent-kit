@@ -3,7 +3,8 @@
 Choose the area first, then the narrowest trigger. [ROUTING.md](ROUTING.md) explains
 neighboring skills and when no workflow is needed. Read the [shared contract](CONTRACT.md)
 with the selected workflow. The installed project index points here after `mix deps.get`.
-No individual native skill files are registered in consumer projects.
+Consumer projects hold at most one generated pointer skill per client, never a
+copy of a workflow body.
 
 ## Frontend and user experience
 

@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+- Generate one pointer skill per native client (`.claude/skills/elixir-agent-kit/SKILL.md`
+  for `:claude`, `.agents/skills/elixir-agent-kit/SKILL.md` for `:codex`) with a
+  discovery description, the selected catalog and links into the dependency.
+  Claude Code and Codex scan only their own skill directories, so the dependency
+  alone was invisible to native discovery. No workflow body is copied; uninstall
+  prunes only directories the kit emptied; a pre-existing skill with that name
+  blocks installation.
+
 ## 0.4.0
 
 - Make the Claude block import `AGENTS.md` whenever the kit manages that file
