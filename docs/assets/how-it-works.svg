@@ -41,7 +41,7 @@
   <text class="p" x="48" y="104">Pin a tag in <tspan class="m">mix.exs</tspan>, like any dep.</text>
   <text class="m" x="48" y="134">{:elixir_agent_kit,</text>
   <text class="m" x="48" y="152">  git: "…/elixir-agent-kit.git",</text>
-  <text class="m" x="48" y="170">  tag: "v0.4.0",</text>
+  <text class="m" x="48" y="170">  tag: "v0.5.0",</text>
   <text class="m" x="48" y="188">  only: [:dev, :test]}</text>
   <text class="p" x="48" y="222">Then:</text>
   <text class="m-accent" x="48" y="244">mix deps.get</text>
