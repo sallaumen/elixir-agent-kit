@@ -49,7 +49,7 @@ following `main` silently would make identical project revisions behave differen
 
 ## Migrating copied installations
 
-Version 0.2 uses dependency references. Synchronizing from 0.1 removes only files
+Since 0.2 the kit installs dependency references. Synchronizing from 0.1 removes only files
 recorded in its ownership manifest, after verifying they are unmodified. Local
 edits block the entire migration. Preserve such edits as proposals or local rules,
 then restore the recorded originals before retrying. Never delete the manifest to

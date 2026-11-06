@@ -50,6 +50,9 @@ are not packaged. “Original workflow” means the historical authored material
 
 ## Source selection and editorial decisions
 
+Origins and licenses of every lens below are tabulated in
+[provenance](provenance.md#review-lenses-and-their-licenses).
+
 - `skill-creator` supplied the packaging principle: a skill should say when to use it, which decisions matter and how to check the outcome. Length alone is not the goal.
 - `ui-review` contributed real browser, keyboard, responsive and state checks. `impeccable` and `stitch-design-taste` helped expose hierarchy and design-system questions, but their aesthetic defaults are not universal product rules.
 - `playbook-antislop` contributed honest product copy and functioning controls. Its guidance is applied only where interface or user-facing text is at issue.
