@@ -50,6 +50,6 @@ Use when unfinished features, abandoned paths or competing implementations make 
 
 ## Completion
 
-A recorded disposition for the selected candidates and a verified canonical path. Test duplication is handled by test-consolidation.
+A recorded disposition for the selected candidates and a verified canonical path. Test duplication is handled by test-strategy.
 
 Use the [Elixir context](../../ELIXIR.md) only for technology present in the project. Record a useful [handoff](../../HANDOFF.md) when another person or agent will continue the work.

@@ -1,6 +1,6 @@
 ---
 name: test-strategy
-description: "Use when a passing suite misses important bugs or the required regression coverage is unclear."
+description: "Use when a passing suite misses important bugs, the required regression coverage is unclear, or duplicated tests protect nothing distinct."
 ---
 
 # Test Strategy
@@ -56,6 +56,10 @@ The output is a short list of risks, each with the cheapest test that can observ
 - Output of the failing run (unfixed code or mutation) and of the passing run.
 - The focused suite and the project gate, with skips, fakes and unverified provider behavior named.
 
+## Removing duplicates
+
+The risk list also shows which existing tests protect nothing distinct. Remove or merge one duplicate at a time, only where two tests detect the same regression at the same seam; keep separate coverage for distinct paths, roles, retries or failure mechanisms even when the fixtures look alike. The surviving test states its oracle and still fails when the contract breaks: when that is in doubt, make a one-line mutation and watch it fail. Run the focused suite and record any coverage dropped on purpose and why the remaining tests still catch the regression.
+
 ## Avoid
 
 - Do not write tests that mirror the implementation line by line or that assert on private functions.
@@ -63,9 +67,10 @@ The output is a short list of risks, each with the cheapest test that can observ
 - Do not raise coverage with redundant assertions on the same path; one test per distinct failure mode.
 - Do not use `Process.sleep` or a longer timeout to stabilize a race; make the ordering explicit.
 - Do not claim a regression is covered by a test that never failed.
+- Do not delete the only failure-path check to speed up a suite, or replace several assertions with one snapshot that misses the important condition.
 
 ## Completion
 
-A ranked risk list, one test per risk at the cheapest observing seam, each seen failing before passing, and the remaining gaps stated. To remove duplicates the list reveals use [test-consolidation](../test-consolidation/SKILL.md); for a failure with no known cause use [debugging](../debugging/SKILL.md) first.
+A ranked risk list, one test per risk at the cheapest observing seam, each seen failing before passing, duplicates that protected nothing distinct removed, and the remaining gaps stated. For a failure with no known cause use [debugging](../debugging/SKILL.md) first.
 
 Use the [Elixir context](../../ELIXIR.md) only for technology present in the project. Record a useful [handoff](../../HANDOFF.md) when another person or agent will continue the work.

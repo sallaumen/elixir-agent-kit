@@ -1,6 +1,6 @@
 # Workflow provenance
 
-This English community edition adapts 33 workflows developed by Lucas Tavano with coding-agent assistance, adds one workflow adapted from an external MIT skill and one distilled from a consuming application's rules, for 35 public workflows. The source collection was `biblioteca-prompts-desenvolvimento v1.0.0`, later refined in an application repository. The public edition preserves task boundaries and authorization modes while rewriting instructions for a standalone package. Product-specific contexts, application source, credentials and operational records are not included.
+This English community edition adapts 33 workflows developed by Lucas Tavano with coding-agent assistance, adds one workflow adapted from an external MIT skill and one distilled from a consuming application's rules, for 33 public workflows after the 0.5 merges (`revision-lineage` from two lineage workflows, `test-strategy` absorbing `testes-redundantes`). The source collection was `biblioteca-prompts-desenvolvimento v1.0.0`, later refined in an application repository. The public edition preserves task boundaries and authorization modes while rewriting instructions for a standalone package. Product-specific contexts, application source, credentials and operational records are not included.
 
 | Public ID | Original ID |
 |---|---|
@@ -9,12 +9,12 @@ This English community edition adapts 33 workflows developed by Lucas Tavano wit
 | `abstraction-layers` | `stratified-design` |
 | `module-design` | `organizar-modulos` |
 | `code-consolidation` | `consolidar-codigo` |
-| `version-lineage` | `versoes-e-rastreabilidade` |
+| `revision-lineage` | `versoes-e-rastreabilidade` and `assets-e-imagens` (merged in 0.5) |
 | `data-contracts` | `contratos-e-dados` |
 | `ui-identity` | `identidade-ui` |
 | `layout-density` | `espaco-e-densidade` |
 | `navigation-ux` | `ux-e-navegacao` |
-| `responsive-mobile` | `mobile-e-responsividade` |
+| `responsive-layout` | `mobile-e-responsividade` (history and overlays moved to `navigation-ux` in 0.5) |
 | `direct-interactions` | `interacoes-diretas` |
 | `accessibility` | `acessibilidade` |
 | `design-system` | `design-system` |
@@ -25,12 +25,10 @@ This English community edition adapts 33 workflows developed by Lucas Tavano wit
 | `notifications` | `notificacoes-e-bots` |
 | `integration-setup` | `setup-integracoes` |
 | `commercial-eligibility` | `elegibilidade-comercial` |
-| `asset-lineage` | `assets-e-imagens` |
 | `metrics-costs` | `metricas-e-custos` |
 | `operational-alerts` | `alertas-operacionais` |
 | `simulation-isolation` | `simulacao-e-producao` |
-| `test-consolidation` | `testes-redundantes` |
-| `test-strategy` | `estrategia-de-testes` |
+| `test-strategy` | `estrategia-de-testes` and `testes-redundantes` (merged in 0.5) |
 | `code-review` | `code-review` |
 | `debugging` | `investigar-bugs` |
 | `security-boundaries` | `seguranca-e-permissoes` |

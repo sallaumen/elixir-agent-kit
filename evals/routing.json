@@ -59,7 +59,7 @@
       "request": "Os botões estão enormes e os blocos desalinhados; no ultrawide fica tudo numa coluna estreita.",
       "expected_primary": "layout-density",
       "allowed_alternatives": [
-        "responsive-mobile"
+        "responsive-layout"
       ],
       "success_signals": [
         "Melhorar proporções e aproveitamento horizontal",
@@ -73,8 +73,10 @@
     {
       "id": "E06",
       "request": "No celular, voltar com uma modal aberta sai da página. Quero corrigir histórico, fechamento e acesso direto ao detalhe.",
-      "expected_primary": "responsive-mobile",
-      "allowed_alternatives": [],
+      "expected_primary": "navigation-ux",
+      "allowed_alternatives": [
+        "responsive-layout"
+      ],
       "success_signals": [
         "Considerar modal, fechamento, retorno e links diretos",
         "Separar viewport de comportamento real"
@@ -142,7 +144,7 @@
     {
       "id": "E11",
       "request": "Um teste unitário e outro de persistência esperam o mesmo preço. Limpe testes duplicados sem perder o que cada camada protege.",
-      "expected_primary": "test-consolidation",
+      "expected_primary": "test-strategy",
       "allowed_alternatives": [],
       "success_signals": [
         "Comparar riscos e fronteiras antes de remover"
@@ -221,7 +223,7 @@
     {
       "id": "E17",
       "request": "Ver uma arte antiga troca a versão principal do produto. A mais recente também nem sempre é a aprovada.",
-      "expected_primary": "version-lineage",
+      "expected_primary": "revision-lineage",
       "allowed_alternatives": [],
       "success_signals": [
         "Separar visualizada, principal, recente e aprovada"
@@ -413,7 +415,7 @@
     {
       "id": "E31",
       "request": "As miniaturas de uma arte antiga aparecem na versão nova e o usuário baixa o arquivo errado.",
-      "expected_primary": "asset-lineage",
+      "expected_primary": "revision-lineage",
       "allowed_alternatives": [],
       "success_signals": [
         "Rastrear origem, variante, versão e URL do asset até o download"
@@ -535,7 +537,7 @@
       "request": "No jogo em canvas do projeto, o HUD fica escondido atrás do notch no celular e o menu de pausa não responde ao teclado.",
       "expected_primary": "accessibility",
       "allowed_alternatives": [
-        "responsive-mobile",
+        "responsive-layout",
         "navigation-ux"
       ],
       "success_signals": [
