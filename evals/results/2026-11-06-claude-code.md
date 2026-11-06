@@ -223,9 +223,57 @@ from "kit not reached" to "kit reached, workflow sometimes not opened". The next
 hand), and the next measurement should run on a machine without the operator's global
 instructions.
 
+## Remeasure of the backend cases on v0.5.2 (`START.md` ends in the choice)
+
+agent-board `main` `7d44028` (kit v0.5.2: `START.md` and the pointer skills are four
+steps ending in "state the workflow ID or NONE before the first edit", then the catalog
+with direct `SKILL.md` links). Same client, prompts, permissions and 5 USD cap; three
+repetitions of E32 and E44 in fresh worktrees, 15:43–16:14 local time, 27.65 USD.
+"START at turn" is the assistant turn that opened `START.md`, out of the run's total.
+
+| Run | Expected | Read from kit | Routed | Skill tool | START at turn | Edits | mix test | Ended | Cost (USD) |
+|---|---|---|---|---|---|---|---|---|---|
+| E32-r1 | async-state | START, CONTRACT, async-state | ok | no | 58 of 84 | 3 | yes | budget cap | 5.08 |
+| E32-r2 | async-state | START | none | no | 76 of 76 | 0 | no | turn cap | 3.25 |
+| E32-r3 | async-state | nothing | none | no | never | 0 | yes | budget cap | 5.04 |
+| E44-r1 | provider-calls | START | none | no | 102 of 102 | 2 | yes | turn cap | 4.51 |
+| E44-r2 | provider-calls | START, provider-calls | ok | yes | 76 of 107 | 5 | yes | budget cap | 5.11 |
+| E44-r3 | provider-calls | START, provider-calls, CONTRACT | ok | yes | 59 of 112 | 5 | yes | turn cap | 4.66 |
+
+Across the three backend measurements (v0.5.0, v0.5.1, v0.5.2): reached the kit 2/6,
+5/6, 5/6; routed correctly 2/6, 3/6, 3/6. The totals did not move, but the shape of the
+miss did:
+
+- Every session that opened `START.md` with turns to spare left it with the right
+  `SKILL.md` within three turns (E32-r1 at 58 → 60, E44-r2 at 76 → 79, E44-r3 at
+  59 → 62) and named the workflow in its text ("the async-state workflow fits
+  exactly", "Workflow selected: provider-calls"). On v0.5.1 two sessions had left
+  `START.md` without a workflow; on v0.5.2 none did.
+- The two "START only" runs opened it as their last action before the turn cap
+  (E32-r2 at turn 76 of 76, E44-r1 at 102 of 102). E32-r3 never reached it and
+  reported "Workflow chosen: none, I did not formally select an Elixir Agent Kit
+  workflow", which is step 4 doing its job as an honest report.
+- All six runs read the maintainer contract first, then investigated source for 50 to
+  100 turns before turning to the kit. The block and `AGENTS.md` say "before changing
+  behavior", and the sessions take that literally: the kit is the step before the
+  first edit, after the investigation, and the investigation consumes the budget.
+  Backend symptoms with a binding local contract invite exactly that order.
+- E44 routed 2/3 (1/3 on v0.5.1), both through the Skill tool; this is the first
+  time a backend case invoked the pointer skill. E32 routed 1/3 (2/3 on v0.5.1);
+  with three repetitions that is within noise.
+- All six runs hit a cap. None finished; the judgment of the fixes is not measurable
+  at 5 USD and 40 turns for these two cases on this consumer.
+
+Reading: the `START.md` fix removed the in-kit miss. What remains is timing, not
+wording: the kit is reached late because the local contract and the investigation
+come first. The lever now is where the selection sits in the session's order, for
+example a block that asks for the workflow choice before the investigation starts,
+or a consumer `AGENTS.md` that lists the kit selection before the maintainer contract.
+A larger turn and budget cap would also let these runs finish.
+
 ## Limits
 
-- One client, one model, 18 runs plus controls and the 18-run rerun on v0.5.1, on the operator's machine with the
+- One client, one model, 18 runs plus controls, the 18-run rerun on v0.5.1 and the 6-run remeasure on v0.5.2, on the operator's machine with the
   operator's global instructions present. Codex and the DeepSeek executor were not
   evaluated.
 - "Routed" is measured by which `SKILL.md` was opened, not by whether its criteria were
@@ -244,7 +292,12 @@ v0.5.1) and the rerun above measures them.
 2. Done. Kit: reword the generated block from "consult" to "before changing behavior,
    select one workflow", with the same wording in the pointer skill's description.
 3. Done. Kit: add a routing case for a request that names a local contract first.
-4. Kit: make `START.md` end with the workflow choice, so a session that opens it leaves
-   with one `SKILL.md` path; two backend runs stopped at `START.md`.
-5. Evaluation: a fresh clone per no-deps repetition; the same matrix on a machine
+4. Done (v0.5.2). Kit: make `START.md` end with the workflow choice, so a session that
+   opens it leaves with one `SKILL.md` path; the remeasure above shows no session
+   leaving `START.md` without a workflow.
+5. Kit and consumer: move the selection earlier in the session's order. Candidates:
+   block wording that asks for the workflow choice before the investigation starts,
+   and listing the kit selection before the maintainer contract in `AGENTS.md`.
+   Measure with a 60-turn cap so the backend runs can finish.
+6. Evaluation: a fresh clone per no-deps repetition; the same matrix on a machine
    without the operator's global skill rule, and on Codex and the DeepSeek executor.
