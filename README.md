@@ -2,7 +2,7 @@
 
 **Shared coding practices for AI agents, versioned with your Elixir project.**
 
-33 focused workflows grouped into frontend, backend, cross-cutting engineering
+34 focused workflows grouped into frontend, backend, cross-cutting engineering
 and delivery. Each names inputs, decisions, quality criteria and verification.
 Install with Mix; agents read the library directly from the dependency. No copied
 skill library, service, model calls or production dependency.
@@ -14,7 +14,7 @@ skill library, service, model calls or production dependency.
 
 ## Quick start
 
-Requires Elixir 1.15+, compatible Erlang/OTP and Git. Version 0.3.1 is distributed
+Requires Elixir 1.15+, compatible Erlang/OTP and Git. Version 0.4.0 is distributed
 through public GitHub tags, **not Hex**. No token is required.
 
 Add to your existing `deps/0`:
@@ -22,7 +22,7 @@ Add to your existing `deps/0`:
 ```elixir
 {:elixir_agent_kit,
  git: "https://github.com/sallaumen/elixir-agent-kit.git",
- tag: "v0.3.1",
+ tag: "v0.4.0",
  only: [:dev, :test],
  runtime: false}
 ```

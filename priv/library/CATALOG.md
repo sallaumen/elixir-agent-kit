@@ -16,6 +16,7 @@ No individual native skill files are registered in consumer projects.
 | [direct-interactions](skills/direct-interactions/SKILL.md) | analyze-and-fix | Use when a simple selection or adjustment requires excessive forms and disconnected controls. |
 | [accessibility](skills/accessibility/SKILL.md) | analyze-and-fix | Use when controls, forms, dialogs or asynchronous changes may exclude keyboard or assistive-technology users. |
 | [design-system](skills/design-system/SKILL.md) | analyze-and-fix | Use when teams repeat interface mistakes or create incompatible component and token variations. |
+| [motion-design](skills/motion-design/SKILL.md) | analyze-and-fix | Use when interface motion is missing, generic or applied to every change, or when transitions misrepresent state. |
 | [asset-lineage](skills/asset-lineage/SKILL.md) | analyze-and-fix | Use when previews or generated assets lack clear source, version, orientation or ownership. |
 
 ## Backend and data

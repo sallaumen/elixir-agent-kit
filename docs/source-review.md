@@ -1,4 +1,4 @@
-# Review of all 33 workflows
+# Review of all 34 workflows
 
 This matrix is an editorial audit, not an evaluation of model compliance. The
 earlier public edition preserved each trigger and a short four-step workflow but
@@ -27,6 +27,7 @@ are not packaged. “Original workflow” means the historical authored material
 | Frontend | [`direct-interactions`](../priv/library/skills/direct-interactions/SKILL.md) | `interacoes-diretas` | ui-review; impeccable | Use a representation that communicates the actual choice, such as a segmented control or thumbnail, without turning decoration into a hidden input. |
 | Frontend | [`accessibility`](../priv/library/skills/accessibility/SKILL.md) | `acessibilidade` | ui-review; WCAG 2.2 | Provide correct heading/landmark order, labels and programmatic relationships that match the visible task. |
 | Frontend | [`design-system`](../priv/library/skills/design-system/SKILL.md) | `design-system` | impeccable; stitch-design-taste | Describe principles by purpose: hierarchy, density, typography, color role, motion, imagery and interaction states, not a fashionable fixed palette. |
+| Frontend | [`motion-design`](../priv/library/skills/motion-design/SKILL.md) | — (external adaptation) | motion-kit (MIT, pinned commit); Material 3; IBM Carbon | Every animated change names the state it explains, the curve and duration derived for it, and a reduced-motion alternative that keeps the state legible. |
 | Cross-cutting | [`performance`](../priv/library/skills/performance/SKILL.md) | `performance` | original workflow; shared contract | Before/after measurements use comparable inputs, warmup, configuration and statistical summary. |
 | Cross-cutting | [`async-state`](../priv/library/skills/async-state/SKILL.md) | `estados-assincronos` | original workflow; shared contract | The UI and API can reconcile after reconnect or reload using persisted identifiers and a current-state read. |
 | Backend | [`ai-orchestration`](../priv/library/skills/ai-orchestration/SKILL.md) | `orquestracao-ias` | original workflow; shared contract | Acquisition, release, timeout, cancellation and crash recovery keep capacity counters consistent. |
@@ -53,8 +54,9 @@ are not packaged. “Original workflow” means the historical authored material
 - `ui-review` contributed real browser, keyboard, responsive and state checks. `impeccable` and `stitch-design-taste` helped expose hierarchy and design-system questions, but their aesthetic defaults are not universal product rules.
 - `playbook-antislop` contributed honest product copy and functioning controls. Its guidance is applied only where interface or user-facing text is at issue.
 - `elixir-antipatterns` and `elixir-ecto-patterns` helped identify module boundaries, changesets, constraints and query behavior. Their numerical heuristics and illustrative code are not imported as enforceable rules.
+- `motion-kit` supplied the motion method (registers, curve per property, distance-and-weight duration, lead and reactions, restraint) for `motion-design`; its video-only tools and its text are not imported. Material 3, IBM Carbon and easings.net supplied public curve values, as credited in the source.
 - `tdd` helped distinguish public behavior, failure cases and test oracles. The kit does not mandate test-first for every change or reward a test that only mirrors implementation.
-- The original 33 workflows supply the domain-specific distinctions, including async identity, eligibility per variant and destination, notification delivery, simulations, persisted migration contracts and coordinated delivery.
+- The original 33 workflows supply the domain-specific distinctions, including async identity, eligibility per variant and destination, notification delivery, simulations, persisted migration contracts and coordinated delivery. The thirty-fourth, `motion-design`, is the external adaptation recorded in [provenance](provenance.md).
 
 ## Gaps and resolution
 
@@ -65,6 +67,7 @@ are not packaged. “Original workflow” means the historical authored material
 | Completion language was easy to satisfy by assertion alone. | Each workflow names quality criteria and representative validation evidence. |
 | Source skills contained product-bound and sometimes overly prescriptive advice. | The public bodies retain reusable mechanisms, with local product rules left to consuming repositories. |
 | Game and canvas interfaces had no route. | The routing guide points to one pinned external `game-ui-ux` skill when the source has a canvas or game scene, beside a kit frontend workflow. |
+| Interface motion had no route, so the default was one borrowed easing on every change. | `motion-design` covers curves, distance-and-weight timing, reactions, continuity and reduced motion; the routing guide points to a pinned external `motion-designer` skill for rendered video. |
 | Structural package checks could be mistaken for proof that GPT, DeepSeek or Claude followed instructions. | Compatibility docs retain an explicit live-client evaluation boundary. |
 
 The matrix establishes content coverage. It does not prove that each agent client

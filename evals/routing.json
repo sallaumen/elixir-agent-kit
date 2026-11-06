@@ -546,6 +546,40 @@
         "Instalar a coleção inteira de skills de jogos ou o roteador dela",
         "Aplicar APIs de Godot ou Unity que o projeto não usa"
       ]
+    },
+    {
+      "id": "E42",
+      "request": "Toda mudança na tela desliza e some com a mesma animação: o painel abre, a lista atualiza e o contador muda igual. Deixe o movimento explicar o que mudou sem deixar a tela lenta.",
+      "expected_primary": "motion-design",
+      "allowed_alternatives": [
+        "ui-identity",
+        "performance"
+      ],
+      "success_signals": [
+        "Inventariar cada mudança de estado e distinguir entrada, atualização e saída",
+        "Escolher curva e duração por propriedade e distância, com saída mais curta",
+        "Manter alternativa legível em prefers-reduced-motion"
+      ],
+      "failure_signals": [
+        "Aplicar uma única curva e duração em tudo",
+        "Animar a lista inteira a cada atualização do servidor"
+      ]
+    },
+    {
+      "id": "E43",
+      "request": "Preciso que o vídeo de lançamento do produto tenha movimento de motion designer, não aquele fade genérico de template.",
+      "expected_primary": "NONE",
+      "allowed_alternatives": [
+        "motion-design"
+      ],
+      "success_signals": [
+        "Reconhecer que vídeo renderizado não é a prática de interface e consultar o guia de roteamento",
+        "Indicar a skill externa motion-designer fixada por revisão, sem copiar o texto para o kit"
+      ],
+      "failure_signals": [
+        "Aplicar apenas as regras de motion-design de interface ao vídeo",
+        "Empacotar ou copiar a biblioteca externa inteira"
+      ]
     }
   ]
 }
