@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+- Reword the generated instruction block and the pointer skill description from
+  "for development tasks, consult" to "before changing behavior or reviewing code,
+  select one workflow", stating that a local contract does not replace the
+  selection. The live evaluation (`evals/results/2026-11-06-claude-code.md`) showed
+  backend symptoms going to a consumer's own contract and skipping the kit. Existing
+  installations pick the new block up on `sync`. Routing case E46 (46 total) tests
+  that precedence.
+
 ## 0.5.0 — 2026-11-06
 
 - Reorganize the catalog into five areas: frontend; backend and data (contracts,

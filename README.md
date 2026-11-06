@@ -100,7 +100,7 @@ Commit `mix.exs`, `mix.lock` and those paths. Do not commit `deps/`. Add
 4. It reports with the [handoff template](priv/library/HANDOFF.md): outcome,
    workflow and version used, checks actually run, limits.
 
-The routing cases in [`evals/`](evals/README.md) hold 45 requests like that one,
+The routing cases in [`evals/`](evals/README.md) hold 46 requests like that one,
 with the expected workflow and the signals of a good or bad answer. They stay out
 of the installed payload so an agent never sees the answer key.
 
