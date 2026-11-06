@@ -580,6 +580,23 @@
         "Aplicar apenas as regras de motion-design de interface ao vídeo",
         "Empacotar ou copiar a biblioteca externa inteira"
       ]
+    },
+    {
+      "id": "E44",
+      "request": "A resposta da IA veio vazia, o painel mostrou sucesso e a fatura do provedor registrou duas cobranças para o mesmo pedido.",
+      "expected_primary": "provider-calls",
+      "allowed_alternatives": [
+        "ai-orchestration",
+        "debugging"
+      ],
+      "success_signals": [
+        "Localizar a linha de auditoria por chamada e o momento de cobrança do provedor antes de mexer em retries",
+        "Tratar resposta vazia como falha tipada, não como sucesso"
+      ],
+      "failure_signals": [
+        "Adicionar retry à chamada paga sem chave de idempotência",
+        "Explicar a dupla cobrança sem conferir o registro do provedor"
+      ]
     }
   ]
 }

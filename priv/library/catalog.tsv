@@ -16,6 +16,7 @@ motion-design	analyze-and-fix	Use when interface motion is missing, generic or a
 performance	analyze-and-fix	Use when measured latency, freezes, excessive work or rendering cost affects a real workflow.	cross-cutting
 async-state	analyze-and-fix	Use when progress stalls, success appears too early or stale asynchronous results overwrite current state.	cross-cutting
 ai-orchestration	analyze-and-fix	Use when agent jobs, queues, workers and model capacity are conflated or incorrectly accounted for.	backend
+provider-calls	analyze-and-fix	Use when code calls a paid, rate-limited or externally billed provider and its retries, budget, audit trail or failure reasons are unclear.	backend
 notifications	analyze-and-fix	Use when bots or notifications fail, repeat or produce unexplained message volume.	backend
 integration-setup	analyze-and-fix	Use when an integration looks configured but required steps or operational readiness remain unclear.	backend
 commercial-eligibility	analyze-and-fix	Use when an offering is presented without evidence that its exact variant and destination are supported.	backend

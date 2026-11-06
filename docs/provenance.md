@@ -1,6 +1,6 @@
 # Workflow provenance
 
-This English community edition adapts 33 workflows developed by Lucas Tavano with coding-agent assistance, and adds one workflow adapted from an external MIT skill, for 34 public workflows. The source collection was `biblioteca-prompts-desenvolvimento v1.0.0`, later refined in an application repository. The public edition preserves task boundaries and authorization modes while rewriting instructions for a standalone package. Product-specific contexts, application source, credentials and operational records are not included.
+This English community edition adapts 33 workflows developed by Lucas Tavano with coding-agent assistance, adds one workflow adapted from an external MIT skill and one distilled from a consuming application's rules, for 35 public workflows. The source collection was `biblioteca-prompts-desenvolvimento v1.0.0`, later refined in an application repository. The public edition preserves task boundaries and authorization modes while rewriting instructions for a standalone package. Product-specific contexts, application source, credentials and operational records are not included.
 
 | Public ID | Original ID |
 |---|---|
@@ -98,3 +98,13 @@ text ranges) stay in the source and are not packaged. Curve values retain their
 attribution to easings.net, Material 3 and IBM Carbon. The source is MIT and permits
 adaptation; no text is bundled verbatim. For rendered video the routing guide points
 at the external skill instead of copying it into this kit.
+
+## Provider calls in 0.5
+
+`provider-calls` does not come from the original collection either. It generalizes
+rules that a consuming application (agent-board) kept in its maintainer contract
+for paid model and voice calls: every call is a row, no retry of a paid request,
+failure is a typed reason rather than a fabricated answer, budget is checked before
+the network. The workflow restates them for any billed or rate-limited provider and
+adds output validation and prompt-content boundaries. No application text, module
+names or credentials are included.
