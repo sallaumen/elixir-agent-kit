@@ -11,9 +11,10 @@ Default mode: **analyze-and-fix**. Read the [shared contract](../../CONTRACT.md)
 
 Use when dependencies, builds or CI fail or behave differently across environments.
 
-## Useful inputs
+## Inputs to inspect
 
-The requested outcome, affected flow or diff, project instructions, relevant evidence and acceptance criteria. Discover available context before asking for missing information.
+- Runtime/toolchain versions, dependency manifests and lockfiles, build environment and cache key inputs.
+- The failing or inconsistent build path, including network and credential constraints.
 
 ## Workflow
 
@@ -24,6 +25,28 @@ The requested outcome, affected flow or diff, project instructions, relevant evi
 3. Compare local and CI commands, caches, permissions and service prerequisites. Never disable a meaningful check or swallow a nonzero exit merely to obtain green output.
 
 4. Verify the repaired command and required project gates. Report residual infrastructure limits and avoid incidental publishing or deployment.
+
+## Decision points
+
+- Determine whether the problem is source, dependency resolution, stale artifacts or environment mismatch before clearing caches.
+- Pin and update dependency versions through the package manager, considering all supported runtimes and consumers.
+
+## Quality criteria
+
+- A fresh install resolves the same dependency graph from committed manifests.
+- Generated artifacts and caches have explicit invalidation inputs and can be regenerated without hidden local state.
+- Private credentials are not embedded in tracked manifests or logs.
+- Dependency upgrades include compatibility and transitive effects relevant to the package’s public contract.
+
+## Validation and evidence
+
+- Reproduce with a clean or isolated build and compare it with the existing cache path.
+- Record resolved versions and the command/environment that produced the verified build.
+
+## Avoid
+
+- Do not delete another process’s shared build artifacts during active work.
+- Do not call a successful cached build proof of reproducibility.
 
 ## Completion
 

@@ -11,9 +11,10 @@ Default mode: **analyze-and-fix**. Read the [shared contract](../../CONTRACT.md)
 
 Use when layers disagree about data, rules are duplicated or a write leaves records inconsistent.
 
-## Useful inputs
+## Inputs to inspect
 
-The requested outcome, affected flow or diff, project instructions, relevant evidence and acceptance criteria. Discover available context before asking for missing information.
+- The entry payload, domain rule, transformations, persisted schema, derived caches and outward response for a selected flow.
+- Ownership decisions, existing constraints, callers, retries and partial-write history.
 
 ## Workflow
 
@@ -24,6 +25,28 @@ The requested outcome, affected flow or diff, project instructions, relevant evi
 3. Move duplicated decisions to the appropriate boundary and validate inputs before effects. Use transactions for related local writes; describe external consistency and compensation explicitly.
 
 4. Test the full affected flow, including an invalid input and a partial failure. If a schema or stored payload changes, apply the migration-compatibility workflow.
+
+## Decision points
+
+- Choose one canonical owner for a rule or value; derived copies need an explicit refresh or reconciliation path.
+- Use application validation for useful errors and database constraints for races/invariants that must survive concurrent writers.
+
+## Quality criteria
+
+- Document accepted input, output, errors and side effects at each meaningful boundary without repeating the same rule in every layer.
+- Related local writes remain atomic where required; external effects have explicit idempotency or compensation because a DB rollback cannot undo them.
+- Consumers agree on identifiers, units, optionality and state transitions, including old records and missing fields.
+- Caches and events have known origin/version so stale or out-of-order results cannot silently become authoritative.
+
+## Validation and evidence
+
+- Trace one valid record and one invalid or concurrent operation from entry to persisted and presented result.
+- Test the boundary that owns the guarantee, plus a real consumer; explain any incomplete cross-system transaction.
+
+## Avoid
+
+- Do not choose the UI display as a substitute for stored integrity.
+- Do not make a single giant schema module the owner of unrelated business decisions.
 
 ## Completion
 

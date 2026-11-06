@@ -12,7 +12,7 @@ from urllib.parse import unquote
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--git-url", help="Fetch a real published Git dependency instead of the local package")
-parser.add_argument("--ref", default="v0.2.0")
+parser.add_argument("--ref", default="v0.3.0")
 parser.add_argument("--deps-path", default="deps", help="Consumer dependency directory, relative to its root")
 args = parser.parse_args()
 if Path(args.deps_path).is_absolute() or ".." in Path(args.deps_path).parts:
@@ -55,6 +55,9 @@ end
     run(root, "mix", "deps.get")
     listing = run(root, "mix", "agent_kit.list")
     assert "architecture-review" in listing and "delivery-validation" in listing
+    for area in ["Frontend and user experience", "Backend and data",
+                 "Cross-cutting engineering", "Delivery and build"]:
+        assert area in listing, area
     run(root, "mix", "agent_kit.check", expected=1)
     before = snapshot(root)
     run(root, "mix", "agent_kit.install", "--dry-run")

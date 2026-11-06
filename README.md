@@ -2,17 +2,19 @@
 
 **Shared coding practices for AI agents, versioned with your Elixir project.**
 
-33 focused workflows for architecture, debugging, testing, review, UI and delivery.
+33 focused workflows grouped into frontend, backend, cross-cutting engineering
+and delivery. Each names inputs, decisions, quality criteria and verification.
 Install with Mix; agents read the library directly from the dependency. No copied
 skill library, service, model calls or production dependency.
 
-[Quick start](#quick-start) · [Catalog](priv/library/CATALOG.md) ·
+[Quick start](#quick-start) · [Choose a workflow](priv/library/ROUTING.md) ·
+[Catalog](priv/library/CATALOG.md) · [Documentation map](docs/README.md) ·
 [Install with an AI agent](docs/INSTALL_WITH_AI.md) ·
 [Português](docs/README.pt-BR.md) · [Contributing](CONTRIBUTING.md)
 
 ## Quick start
 
-Requires Elixir 1.15+, compatible Erlang/OTP and Git. Version 0.2.0 is distributed
+Requires Elixir 1.15+, compatible Erlang/OTP and Git. Version 0.3.0 is distributed
 through public GitHub tags, **not Hex**. No token is required.
 
 Add to your existing `deps/0`:
@@ -20,7 +22,7 @@ Add to your existing `deps/0`:
 ```elixir
 {:elixir_agent_kit,
  git: "https://github.com/sallaumen/elixir-agent-kit.git",
- tag: "v0.2.0",
+ tag: "v0.3.0",
  only: [:dev, :test],
  runtime: false}
 ```
@@ -71,14 +73,18 @@ checkout; the model name alone does not establish support. See
 
 ## Selection and commands
 
-The default is `:generic` with all skills. To narrow discovery, set
+Start from the [area routing guide](priv/library/ROUTING.md), select the
+narrowest applicable workflow from the [catalog](priv/library/CATALOG.md), and
+read its quality and validation sections. Categories describe the primary work,
+not ownership of an application directory. The default is `:generic` with all
+skills. To narrow discovery, set
 `skills: ["debugging", "code-review"]` in project configuration and sync.
 Selection is guidance in the index, not an access-control boundary. With no
 project configuration, subsequent commands reuse the recorded selection.
 
 | Command | Effect |
 |---|---|
-| `mix agent_kit.list` | Prints workflow IDs, modes and triggers. |
+| `mix agent_kit.list` | Prints workflow IDs, modes and triggers grouped by area. |
 | `mix agent_kit.install` | Creates or synchronizes references after conflict preflight. |
 | `mix agent_kit.sync` | Same reconciliation, including removal of unmodified legacy generated files. |
 | `mix agent_kit.check` | Offline, read-only comparison against the loaded package and configuration; fails on drift. |

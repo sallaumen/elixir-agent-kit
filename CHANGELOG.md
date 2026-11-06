@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.3.0
+
+- Rework all 33 workflows with task-specific inputs, decision points, quality
+  criteria, validation evidence and pitfalls, drawing selectively on the original
+  long-form collection and reviewed professional skills.
+- Group workflows into frontend, backend, cross-cutting engineering and delivery
+  in the catalog and `mix agent_kit.list`; add an area routing guide.
+- Add a complete source-review matrix, 11 routing cases (40 total) and a
+  documentation map. Preserve the
+  reference-only consumer layout and the offline integrity contract.
+
 ## 0.2.0
 
 - Replace copied snapshots and per-skill wrappers with a small dependency-backed index and instruction blocks. Fresh checkouts need `mix deps.get`; native per-skill registration is removed.

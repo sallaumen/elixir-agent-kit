@@ -11,9 +11,10 @@ Default mode: **analyze-and-fix**. Read the [shared contract](../../CONTRACT.md)
 
 Use when changes cross many modules, rules repeat, dependencies cycle or domain ownership is unclear.
 
-## Useful inputs
+## Inputs to inspect
 
-The requested outcome, affected flow or diff, project instructions, relevant evidence and acceptance criteria. Discover available context before asking for missing information.
+- Requested change and the current module, data, process and deployment boundaries that it touches.
+- Callers, consumers, persisted contracts, existing decisions and the smallest representative path through the system.
 
 ## Workflow
 
@@ -24,6 +25,28 @@ The requested outcome, affected flow or diff, project instructions, relevant evi
 3. Prefer a small boundary correction that improves the selected operation. Do not equate pages with domains, line counts with quality, or a folder rearrangement with architectural improvement.
 
 4. Check callers, callbacks, configuration, serialization and persisted jobs before changing a public boundary. Validate the affected contracts and failure paths.
+
+## Decision points
+
+- Distinguish a structural risk visible in the actual change from a hypothetical future need.
+- Choose whether to repair the boundary now, record a follow-up with evidence, or leave an established pattern intact.
+
+## Quality criteria
+
+- Each finding names the owner of the behavior, the dependency crossing it and the consequence for a real use case.
+- Recommendations keep one accountable source for data and avoid new cyclic or bidirectional dependencies.
+- The review considers runtime processes, async messages, database effects and public contracts where present.
+- The proposed shape can be introduced in bounded steps without silently changing unrelated behavior.
+
+## Validation and evidence
+
+- Trace at least one real call or data path from entry point to effect and a consumer of its result.
+- For each significant recommendation, show the affected boundary, migration cost and a verification path.
+
+## Avoid
+
+- Do not turn a small change into a speculative rewrite.
+- Do not label a module “bad architecture” without a concrete failure or maintenance cost.
 
 ## Completion
 

@@ -11,9 +11,10 @@ Default mode: **coordinate**. Read the [shared contract](../../CONTRACT.md) befo
 
 Use when consolidating a product or dividing an authorized change into reviewable deliveries.
 
-## Useful inputs
+## Inputs to inspect
 
-The requested outcome, affected flow or diff, project instructions, relevant evidence and acceptance criteria. Discover available context before asking for missing information.
+- Repository collaboration protocol, active branches/PRs, ownership of files and current integration baseline.
+- Authorized scope, required checks, merge policy and any agent or human handoff already in progress.
 
 ## Workflow
 
@@ -26,6 +27,28 @@ The requested outcome, affected flow or diff, project instructions, relevant evi
 4. Track completed, blocked and deferred work separately. A worker report is evidence to inspect, not proof of an integrated result.
 
 Default to at most two execution fronts when delegation is authorized; expand only with demonstrated independence and capacity. Distinguish missing configuration from broken features. Set removal criteria for temporary compatibility paths. Rolling back code does not undo stored data or external effects.
+
+## Decision points
+
+- Split work at file and contract boundaries that agents can own without conflicting writes.
+- Sequence dependent changes and obtain the latest upstream state before branching, review and merge.
+
+## Quality criteria
+
+- Each work item has an owner, objective, affected paths, integration condition and handoff evidence.
+- Concurrent agents avoid staging or rewriting files owned by another task.
+- Changes are integrated against an explicit base; conflicts receive semantic review rather than blind resolution.
+- A merged task leaves documentation, follow-up owners and version pins consistent across consumers.
+
+## Validation and evidence
+
+- Check working tree and remote head before creating or merging work, and report actual PR/check state.
+- Verify the integrated branch or release rather than treating an open PR as completion.
+
+## Avoid
+
+- Do not use broad staging in a shared checkout.
+- Do not infer merge authorization from a generic collaboration template; follow the user and repository policy.
 
 ## Completion
 

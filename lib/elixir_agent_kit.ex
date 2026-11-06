@@ -19,8 +19,8 @@ defmodule ElixirAgentKit do
     |> File.read!()
     |> String.split("\n", trim: true)
     |> Enum.map(fn line ->
-      [id, mode, description] = String.split(line, "\t", parts: 3)
-      %{id: id, mode: mode, description: description}
+      [id, mode, description, area] = String.split(line, "\t", parts: 4)
+      %{id: id, mode: mode, description: description, area: area}
     end)
   end
 end

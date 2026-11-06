@@ -5,11 +5,11 @@ consuming Elixir project. Review the resulting diff and evidence under your
 project's existing delivery policy. The prompt grants no new paid calls or deploys.
 
 ```text
-Install or migrate Elixir Agent Kit v0.2.0 in this Elixir project using its
+Install or migrate Elixir Agent Kit v0.3.0 in this Elixir project using its
 reference-only layout. Read the project's instructions and the versioned guide:
-https://github.com/sallaumen/elixir-agent-kit/blob/v0.2.0/README.md
+https://github.com/sallaumen/elixir-agent-kit/blob/v0.3.0/README.md
 and compatibility:
-https://github.com/sallaumen/elixir-agent-kit/blob/v0.2.0/docs/compatibility.md
+https://github.com/sallaumen/elixir-agent-kit/blob/v0.3.0/docs/compatibility.md
 
 1. Inspect the working tree, Mix project, existing instruction files, dependency
    aliases and any previous .elixir-agent-kit/state.tsv. Preserve unrelated work;
@@ -17,7 +17,7 @@ https://github.com/sallaumen/elixir-agent-kit/blob/v0.2.0/docs/compatibility.md
 2. In the existing deps/0 add or update exactly one dependency:
    {:elixir_agent_kit,
     git: "https://github.com/sallaumen/elixir-agent-kit.git",
-    tag: "v0.2.0", only: [:dev, :test], runtime: false}
+    tag: "v0.3.0", only: [:dev, :test], runtime: false}
    It is public: no token in source. Do not claim it is published to Hex.
 3. In project/0 set elixir_agent_kit: [agents: [:codex, :claude, :generic], skills: :all],
    unless this project already has a deliberately narrower selection.
@@ -36,14 +36,18 @@ https://github.com/sallaumen/elixir-agent-kit/blob/v0.2.0/docs/compatibility.md
 7. Run mix agent_kit.check and verify every index link resolves to the downloaded
    library. Verify a second sync makes no changes. Add check to the appropriate
    existing local/CI gate after fetching dependencies; never auto-sync in CI.
-8. Update this project's setup instructions: a fresh checkout needs mix deps.get;
+8. In a fresh agent session, read the project's instructions, the generated
+   START.md, the dependency's ROUTING.md and one task-appropriate SKILL.md. Name
+   its inputs, decision and validation criteria in the agent's work. A file-link
+   check alone does not establish that the client loaded or followed the skill.
+9. Update this project's setup instructions: a fresh checkout needs mix deps.get;
    clients must read ignored dependency files directly. For DeepSeek, confirm the
    harness loads AGENTS.md or the index in its actual executor worktree. A model
    name does not establish compatibility. Do not claim live compliance from file checks.
-9. Explain maintenance: reusable lessons are proposed upstream through the kit's
+10. Explain maintenance: reusable lessons are proposed upstream through the kit's
    EVOLUTION.md; product-specific rules remain local. Use mix agent_kit.outdated
    explicitly to discover stable releases; no background or unpinned update.
-10. Run project-required checks, inspect the diff and stage files by name. Commit
+11. Run project-required checks, inspect the diff and stage files by name. Commit
     dependency, lock, index/state, references and removal of obsolete owned files
     together. Follow existing PR/merge authority. Report exact files/counts,
     validation, selected version, any blocked steps and unverified live clients.

@@ -397,6 +397,138 @@
       "failure_signals": [
         "Abrir uma revisão de módulos e APIs do código inteiro para renomear um doc"
       ]
+    },
+    {
+      "id": "E30",
+      "request": "Um formulário LiveView funciona no mouse, mas os erros aparecem sem anúncio e o foco se perde ao abrir o diálogo.",
+      "expected_primary": "accessibility",
+      "allowed_alternatives": [],
+      "success_signals": [
+        "Verificar teclado, foco, anúncio e semântica nos estados reais"
+      ],
+      "failure_signals": [
+        "Declarar acessível apenas por passar em um scanner"
+      ]
+    },
+    {
+      "id": "E31",
+      "request": "As miniaturas de uma arte antiga aparecem na versão nova e o usuário baixa o arquivo errado.",
+      "expected_primary": "asset-lineage",
+      "allowed_alternatives": [],
+      "success_signals": [
+        "Rastrear origem, variante, versão e URL do asset até o download"
+      ],
+      "failure_signals": [
+        "Trocar a imagem exibida sem corrigir identidade e cache"
+      ]
+    },
+    {
+      "id": "E32",
+      "request": "Após reconectar, uma mensagem atrasada marca como concluída a tarefa anterior e esconde o progresso da tarefa atual.",
+      "expected_primary": "async-state",
+      "allowed_alternatives": [],
+      "success_signals": [
+        "Usar identidade persistida, reconciliação e eventos fora de ordem"
+      ],
+      "failure_signals": [
+        "Tratar o sucesso do pedido HTTP como conclusão do job"
+      ]
+    },
+    {
+      "id": "E33",
+      "request": "Temos duas implementações quase iguais do cálculo, mas uma inclui imposto local. Descubra o que unificar.",
+      "expected_primary": "code-consolidation",
+      "allowed_alternatives": [],
+      "success_signals": [
+        "Comparar semântica e preservar diferença tributária explícita"
+      ],
+      "failure_signals": [
+        "Extrair função genérica com flag booleana sem entender regras"
+      ]
+    },
+    {
+      "id": "E34",
+      "request": "O cadastro valida um campo no LiveView, mas o job salva outro formato e deixa registros parcialmente inconsistentes.",
+      "expected_primary": "data-contracts",
+      "allowed_alternatives": [],
+      "success_signals": [
+        "Definir dono do contrato e validar escrita na fronteira persistente"
+      ],
+      "failure_signals": [
+        "Duplicar validação visual sem proteger a gravação"
+      ]
+    },
+    {
+      "id": "E35",
+      "request": "Um pedido falha às vezes com resultado incorreto após o retry; ainda não sabemos a causa.",
+      "expected_primary": "debugging",
+      "allowed_alternatives": [],
+      "success_signals": [
+        "Reproduzir, comparar hipóteses e separar gatilho de causa"
+      ],
+      "failure_signals": [
+        "Aumentar sleep arbitrário e declarar resolvido"
+      ]
+    },
+    {
+      "id": "E36",
+      "request": "Três fluxos usam botões e campos com estados incompatíveis; queremos regras de componente reaproveitáveis.",
+      "expected_primary": "design-system",
+      "allowed_alternatives": [],
+      "success_signals": [
+        "Mapear estados reais e contratos do componente sem apagar identidade local"
+      ],
+      "failure_signals": [
+        "Criar biblioteca visual abstrata sem usar os fluxos existentes"
+      ]
+    },
+    {
+      "id": "E37",
+      "request": "Para escolher uma cor o usuário abre outro formulário, salva, volta e perde o preview.",
+      "expected_primary": "direct-interactions",
+      "allowed_alternatives": [],
+      "success_signals": [
+        "Projetar seleção direta com feedback e estado recuperável"
+      ],
+      "failure_signals": [
+        "Trocar o formulário por controle sem estado de erro ou teclado"
+      ]
+    },
+    {
+      "id": "E38",
+      "request": "O painel diz que a integração está pronta porque há token, mas o webhook nunca foi verificado.",
+      "expected_primary": "integration-setup",
+      "allowed_alternatives": [],
+      "success_signals": [
+        "Representar requisitos de prontidão distintos e motivo da pendência"
+      ],
+      "failure_signals": [
+        "Declarar sucesso apenas porque uma credencial está presente"
+      ]
+    },
+    {
+      "id": "E39",
+      "request": "O módulo AccountOps tem APIs públicas de cobrança e perfil misturadas; localize limites e proponha nomes.",
+      "expected_primary": "module-design",
+      "allowed_alternatives": [],
+      "success_signals": [
+        "Investigar consumidores e separar responsabilidades pelo contrato público"
+      ],
+      "failure_signals": [
+        "Renomear arquivos e pastas sem analisar chamadas"
+      ]
+    },
+    {
+      "id": "E40",
+      "request": "Um link profundo para o detalhe abre sem contexto e o voltar leva o usuário para uma página inesperada.",
+      "expected_primary": "navigation-ux",
+      "allowed_alternatives": [],
+      "success_signals": [
+        "Verificar entrada direta, contexto, retorno e recuperação"
+      ],
+      "failure_signals": [
+        "Resolver apenas com mudança de margem no botão voltar"
+      ]
     }
   ]
 }

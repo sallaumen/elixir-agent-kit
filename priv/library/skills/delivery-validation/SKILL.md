@@ -11,9 +11,10 @@ Default mode: **analyze**. Read the [shared contract](../../CONTRACT.md) before 
 
 Use when checking whether an integrated change actually satisfies its acceptance criteria.
 
-## Useful inputs
+## Inputs to inspect
 
-The requested outcome, affected flow or diff, project instructions, relevant evidence and acceptance criteria. Discover available context before asking for missing information.
+- Requested user outcome, changed files, required repository gates and release or deployment target.
+- Manual flows, docs, generated artifacts and downstream consumers that the change affects.
 
 ## Workflow
 
@@ -24,6 +25,28 @@ The requested outcome, affected flow or diff, project instructions, relevant evi
 3. Compare the integrated result with the mandate, not only a worker's report. Separate inspected, simulated, executed, published and unverified claims.
 
 4. Report passed, failed, blocked and deferred criteria with reproducible evidence. Do not silently switch from validation to repair, publish, merge or deploy without the necessary authority.
+
+## Decision points
+
+- Pick checks that prove the requested behavior and required contracts, then stop when remaining risk is clearly stated.
+- Separate merged, released, installed and actually observed-in-use states.
+
+## Quality criteria
+
+- The final evidence links each acceptance condition to a check or a clearly stated limitation.
+- A versioned package is tagged and installable from the documented reference before consumer pins are updated.
+- Documentation, examples and generated indexes match the shipped code.
+- The handoff names any external action or monitoring that still has to occur.
+
+## Validation and evidence
+
+- Run required project gates plus a representative end-to-end or consumer smoke path when distribution changes.
+- Check final commit, tag, PR merge and consumer version pins from the integrated state.
+
+## Avoid
+
+- Do not claim live agent compliance from repository structure alone.
+- Do not leave a release described as complete when consumers still point at the old version.
 
 ## Completion
 

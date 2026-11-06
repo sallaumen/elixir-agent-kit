@@ -14,12 +14,14 @@ if len(ids) != len(set(ids)):
 actual_ids = {p.parent.name for p in (LIBRARY / "skills").glob("*/SKILL.md")}
 if set(ids) != actual_ids:
     errors.append("Catalog and workflow directories disagree")
-for skill_id, mode, description in rows:
+for skill_id, mode, description, area in rows:
     text = (LIBRARY / "skills" / skill_id / "SKILL.md").read_text()
     if not text.startswith(f'---\nname: {skill_id}\ndescription: {json.dumps(description)}\n---\n'):
         errors.append(f"Frontmatter mismatch: {skill_id}")
     if f"Default mode: **{mode}**" not in text:
         errors.append(f"Mode mismatch: {skill_id}")
+    if area not in {"frontend", "backend", "cross-cutting", "delivery"}:
+        errors.append(f"Invalid area: {skill_id}")
     if f"[{skill_id}](skills/{skill_id}/SKILL.md)" not in (LIBRARY / "CATALOG.md").read_text():
         errors.append(f"Human catalog missing: {skill_id}")
     if f"`{skill_id}`" not in (ROOT / "docs/provenance.md").read_text():

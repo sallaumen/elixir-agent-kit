@@ -8,7 +8,7 @@ Não copia a biblioteca nem cria dezenas de skills dentro da aplicação.
 ```elixir
 {:elixir_agent_kit,
  git: "https://github.com/sallaumen/elixir-agent-kit.git",
- tag: "v0.2.0",
+ tag: "v0.3.0",
  only: [:dev, :test],
  runtime: false}
 ```
@@ -40,6 +40,10 @@ foi possível determinar a versão atual. Não há atualização automática em 
 
 Melhorias reutilizáveis vão para o kit; regras de domínio ficam no projeto.
 Uma melhoria revisada vira release e cada consumidor adota a versão em um PR.
+As 33 práticas agora estão agrupadas em frontend, backend, engenharia transversal
+e entrega. O agente começa pelo [guia de seleção](../priv/library/ROUTING.md),
+escolhe a prática específica no [catálogo](../priv/library/CATALOG.md) e lê
+seus critérios de qualidade e validação diretamente na dependência.
 Veja a [política de evolução](../priv/library/EVOLUTION.md), o
 [prompt completo de instalação](INSTALL_WITH_AI.md), a
 [compatibilidade](compatibility.md) e o [guia principal](../README.md).

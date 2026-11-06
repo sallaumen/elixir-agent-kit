@@ -11,9 +11,10 @@ Default mode: **analyze-and-fix**. Read the [shared contract](../../CONTRACT.md)
 
 Use when measured latency, freezes, excessive work or rendering cost affects a real workflow.
 
-## Useful inputs
+## Inputs to inspect
 
-The requested outcome, affected flow or diff, project instructions, relevant evidence and acceptance criteria. Discover available context before asking for missing information.
+- A measured symptom with environment, workload, scale, baseline and target for the affected path.
+- Instrumentation, query traces, process/queue metrics, render profiles or benchmark data relevant to that symptom.
 
 ## Workflow
 
@@ -24,6 +25,28 @@ The requested outcome, affected flow or diff, project instructions, relevant evi
 3. Change one supported cause and compare under equivalent conditions. Preserve correctness, cancellation, cleanup and observability.
 
 4. Report improvement with its measurement limits. An asynchronous state bug belongs to async-state even if it appears as a spinner.
+
+## Decision points
+
+- Prioritize the dominant measured cost and distinguish latency, throughput, memory and user-perceived responsiveness.
+- Choose the smallest change that addresses the mechanism; an unmeasured optimization remains a hypothesis.
+
+## Quality criteria
+
+- Before/after measurements use comparable inputs, warmup, configuration and statistical summary.
+- Correctness, ordering and authorization survive caching, batching or concurrency changes.
+- The performance budget includes queueing, database, network and client rendering where those dominate.
+- Tradeoffs in resource use, freshness and complexity are stated for the actual workload.
+
+## Validation and evidence
+
+- Capture a baseline and rerun the same representative workload after the change.
+- Report units, sample size or repeat count, environment and remaining bottleneck.
+
+## Avoid
+
+- Do not claim a speedup from a single unmatched run.
+- Do not add a cache without invalidation and scope rules.
 
 ## Completion
 

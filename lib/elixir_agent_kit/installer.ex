@@ -75,7 +75,7 @@ defmodule ElixirAgentKit.Installer do
   defp start_document(config, target) do
     selection =
       if config.skills == ["all"],
-        do: "Choose the smallest relevant workflow from the catalog.",
+        do: "Choose the smallest relevant workflow from the routing guide and catalog.",
         else: "Enabled workflow IDs: " <> Enum.map_join(config.skills, ", ", &"`#{&1}`") <> "."
 
     # Markdown destinations need encoding for spaces and parentheses in local paths.
@@ -85,7 +85,8 @@ defmodule ElixirAgentKit.Installer do
     """
     # Elixir Agent Kit #{ElixirAgentKit.version()}
 
-    Read the [shared contract](#{target}/CONTRACT.md), then select from the
+    Read the [shared contract](#{target}/CONTRACT.md), then use the
+    [area routing guide](#{target}/ROUTING.md) and
     [workflow catalog](#{target}/CATALOG.md). #{selection}
     Read workflow bodies from the dependency; do not copy them into this project.
     Use the [Elixir context](#{target}/ELIXIR.md) only for technologies present here.
