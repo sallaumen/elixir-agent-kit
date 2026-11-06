@@ -68,7 +68,7 @@ defmodule ElixirAgentKit.Installer do
 
     Enum.reduce(config.agents, payload, fn agent, acc ->
       instructions = if agent == "claude", do: "CLAUDE.md", else: "AGENTS.md"
-      Map.put(acc, instructions, {:block, block()})
+      Map.put(acc, instructions, {:block, block(agent, config, root)})
     end)
   end
 
@@ -98,13 +98,30 @@ defmodule ElixirAgentKit.Installer do
     """
   end
 
-  defp block do
-    @start <>
-      "## Elixir Agent Kit\n\n" <>
-      "For development tasks, consult [.elixir-agent-kit/START.md](.elixir-agent-kit/START.md).\n" <>
+  # Claude Code reads AGENTS.md only while no CLAUDE.md applies, so a Claude block
+  # imports AGENTS.md whenever the kit manages it or the project already has one.
+  # Otherwise creating CLAUDE.md would silently hide the project's instructions.
+  defp block("claude", config, root) do
+    cond do
+      Enum.any?(config.agents, &(&1 != "claude")) -> wrap(import_agents())
+      read(root, "AGENTS.md") != nil -> wrap(import_agents() <> "\n" <> reference())
+      true -> wrap(reference())
+    end
+  end
+
+  defp block(_agent, _config, _root), do: wrap(reference())
+
+  defp wrap(body), do: @start <> "## Elixir Agent Kit\n\n" <> body <> @finish
+
+  defp reference do
+    "For development tasks, consult [.elixir-agent-kit/START.md](.elixir-agent-kit/START.md).\n" <>
       "Select the relevant workflow and read its shared contract. Preserve this project's rules.\n" <>
-      "If the files are missing, report the missing setup; do not claim the practices were applied.\n" <>
-      @finish
+      "If the files are missing, report the missing setup; do not claim the practices were applied.\n"
+  end
+
+  defp import_agents do
+    "Claude Code reads AGENTS.md only when no CLAUDE.md applies, so this block imports it.\n" <>
+      "This project's instructions in AGENTS.md govern the work.\n\n@AGENTS.md\n"
   end
 
   defp plan(root, desired, previous, action) do

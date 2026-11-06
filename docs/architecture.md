@@ -16,7 +16,11 @@ Product-specific contracts stay with their applications.
 ## Reference-only installation
 
 The installer writes a small `START.md`, a state file, and bounded blocks in
-`AGENTS.md` and/or `CLAUDE.md`. It creates no library copies or native skill wrappers.
+`AGENTS.md` and/or `CLAUDE.md`. A Claude block imports `AGENTS.md` when the kit
+manages that file or the project already has one, because Claude Code stops
+reading `AGENTS.md` as soon as a `CLAUDE.md` applies; a Claude-only install
+without `AGENTS.md` carries the reference itself. It creates no library copies
+or native skill wrappers.
 Configuration selects instruction adapters and workflow IDs for routing. It does
 not prevent reading other workflows. Clients must load project instructions and
 be able to read the ignored dependency directory after `mix deps.get`.

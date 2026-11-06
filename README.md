@@ -52,7 +52,7 @@ the generated index/state and instruction blocks. Do not commit `deps/`.
 | `.elixir-agent-kit/START.md` | Small index pointing to the dependency's contract and catalog. |
 | `.elixir-agent-kit/state.tsv` | Version, selection and checksums of files/blocks owned by the installer. |
 | `AGENTS.md` | A bounded reference block for Codex and generic harnesses. |
-| `CLAUDE.md` | A bounded reference block for Claude Code. |
+| `CLAUDE.md` | A bounded block for Claude Code. When the kit also manages `AGENTS.md`, or the project already has one, the block imports it with `@AGENTS.md` instead of repeating the reference. |
 
 Existing project instructions outside those blocks remain unchanged. No workflow
 bodies are copied into the project and no per-skill files are created in `.agents`
@@ -61,8 +61,11 @@ standard Git dependency. Custom dependency paths are resolved by Mix; external
 local path dependencies produce local absolute links and need resync after moving.
 
 `:codex` and `:generic` share the same `AGENTS.md` block; `:claude` selects
-`CLAUDE.md`. These are instruction-file adapters, not model integrations. This
-version does **not** register individual native skills or slash commands.
+`CLAUDE.md`. Claude Code reads `AGENTS.md` only while no `CLAUDE.md` applies, so
+the Claude block imports `AGENTS.md` whenever that file is managed or already
+exists; adding `AGENTS.md` later shows as drift until you sync. These are
+instruction-file adapters, not model integrations. This version does **not**
+register individual native skills or slash commands.
 
 A fresh checkout must run `mix deps.get` before reading the practices. A client
 must be able to read ignored dependency files. Ask a fresh session to read

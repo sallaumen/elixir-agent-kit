@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Make the Claude block import `AGENTS.md` whenever the kit manages that file
+  or the project already has one. Claude Code reads `AGENTS.md` only while no
+  `CLAUDE.md` applies, so the previous block hid a consumer's own instructions
+  from Claude sessions. Existing installations pick this up on `sync`.
+
 ## 0.3.1
 
 - Point game and canvas interface work to one pinned external skill,
