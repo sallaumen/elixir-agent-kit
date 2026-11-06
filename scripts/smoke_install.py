@@ -62,7 +62,8 @@ end
     before = snapshot(root)
     run(root, "mix", "agent_kit.install", "--dry-run")
     assert snapshot(root) == before, "dry run wrote project files"
-    run(root, "mix", "agent_kit.install")
+    install_output = run(root, "mix", "agent_kit.install")
+    assert "Next: run mix agent_kit.check" in install_output, install_output
     run(root, "mix", "agent_kit.check")
     installed = snapshot(root)
     managed = set(installed) - set(before)
