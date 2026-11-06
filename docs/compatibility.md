@@ -7,7 +7,7 @@ globally or invokes models.
 | Client | Entry point | Required capability |
 |---|---|---|
 | Codex | `AGENTS.md` | Read project instructions and follow links into the dependency. |
-| Claude Code | `CLAUDE.md` | Read project instructions and follow links into the dependency. |
+| Claude Code | `CLAUDE.md`, importing `AGENTS.md` when present | Read project instructions and follow links into the dependency. Claude Code ignores `AGENTS.md` once a `CLAUDE.md` exists, so the generated block imports it. |
 | Generic harness, including DeepSeek-backed executors | `AGENTS.md` or explicit index loading | Configure the harness to load instructions in its actual working checkout. |
 
 The default library path is `deps/elixir_agent_kit/priv/library/`. Dependencies must

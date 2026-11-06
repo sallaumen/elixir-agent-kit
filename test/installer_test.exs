@@ -99,6 +99,39 @@ defmodule ElixirAgentKit.InstallerTest do
     assert {:ok, []} = Installer.run(:uninstall, root)
   end
 
+  test "a Claude block imports the managed AGENTS.md instead of repeating the reference",
+       %{root: root} do
+    Installer.run(:install, root, agents: [:codex, :claude])
+    assert get(root, "AGENTS.md") =~ "START.md"
+    assert get(root, "CLAUDE.md") =~ "\n@AGENTS.md\n"
+    refute get(root, "CLAUDE.md") =~ "START.md"
+    assert {:ok, []} = Installer.run(:check, root)
+    Installer.run(:uninstall, root)
+    refute File.exists?(Path.join(root, "CLAUDE.md"))
+  end
+
+  test "a Claude-only install imports an unmanaged AGENTS.md and keeps the reference",
+       %{root: root} do
+    put(root, "AGENTS.md", "# Mine\n")
+    Installer.run(:install, root, agents: [:claude])
+    assert get(root, "AGENTS.md") == "# Mine\n"
+    claude = get(root, "CLAUDE.md")
+    assert claude =~ "\n@AGENTS.md\n"
+    assert claude =~ "START.md"
+    assert {:ok, []} = Installer.run(:check, root)
+  end
+
+  test "a Claude-only install without AGENTS.md keeps the plain reference and detects a later one",
+       %{root: root} do
+    Installer.run(:install, root, agents: [:claude])
+    refute get(root, "CLAUDE.md") =~ "@AGENTS.md"
+    put(root, "AGENTS.md", "# Added later\n")
+    assert {:drift, ["CLAUDE.md", ".elixir-agent-kit/state.tsv"]} = Installer.run(:check, root)
+    assert {:ok, ["CLAUDE.md", ".elixir-agent-kit/state.tsv"]} = Installer.run(:sync, root)
+    assert get(root, "CLAUDE.md") =~ "\n@AGENTS.md\n"
+    assert get(root, "AGENTS.md") == "# Added later\n"
+  end
+
   test "pre-existing empty instructions survive uninstall", %{root: root} do
     put(root, "AGENTS.md", "")
     Installer.run(:install, root)

@@ -70,6 +70,8 @@ end
     index = root / ".elixir-agent-kit/START.md"
     for target in re.findall(r'\]\(([^)]+)\)', index.read_text()):
         assert (index.parent / unquote(target)).is_file(), target
+    assert "\n@AGENTS.md\n" in (root / "CLAUDE.md").read_text(), "Claude block must import the managed AGENTS.md"
+    assert "START.md" in (root / "AGENTS.md").read_text() and original in (root / "AGENTS.md").read_text()
     assert not (root / ".agents").exists()
     assert not (root / ".claude").exists()
     assert not (root / ".elixir-agent-kit/library").exists()
