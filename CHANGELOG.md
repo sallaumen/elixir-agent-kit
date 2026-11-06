@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Rewrite `ELIXIR.md` by technology (OTP, Phoenix and LiveView, Ecto and
+  migrations, Oban, ExUnit and diagnostics, build and releases), each with what to
+  inspect, what to do and how to verify, so workflows can point at concrete
+  mechanics instead of restating them. Applies only to technologies present in
+  `mix.lock`.
 - Record every review lens with its origin and the license found in the local
   copy (`docs/provenance.md`), date each release in this changelog, describe the
   evaluation cases by language instead of "bilingual", and remove leftover
