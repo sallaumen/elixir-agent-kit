@@ -137,6 +137,26 @@ while the backend case is dominated by the maintainer contract in both arms. The
 operator's global rule also fired here: both E30 controls attempted `mcptoon skills
 resolve` before anything else.
 
+## Retest after the consumer reordered `AGENTS.md`
+
+agent-board#261 placed "select one Elixir Agent Kit workflow" directly under the
+maintainer contract in "Required contracts" (the kit block itself still carried the
+v0.5.0 wording; kit#17's new wording is unreleased). Same client, prompts, permissions
+and 3 USD cap; two repetitions of the two backend cases in fresh worktrees.
+
+| Run | Read from kit | Routed | Edits | mix test | Maintainer contract read | Ended | Cost (USD) |
+|---|---|---|---|---|---|---|---|
+| E32-r1 | START, CONTRACT, async-state | ok | 7 | yes | yes | turn cap | 3.00 |
+| E32-r2 | nothing | none | 7 | yes | yes | budget cap | 3.05 |
+| E44-r1 | START, CONTRACT, ROUTING, provider-calls | ok | 5 | yes | yes | budget cap | 3.03 |
+| E44-r2 | START | none | 2 | no | yes | budget cap | 3.10 |
+
+Before the reorder these two cases reached the kit in 2 of 6 runs and routed
+correctly in 2 of 6; after it, 3 of 4 and 2 of 4. Every run still opened the
+maintainer contract first, and every run hit a cap, so this is a direction, not a
+rate: four runs cannot separate the reorder from noise. The next measurement should
+use the released block wording, a 5 USD cap, and at least three repetitions.
+
 ## Limits
 
 - One client, one model, 18 runs plus controls, on the operator's machine with the
