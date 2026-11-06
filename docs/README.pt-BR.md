@@ -52,7 +52,7 @@ no gate que roda depois de `mix deps.get`. Para ver o plano antes, use
 
 | Caminho | Para quê |
 |---|---|
-| `.elixir-agent-kit/START.md` | Índice pequeno apontando para contrato, guia de seleção e catálogo na dependência. |
+| `.elixir-agent-kit/START.md` | Quatro passos que terminam na escolha nomeada de um workflow, depois o catálogo habilitado com links para a dependência. |
 | `.elixir-agent-kit/state.tsv` | Versão, seleção e SHA-256 de cada arquivo e bloco que o instalador possui. |
 | `AGENTS.md` | Bloco delimitado para Codex e harnesses genéricos. |
 | `CLAUDE.md` | Bloco delimitado para Claude Code. Quando `AGENTS.md` é gerenciado ou já existe, o bloco o importa com `@AGENTS.md`, porque o Claude Code deixa de ler `AGENTS.md` assim que um `CLAUDE.md` se aplica. |

@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- `START.md` and the pointer skills now share one body: four steps that end in
+  stating the workflow ID or NONE before the first edit, followed by the enabled
+  catalog with links into the dependency. The v0.5.1 live rerun
+  (`evals/results/2026-11-06-claude-code.md`) showed two backend sessions opening
+  `START.md` and leaving it without a workflow; the old index pointed at three
+  more files before any `SKILL.md`. Existing installations pick it up on `sync`.
+
 ## 0.5.1 — 2026-11-06
 
 - Reword the generated instruction block and the pointer skill description from

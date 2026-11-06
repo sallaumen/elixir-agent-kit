@@ -29,7 +29,7 @@ https://github.com/sallaumen/elixir-agent-kit/blob/v0.5.1/docs/compatibility.md
    per-skill wrappers. Do not delete by glob or erase the ownership manifest.
    If edited managed content blocks migration, preserve the edits as project rules
    or upstream proposals and restore only their recorded originals before retrying.
-6. Verify the only kit-managed content remaining is the small START.md index,
+6. Verify the only kit-managed content remaining is the generated START.md,
    state.tsv, bounded blocks in AGENTS.md/CLAUDE.md and, for :claude and :codex,
    one generated pointer skill each (.claude/skills/elixir-agent-kit/SKILL.md,
    .agents/skills/elixir-agent-kit/SKILL.md). Preserve other tools' skills and

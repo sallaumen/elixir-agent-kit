@@ -89,8 +89,10 @@ defmodule ElixirAgentKit.InstallerTest do
                "CLAUDE.md"
              ]
 
-    assert get(root, ".elixir-agent-kit/START.md") =~
-             "../deps/elixir_agent_kit/priv/library/CONTRACT.md"
+    start = get(root, ".elixir-agent-kit/START.md")
+    assert start =~ "../deps/elixir_agent_kit/priv/library/CONTRACT.md"
+    assert start =~ "4. Before the first edit, state the workflow ID or NONE"
+    assert start =~ "../deps/elixir_agent_kit/priv/library/skills/debugging/SKILL.md"
 
     pointer = get(root, ".claude/skills/elixir-agent-kit/SKILL.md")
     assert pointer =~ "name: elixir-agent-kit\n"
@@ -220,8 +222,10 @@ defmodule ElixirAgentKit.InstallerTest do
     assert Path.wildcard(Path.join(root, ".claude/skills/*/SKILL.md")) == []
     assert get(root, ".agents/skills/my-own/SKILL.md") == "keep"
     assert Path.wildcard(Path.join(root, ".agents/skills/eak-*/SKILL.md")) == []
-    assert get(root, ".elixir-agent-kit/START.md") =~ "`debugging`"
-    refute get(root, ".elixir-agent-kit/START.md") =~ "`code-review`"
+    start = get(root, ".elixir-agent-kit/START.md")
+    assert start =~ "../deps/elixir_agent_kit/priv/library/skills/debugging/SKILL.md"
+    refute start =~ "skills/code-review/SKILL.md"
+    refute start =~ "## Frontend"
     pointer = get(root, ".agents/skills/elixir-agent-kit/SKILL.md")
     assert pointer =~ "skills/debugging/SKILL.md"
     refute pointer =~ "skills/code-review/SKILL.md"
