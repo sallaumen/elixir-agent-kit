@@ -8,7 +8,7 @@
 **Shared coding practices for AI agents, versioned with your Elixir project.**
 
 Pin the kit like any Mix dependency. Every agent that touches the project, whether
-Codex, Claude Code or your own harness, reads the same 35 reviewed workflows from
+Codex, Claude Code or your own harness, reads the same 33 reviewed workflows from
 `deps/`: what to inspect, which decisions matter, what "done" looks like and how
 to prove it. No copied skill library to drift, no service, no model calls, nothing
 shipped to production.
@@ -113,13 +113,13 @@ the [catalog](priv/library/CATALOG.md) lists the trigger sentences.
 |---|---|---|---|
 | [ui-identity](priv/library/skills/ui-identity/SKILL.md) | [abstraction-layers](priv/library/skills/abstraction-layers/SKILL.md) | [architecture-review](priv/library/skills/architecture-review/SKILL.md) | [delivery-coordination](priv/library/skills/delivery-coordination/SKILL.md) |
 | [layout-density](priv/library/skills/layout-density/SKILL.md) | [module-design](priv/library/skills/module-design/SKILL.md) | [code-consolidation](priv/library/skills/code-consolidation/SKILL.md) | [pipeline-design](priv/library/skills/pipeline-design/SKILL.md) |
-| [navigation-ux](priv/library/skills/navigation-ux/SKILL.md) | [data-contracts](priv/library/skills/data-contracts/SKILL.md) | [version-lineage](priv/library/skills/version-lineage/SKILL.md) | [build-dependencies](priv/library/skills/build-dependencies/SKILL.md) |
-| [responsive-mobile](priv/library/skills/responsive-mobile/SKILL.md) | [ai-orchestration](priv/library/skills/ai-orchestration/SKILL.md) | [performance](priv/library/skills/performance/SKILL.md) | [delivery-validation](priv/library/skills/delivery-validation/SKILL.md) |
+| [navigation-ux](priv/library/skills/navigation-ux/SKILL.md) | [data-contracts](priv/library/skills/data-contracts/SKILL.md) | [revision-lineage](priv/library/skills/revision-lineage/SKILL.md) | [build-dependencies](priv/library/skills/build-dependencies/SKILL.md) |
+| [responsive-layout](priv/library/skills/responsive-layout/SKILL.md) | [ai-orchestration](priv/library/skills/ai-orchestration/SKILL.md) | [performance](priv/library/skills/performance/SKILL.md) | [delivery-validation](priv/library/skills/delivery-validation/SKILL.md) |
 | [direct-interactions](priv/library/skills/direct-interactions/SKILL.md) | [notifications](priv/library/skills/notifications/SKILL.md) | [async-state](priv/library/skills/async-state/SKILL.md) | |
-| [accessibility](priv/library/skills/accessibility/SKILL.md) | [integration-setup](priv/library/skills/integration-setup/SKILL.md) | [test-consolidation](priv/library/skills/test-consolidation/SKILL.md) | |
-| [design-system](priv/library/skills/design-system/SKILL.md) | [commercial-eligibility](priv/library/skills/commercial-eligibility/SKILL.md) | [test-strategy](priv/library/skills/test-strategy/SKILL.md) | |
-| [motion-design](priv/library/skills/motion-design/SKILL.md) | [metrics-costs](priv/library/skills/metrics-costs/SKILL.md) | [code-review](priv/library/skills/code-review/SKILL.md) | |
-| [asset-lineage](priv/library/skills/asset-lineage/SKILL.md) | [operational-alerts](priv/library/skills/operational-alerts/SKILL.md) | [debugging](priv/library/skills/debugging/SKILL.md) | |
+| [accessibility](priv/library/skills/accessibility/SKILL.md) | [integration-setup](priv/library/skills/integration-setup/SKILL.md) | [test-strategy](priv/library/skills/test-strategy/SKILL.md) | |
+| [design-system](priv/library/skills/design-system/SKILL.md) | [commercial-eligibility](priv/library/skills/commercial-eligibility/SKILL.md) | [code-review](priv/library/skills/code-review/SKILL.md) | |
+| [motion-design](priv/library/skills/motion-design/SKILL.md) | [metrics-costs](priv/library/skills/metrics-costs/SKILL.md) | [debugging](priv/library/skills/debugging/SKILL.md) | |
+| | [operational-alerts](priv/library/skills/operational-alerts/SKILL.md) | | |
 | | [simulation-isolation](priv/library/skills/simulation-isolation/SKILL.md) | | |
 | | [security-boundaries](priv/library/skills/security-boundaries/SKILL.md) | | |
 | | [migration-compatibility](priv/library/skills/migration-compatibility/SKILL.md) | | |

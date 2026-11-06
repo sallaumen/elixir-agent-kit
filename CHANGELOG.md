@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- Merge `version-lineage` and `asset-lineage` into `revision-lineage` (one identity
+  model: entity, immutable revisions, explicit pointers, artifacts that carry their
+  parent revision; viewing never selects). Fold `test-consolidation` into
+  `test-strategy` as its "Removing duplicates" step. Rename `responsive-mobile` to
+  `responsive-layout` and move browser history and overlay behavior to
+  `navigation-ux`, which now covers them on every device. Routing cases E06, E11,
+  E17 and E31 follow. A `skills:` selection that names a removed ID fails
+  `mix agent_kit.check` until updated: `asset-lineage`/`version-lineage` →
+  `revision-lineage`, `test-consolidation` → `test-strategy`,
+  `responsive-mobile` → `responsive-layout`.
 - Rewrite `accessibility`, `async-state` and `test-strategy` with observable
   completion conditions, required evidence and pointers into the Elixir context:
   a keyboard transcript and accessibility tree for accessibility; a lifecycle

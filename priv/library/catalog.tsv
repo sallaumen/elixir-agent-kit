@@ -3,12 +3,12 @@ architecture-review	analyze-and-fix	Use when changes cross many modules, rules r
 abstraction-layers	analyze-and-fix	Use when functions mix business decisions, low-level details and effects at incompatible levels.	backend
 module-design	analyze-and-fix	Use when module names, locations or public APIs obscure responsibilities that are already understood.	backend
 code-consolidation	analyze-and-fix	Use when unfinished features, abandoned paths or competing implementations make a codebase ambiguous.	cross-cutting
-version-lineage	analyze-and-fix	Use when revisions, previews, selections or generated artifacts are associated with the wrong version.	cross-cutting
+revision-lineage	analyze-and-fix	Use when a revision, preview, asset or selection is associated with the wrong version, or viewing an old version silently changes the current one.	cross-cutting
 data-contracts	analyze-and-fix	Use when layers disagree about data, rules are duplicated or a write leaves records inconsistent.	backend
 ui-identity	analyze-and-fix	Use when a working interface lacks product-specific hierarchy, identity or visual coherence.	frontend
 layout-density	analyze-and-fix	Use when spacing, alignment or information density makes a screen hard to scan or use.	frontend
 navigation-ux	analyze-and-fix	Use when users lose context or need unnecessary steps to complete a multi-screen task.	frontend
-responsive-mobile	analyze-and-fix	Use when mobile navigation, browser history or layouts fail across phone and wide-screen sizes.	frontend
+responsive-layout	analyze-and-fix	Use when a layout breaks, overflows or hides actions across phone, notebook and wide screens, or touch targets and reach fail on a phone.	frontend
 direct-interactions	analyze-and-fix	Use when a simple selection or adjustment requires excessive forms and disconnected controls.	frontend
 accessibility	analyze-and-fix	Use when controls, forms, dialogs or asynchronous changes may exclude keyboard or assistive-technology users.	frontend
 design-system	analyze-and-fix	Use when teams repeat interface mistakes or create incompatible component and token variations.	frontend
@@ -20,12 +20,10 @@ provider-calls	analyze-and-fix	Use when code calls a paid, rate-limited or exter
 notifications	analyze-and-fix	Use when bots or notifications fail, repeat or produce unexplained message volume.	backend
 integration-setup	analyze-and-fix	Use when an integration looks configured but required steps or operational readiness remain unclear.	backend
 commercial-eligibility	analyze-and-fix	Use when an offering is presented without evidence that its exact variant and destination are supported.	backend
-asset-lineage	analyze-and-fix	Use when previews or generated assets lack clear source, version, orientation or ownership.	frontend
 metrics-costs	analyze-and-fix	Use when totals, model costs or operational metrics have unclear scope, origin or meaning.	backend
 operational-alerts	analyze-and-fix	Use when alerts repeat, historical incidents look current or acknowledging an alert appears to resolve it.	backend
 simulation-isolation	analyze-and-fix	Use when simulation, training or demo flows share code and data paths with real operations.	backend
-test-consolidation	analyze-and-fix	Use when duplicated tests slow maintenance without protecting distinct failure modes.	cross-cutting
-test-strategy	analyze-and-fix	Use when a passing suite misses important bugs or the required regression coverage is unclear.	cross-cutting
+test-strategy	analyze-and-fix	Use when a passing suite misses important bugs, the required regression coverage is unclear, or duplicated tests protect nothing distinct.	cross-cutting
 code-review	review	Use when reviewing a bounded diff or pull request for actionable defects and regressions.	cross-cutting
 debugging	analyze-and-fix	Use when a wrong result, exception or intermittent failure has no demonstrated root cause.	cross-cutting
 security-boundaries	analyze-and-fix	Use when untrusted input, credentials, permissions or tenant boundaries may permit unintended access.	backend
