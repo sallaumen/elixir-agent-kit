@@ -19,6 +19,18 @@ workflow only when the task has a distinct risk that the first does not cover;
 state that reason. Read [Elixir context](ELIXIR.md) only for technologies actually
 used. The default mode in the catalog yields to the user's explicit scope.
 
+## Game and canvas interfaces
+
+The kit has no game workflow. When the project renders a game or canvas scene and
+the task touches its HUD, menus or overlays, add the external
+[`game-ui-ux`](https://github.com/gamedev-skills/awesome-gamedev-agent-skills/tree/19d93f97c9c1ea0f8b306e77aa81e0d3e352d3e9/skills/disciplines/game-ui-ux)
+skill (Apache-2.0, pinned commit) beside the kit workflow the risk names, usually
+`accessibility`, `navigation-ux` or `responsive-mobile`. It contributes a screen
+stack, focus navigation, event-driven HUD updates, scaling and safe areas; map its
+Godot and Unity examples onto the project's own rendering code. The evidence is a
+canvas or engine scene in the source, not a playful visual theme. Install that one
+skill per project, after reading and scanning it.
+
 A workflow does not grant permission to send messages, spend money, publish,
 merge, deploy or access production. A user's existing authorization still applies.
 For frontend work, verify behavior in the running application when available;

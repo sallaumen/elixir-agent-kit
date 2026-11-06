@@ -529,6 +529,23 @@
       "failure_signals": [
         "Resolver apenas com mudança de margem no botão voltar"
       ]
+    },
+    {
+      "id": "E41",
+      "request": "No jogo em canvas do projeto, o HUD fica escondido atrás do notch no celular e o menu de pausa não responde ao teclado.",
+      "expected_primary": "accessibility",
+      "allowed_alternatives": [
+        "responsive-mobile",
+        "navigation-ux"
+      ],
+      "success_signals": [
+        "Confirmar a cena em canvas no código antes de somar a skill externa game-ui-ux indicada no guia de roteamento",
+        "Verificar foco inicial, ordem de foco, Escape e área segura no jogo em execução, no celular e no desktop"
+      ],
+      "failure_signals": [
+        "Instalar a coleção inteira de skills de jogos ou o roteador dela",
+        "Aplicar APIs de Godot ou Unity que o projeto não usa"
+      ]
     }
   ]
 }

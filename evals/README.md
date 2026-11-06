@@ -1,6 +1,6 @@
 # Routing evaluation cases
 
-These 40 bilingual cases preserve the original Portuguese requests and evaluator
+These 41 bilingual cases preserve the original Portuguese requests and evaluator
 criteria with public workflow IDs. `EVOLUTION` routes to the maintenance guide;
 `NONE` means a bounded task does not need a broader workflow. Cases stay outside
 the installed library so expected answers are not injected into agent instructions.
@@ -19,3 +19,6 @@ still apply. A read-only review alone never grants publication authority.
 E30–E40 add one primary routing case for each previously uncovered workflow.
 They test selection criteria and expected quality signals; they are not a record
 of live GPT, DeepSeek or Claude evaluations.
+
+E41 checks the routing guide's external `game-ui-ux` pointer: it applies only
+when the project source has a canvas or game scene.

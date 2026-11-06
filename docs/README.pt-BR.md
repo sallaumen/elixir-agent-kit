@@ -8,7 +8,7 @@ Não copia a biblioteca nem cria dezenas de skills dentro da aplicação.
 ```elixir
 {:elixir_agent_kit,
  git: "https://github.com/sallaumen/elixir-agent-kit.git",
- tag: "v0.3.0",
+ tag: "v0.3.1",
  only: [:dev, :test],
  runtime: false}
 ```
