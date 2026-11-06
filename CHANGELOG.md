@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.5.1 — 2026-11-06
 
 - Reword the generated instruction block and the pointer skill description from
   "for development tasks, consult" to "before changing behavior or reviewing code,
