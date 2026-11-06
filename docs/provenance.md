@@ -41,6 +41,28 @@ This English community edition adapts 33 workflows developed by Lucas Tavano wit
 
 Conceptual references: [Agent Skills specification](https://agentskills.io/specification), [Eric Normand on stratified design](https://ericnormand.me/podcast/more-about-stratified-design), and [WCAG 2.2](https://www.w3.org/TR/WCAG22/). These references inform concepts; their texts are not bundled or relicensed.
 
+## Review lenses and their licenses
+
+The [source review matrix](source-review.md) names the skills consulted while
+deepening each workflow. None of their sentences is reproduced in this kit; the
+table records where each lens came from and the license stated in the copy that
+was consulted, so a reader can judge the provenance claim rather than trust it.
+
+| Lens | Origin | License in the consulted copy | What the kit took |
+|---|---|---|---|
+| `skill-creator` | Anthropic skills collection | Apache-2.0 | The packaging principle: when to use, which decisions matter, how to check the outcome. |
+| `ui-review` | Local skill by the kit's author | Same author as this kit | Real browser, keyboard, responsive and state checks as evidence. |
+| `impeccable` | Local skill; the copy declares Apache 2.0 but records no upstream repository | Apache-2.0 (as declared) | Hierarchy and design-system questions; none of its aesthetic defaults. |
+| `stitch-design-taste` | Local skill for Google Stitch | None stated in the consulted copy | Design-system questions only; nothing reused. |
+| `playbook-antislop` | `sallaumen/agent-playbook`, adapted from "Anti Slop" by Miqdad Badjuber | MIT | Honest copy and working controls as quality criteria. |
+| `elixir-antipatterns` | Gentleman-Skills, author tsardinasGitHub | MIT | Module boundary, changeset and query questions; numeric heuristics and code not imported. |
+| `elixir-ecto-patterns` | Local skill | None stated in the consulted copy | Ecto concepts only; nothing reused. |
+| `tdd` | mattpocock-skills plugin by Matt Pocock | MIT | The distinction between public behavior, failure cases and test oracles. |
+| `motion-kit` | Hugh Phan, revision `6173e5c` | MIT | The motion method adapted into `motion-design`, as recorded below. |
+
+Where the consulted copy states no license, the kit relied on the concept alone.
+Confirm the upstream license before any future textual reuse from those sources.
+
 ## Consolidation in 0.2
 
 The original collection stopped being a second editable source. The shared

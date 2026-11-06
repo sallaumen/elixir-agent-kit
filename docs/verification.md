@@ -1,5 +1,7 @@
-> Historical record for the initial 0.1 release. The 0.2 reference layout replaces
-> snapshots and native wrappers; see [compatibility](compatibility.md) for current behavior.
+> Historical record for the initial 0.1 release. Later releases replaced snapshots
+> and per-workflow wrappers with dependency references and one pointer skill per
+> client; see [compatibility](compatibility.md) for current behavior and
+> [CONTRIBUTING](../CONTRIBUTING.md) for the checks that run today.
 
 # Initial release verification
 

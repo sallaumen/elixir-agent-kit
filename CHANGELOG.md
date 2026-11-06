@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Record every review lens with its origin and the license found in the local
+  copy (`docs/provenance.md`), date each release in this changelog, describe the
+  evaluation cases by language instead of "bilingual", and remove leftover
+  "version 0.2" wording from the evolution policy and verification record.
 - Redesign the README around a how-it-works diagram (`docs/assets/how-it-works.svg`,
   light and dark), badges, a three-step quick start with the expected output, a
   worked example of an agent routing one request, and the catalog at a glance.
@@ -15,7 +19,7 @@
   prunes only directories the kit emptied; a pre-existing skill with that name
   blocks installation.
 
-## 0.4.0
+## 0.4.0 — 2026-11-06
 
 - Make the Claude block import `AGENTS.md` whenever the kit manages that file
   or the project already has one. Claude Code reads `AGENTS.md` only while no
@@ -32,14 +36,14 @@
 - Add routing cases E42 and E43 (43 total), and update the catalog, provenance,
   source review and workflow counts.
 
-## 0.3.1
+## 0.3.1 — 2026-11-06
 
 - Point game and canvas interface work to one pinned external skill,
   `game-ui-ux` from awesome-gamedev-agent-skills, beside the kit's frontend
   workflows. The routing guide links it; no external text is packaged.
 - Add routing case E41 (41 total) for a canvas HUD and pause menu.
 
-## 0.3.0
+## 0.3.0 — 2026-11-06
 
 - Rework all 33 workflows with task-specific inputs, decision points, quality
   criteria, validation evidence and pitfalls, drawing selectively on the original
@@ -50,7 +54,7 @@
   documentation map. Preserve the
   reference-only consumer layout and the offline integrity contract.
 
-## 0.2.0
+## 0.2.0 — 2026-11-05
 
 - Replace copied snapshots and per-skill wrappers with a small dependency-backed index and instruction blocks. Fresh checkouts need `mix deps.get`; native per-skill registration is removed.
 - Safely migrate 0.1 ownership records, preserving local instructions and refusing modified generated content.
