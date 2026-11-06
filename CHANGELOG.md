@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- Move the selection to the start of the session: the generated block, `START.md` and
+  the pointer skills now say "before opening any source file for a change or a review,
+  select one workflow and name it, or NONE", and step 4 ends with "then open the code
+  and investigate the way the workflow says". The v0.5.2 remeasure showed sessions
+  reading the local contract and investigating for 50 to 100 turns before the kit,
+  then hitting their cap on `START.md`. Existing installations pick it up on `sync`.
+
 ## 0.5.2 — 2026-11-06
 
 - `START.md` and the pointer skills now share one body: four steps that end in
