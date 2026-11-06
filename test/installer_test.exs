@@ -195,7 +195,7 @@ defmodule ElixirAgentKit.InstallerTest do
   test "managed block edits are preserved and reported", %{root: root} do
     Installer.run(:install, root)
     path = Path.join(root, "AGENTS.md")
-    File.write!(path, String.replace(File.read!(path), "For development tasks", "LOCAL"))
+    File.write!(path, String.replace(File.read!(path), "Before changing behavior", "LOCAL"))
     before = snapshot(root)
     assert_raise ArgumentError, ~r/locally modified/, fn -> Installer.run(:sync, root) end
     assert snapshot(root) == before

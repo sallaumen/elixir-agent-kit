@@ -616,6 +616,23 @@
         "Aumentar max_restarts ou o timeout do call para esconder o problema",
         "Tratar como bug de interface sem olhar a árvore de supervisão"
       ]
+    },
+    {
+      "id": "E46",
+      "request": "O contrato do mantenedor diz que falha de rede nunca apaga o último estado bom, mas depois de um 500 do GitHub o board mostra zero tarefas até o próximo sync. Corrija seguindo o contrato.",
+      "expected_primary": "async-state",
+      "allowed_alternatives": [
+        "debugging",
+        "data-contracts"
+      ],
+      "success_signals": [
+        "Ler o contrato local e ainda assim selecionar um workflow do kit antes de alterar comportamento",
+        "Preservar o último estado válido e testar a falha de rede com resposta controlada"
+      ],
+      "failure_signals": [
+        "Tratar o contrato local como substituto do workflow e pular a seleção",
+        "Esvaziar o estado para 'refletir' a falha"
+      ]
     }
   ]
 }

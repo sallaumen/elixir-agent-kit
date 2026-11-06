@@ -110,7 +110,7 @@ defmodule ElixirAgentKit.Installer do
     """
     ---
     name: elixir-agent-kit
-    description: "Use when a task in this Elixir project matches a shared workflow: screens and accessibility, data and migrations, integrations, asynchronous state, performance, tests, code review, debugging, build or delivery. Routes to the versioned Elixir Agent Kit read from the Mix dependency."
+    description: "Use before changing behavior or reviewing code in this Elixir project, when the task matches a shared workflow: screens and accessibility, data and migrations, provider calls, asynchronous or process state, performance, tests, code review, debugging, build or delivery. Routes to the versioned Elixir Agent Kit read from the Mix dependency."
     ---
 
     # Elixir Agent Kit #{ElixirAgentKit.version()}
@@ -163,9 +163,11 @@ defmodule ElixirAgentKit.Installer do
   defp wrap(body), do: @start <> "## Elixir Agent Kit\n\n" <> body <> @finish
 
   defp reference do
-    "For development tasks, consult [.elixir-agent-kit/START.md](.elixir-agent-kit/START.md).\n" <>
-      "Select the relevant workflow and read its shared contract. Preserve this project's rules.\n" <>
-      "If the files are missing, report the missing setup; do not claim the practices were applied.\n"
+    "Before changing behavior or reviewing code, select one workflow from\n" <>
+      "[.elixir-agent-kit/START.md](.elixir-agent-kit/START.md) and read it with its shared contract,\n" <>
+      "even when a local contract already covers the area; a bounded, fully specified edit needs none.\n" <>
+      "This project's rules keep precedence. If the files are missing, run `mix deps.get`; if you\n" <>
+      "cannot read them, report that instead of claiming the practices were applied.\n"
   end
 
   defp import_agents do
