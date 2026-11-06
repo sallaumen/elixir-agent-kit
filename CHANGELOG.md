@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.5.3 — 2026-11-06
 
 - Move the selection to the start of the session: the generated block, `START.md` and
   the pointer skills now say "before opening any source file for a change or a review,

@@ -4,7 +4,7 @@ defmodule ElixirAgentKit.MixProject do
   def project do
     [
       app: :elixir_agent_kit,
-      version: "0.5.2",
+      version: "0.5.3",
       elixir: "~> 1.15",
       start_permanent: Mix.env() == :prod,
       deps: [],
