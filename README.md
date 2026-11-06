@@ -1,23 +1,42 @@
 # Elixir Agent Kit
 
+[![CI](https://github.com/sallaumen/elixir-agent-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/sallaumen/elixir-agent-kit/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/tag/sallaumen/elixir-agent-kit?label=release&sort=semver&color=7c3aed)](https://github.com/sallaumen/elixir-agent-kit/releases)
+[![Elixir 1.15+](https://img.shields.io/badge/elixir-1.15%2B-4e2a8e)](mix.exs)
+[![License: MIT](https://img.shields.io/badge/license-MIT-2ea44f)](LICENSE)
+
 **Shared coding practices for AI agents, versioned with your Elixir project.**
 
-34 focused workflows grouped into frontend, backend, cross-cutting engineering
-and delivery. Each names inputs, decisions, quality criteria and verification.
-Install with Mix; agents read the library directly from the dependency. No copied
-skill library, service, model calls or production dependency.
+Pin the kit like any Mix dependency. Every agent that touches the project, whether
+Codex, Claude Code or your own harness, reads the same 34 reviewed workflows from
+`deps/`: what to inspect, which decisions matter, what "done" looks like and how
+to prove it. No copied skill library to drift, no service, no model calls, nothing
+shipped to production.
 
-[Quick start](#quick-start) · [Choose a workflow](priv/library/ROUTING.md) ·
-[Catalog](priv/library/CATALOG.md) · [Documentation map](docs/README.md) ·
-[Install with an AI agent](docs/INSTALL_WITH_AI.md) ·
-[Português](docs/README.pt-BR.md) · [Contributing](CONTRIBUTING.md)
+<p align="center">
+  <img src="docs/assets/how-it-works.svg" alt="How it works: the project pins the kit as a Mix dependency; the installer writes small references; an agent session follows them into the dependency and reads one workflow." width="960">
+</p>
+
+## Why a dependency
+
+- **One source, many agents, many projects.** A workflow improves once, in
+  `priv/library/`, ships as a tag, and each application adopts it in a normal
+  dependency PR. Two agents on the same checkout read identical text.
+- **Workflows that say what to do, not how to feel.** Each `SKILL.md` names the
+  inputs to inspect, the decision points, quality criteria, the evidence that
+  validates the result and the pitfalls. See
+  [`async-state`](priv/library/skills/async-state/SKILL.md) for the shape.
+- **Honest by design.** The installer writes references and checksums, never a
+  copy of a workflow. `mix agent_kit.check` runs offline in CI and fails on drift.
+  Nothing here claims that a model followed the text; that is checked in a fresh
+  session, as [compatibility](docs/compatibility.md) describes.
 
 ## Quick start
 
-Requires Elixir 1.15+, compatible Erlang/OTP and Git. Version 0.4.0 is distributed
-through public GitHub tags, **not Hex**. No token is required.
+Requires Elixir 1.15+, a compatible Erlang/OTP and Git. Releases are public Git
+tags, **not Hex**; no token is needed.
 
-Add to your existing `deps/0`:
+**1. Add the dependency** to `deps/0` in `mix.exs`:
 
 ```elixir
 {:elixir_agent_kit,
@@ -27,128 +46,159 @@ Add to your existing `deps/0`:
  runtime: false}
 ```
 
-Add to the keyword list returned by your existing `project/0`:
+**2. Choose the agents and workflows** in `project/0`:
 
 ```elixir
 elixir_agent_kit: [agents: [:codex, :claude, :generic], skills: :all]
 ```
 
-Run from the Mix project root, after checking for project aliases with extra effects:
+**3. Install** from the Mix project root (check your own aliases first; the kit
+runs no application, database or `mix setup`):
 
 ```sh
 mix deps.get
-mix agent_kit.install --dry-run
 mix agent_kit.install
 mix agent_kit.check
 ```
 
-The kit needs no database, app server or `mix setup`. Commit `mix.exs`, `mix.lock`,
-the generated index/state and instruction blocks. Do not commit `deps/`.
+You will see the paths the installer wrote and the next step:
 
-## What remains in your project
+```text
+Changed 6 paths:
+  .agents/skills/elixir-agent-kit/SKILL.md
+  .claude/skills/elixir-agent-kit/SKILL.md
+  .elixir-agent-kit/START.md
+  .elixir-agent-kit/state.tsv
+  AGENTS.md
+  CLAUDE.md
+
+Next: run mix agent_kit.check, commit these paths, then ask a fresh agent
+session to follow .elixir-agent-kit/START.md and name the workflow it selects.
+```
+
+Commit `mix.exs`, `mix.lock` and those paths. Do not commit `deps/`. Add
+`mix agent_kit.check` to the gate that runs after `mix deps.get`. Prefer
+`mix agent_kit.install --dry-run` when you want to see the plan first, and the
+[AI installation prompt](docs/INSTALL_WITH_AI.md) when an agent does the setup.
+
+## What an agent does with it
+
+> "After reconnecting, a late message marks the previous task as done and hides
+> the progress of the current one."
+
+1. The session loads `AGENTS.md` or `CLAUDE.md` and follows the block to
+   `.elixir-agent-kit/START.md`, or finds the generated `elixir-agent-kit` skill
+   in its own skill directory.
+2. It reads the [shared contract](priv/library/CONTRACT.md) and the
+   [routing guide](priv/library/ROUTING.md), and picks the narrowest workflow:
+   [`async-state`](priv/library/skills/async-state/SKILL.md).
+3. The workflow tells it what to inspect (event and job lifecycle, stable IDs,
+   reconnect behavior), what to decide (one durable state owner; idempotency per
+   effect), what quality looks like (the UI reconciles after reload from persisted
+   identifiers; retries never advance state falsely) and what evidence to show
+   (duplicate, delayed and out-of-order delivery exercised on the real flow).
+4. It reports with the [handoff template](priv/library/HANDOFF.md): outcome,
+   workflow and version used, checks actually run, limits.
+
+The routing cases in [`evals/`](evals/README.md) hold 43 requests like that one,
+with the expected workflow and the signals of a good or bad answer. They stay out
+of the installed payload so an agent never sees the answer key.
+
+## The catalog at a glance
+
+Pick the area, then the narrowest trigger. Every entry links to the full workflow;
+the [catalog](priv/library/CATALOG.md) lists the trigger sentences.
+
+| Frontend and user experience | Backend and data | Cross-cutting engineering | Delivery and build |
+|---|---|---|---|
+| [ui-identity](priv/library/skills/ui-identity/SKILL.md) | [abstraction-layers](priv/library/skills/abstraction-layers/SKILL.md) | [architecture-review](priv/library/skills/architecture-review/SKILL.md) | [delivery-coordination](priv/library/skills/delivery-coordination/SKILL.md) |
+| [layout-density](priv/library/skills/layout-density/SKILL.md) | [module-design](priv/library/skills/module-design/SKILL.md) | [code-consolidation](priv/library/skills/code-consolidation/SKILL.md) | [pipeline-design](priv/library/skills/pipeline-design/SKILL.md) |
+| [navigation-ux](priv/library/skills/navigation-ux/SKILL.md) | [data-contracts](priv/library/skills/data-contracts/SKILL.md) | [version-lineage](priv/library/skills/version-lineage/SKILL.md) | [build-dependencies](priv/library/skills/build-dependencies/SKILL.md) |
+| [responsive-mobile](priv/library/skills/responsive-mobile/SKILL.md) | [ai-orchestration](priv/library/skills/ai-orchestration/SKILL.md) | [performance](priv/library/skills/performance/SKILL.md) | [delivery-validation](priv/library/skills/delivery-validation/SKILL.md) |
+| [direct-interactions](priv/library/skills/direct-interactions/SKILL.md) | [notifications](priv/library/skills/notifications/SKILL.md) | [async-state](priv/library/skills/async-state/SKILL.md) | |
+| [accessibility](priv/library/skills/accessibility/SKILL.md) | [integration-setup](priv/library/skills/integration-setup/SKILL.md) | [test-consolidation](priv/library/skills/test-consolidation/SKILL.md) | |
+| [design-system](priv/library/skills/design-system/SKILL.md) | [commercial-eligibility](priv/library/skills/commercial-eligibility/SKILL.md) | [test-strategy](priv/library/skills/test-strategy/SKILL.md) | |
+| [motion-design](priv/library/skills/motion-design/SKILL.md) | [metrics-costs](priv/library/skills/metrics-costs/SKILL.md) | [code-review](priv/library/skills/code-review/SKILL.md) | |
+| [asset-lineage](priv/library/skills/asset-lineage/SKILL.md) | [operational-alerts](priv/library/skills/operational-alerts/SKILL.md) | [debugging](priv/library/skills/debugging/SKILL.md) | |
+| | [simulation-isolation](priv/library/skills/simulation-isolation/SKILL.md) | | |
+| | [security-boundaries](priv/library/skills/security-boundaries/SKILL.md) | | |
+| | [migration-compatibility](priv/library/skills/migration-compatibility/SKILL.md) | | |
+
+Three of them keep a different default mode: `code-review` reviews without
+editing, `delivery-validation` analyzes without repairing, `delivery-coordination`
+coordinates. The user's explicit scope always wins over a default. The
+[Elixir context](priv/library/ELIXIR.md) adds OTP, Phoenix, Ecto and Oban notes
+for the technologies a project actually uses.
+
+## What lands in your project
 
 | Path | Purpose |
 |---|---|
-| `.elixir-agent-kit/START.md` | Small index pointing to the dependency's contract and catalog. |
-| `.elixir-agent-kit/state.tsv` | Version, selection and checksums of files/blocks owned by the installer. |
-| `AGENTS.md` | A bounded reference block for Codex and generic harnesses. |
-| `CLAUDE.md` | A bounded block for Claude Code. When the kit also manages `AGENTS.md`, or the project already has one, the block imports it with `@AGENTS.md` instead of repeating the reference. |
-| `.claude/skills/elixir-agent-kit/SKILL.md` | One generated skill for Claude Code's native discovery (`:claude`): a description, the catalog filtered by your selection and links into the dependency. |
-| `.agents/skills/elixir-agent-kit/SKILL.md` | The same generated skill for Codex (`:codex`). |
+| `.elixir-agent-kit/START.md` | Small index pointing to the dependency's contract, routing guide and catalog. |
+| `.elixir-agent-kit/state.tsv` | Version, selection and SHA-256 of every file and block the installer owns. |
+| `AGENTS.md` | A bounded block for Codex and generic harnesses (`:codex`, `:generic`). |
+| `CLAUDE.md` | A bounded block for Claude Code (`:claude`). When `AGENTS.md` is managed or already exists, the block imports it with `@AGENTS.md`, because Claude Code stops reading `AGENTS.md` once a `CLAUDE.md` applies. |
+| `.claude/skills/elixir-agent-kit/SKILL.md` | One generated skill for Claude Code's native discovery: a description, the catalog filtered by your selection and links into the dependency. |
+| `.agents/skills/elixir-agent-kit/SKILL.md` | The same generated skill for Codex. |
 
-Existing project instructions outside those blocks remain unchanged. No workflow
-bodies are copied into the project: the two generated skills hold only the
-catalog and links, so a client that scans its native skill directory finds the
-kit without a second copy of any practice. The library stays in
-`deps/elixir_agent_kit/priv/library/` for a standard Git dependency. Custom
-dependency paths are resolved by Mix; external local path dependencies produce
-local absolute links and need resync after moving.
+Text outside the managed blocks is yours and survives every sync. No workflow
+body is ever copied; the library stays in `deps/elixir_agent_kit/priv/library/`.
+A pre-existing skill named `elixir-agent-kit` blocks installation until renamed.
+Custom dependency paths are resolved by Mix; an external local path dependency
+produces absolute links and needs a resync after moving.
 
-`:codex` and `:generic` share the same `AGENTS.md` block; `:claude` selects
-`CLAUDE.md`. Claude Code reads `AGENTS.md` only while no `CLAUDE.md` applies, so
-the Claude block imports `AGENTS.md` whenever that file is managed or already
-exists; adding `AGENTS.md` later shows as drift until you sync. `:claude` and
-`:codex` also generate one pointer skill each in the client's native skill
-directory; `:generic` relies on `AGENTS.md` alone. These are instruction-file
-adapters, not model integrations: no per-workflow skills or slash commands are
-registered, and a pre-existing skill named `elixir-agent-kit` blocks installation
-until you rename it.
-
-A fresh checkout must run `mix deps.get` before reading the practices. A client
-must be able to read ignored dependency files. Ask a fresh session to read
-`AGENTS.md` or `CLAUDE.md`, follow the index, select a workflow and name the files
-it actually read. A DeepSeek-backed harness must load these files in its actual
-checkout; the model name alone does not establish support. See
-[compatibility](docs/compatibility.md).
-
-## Selection and commands
-
-Start from the [area routing guide](priv/library/ROUTING.md), select the
-narrowest applicable workflow from the [catalog](priv/library/CATALOG.md), and
-read its quality and validation sections. Categories describe the primary work,
-not ownership of an application directory. The default is `:generic` with all
-skills. To narrow discovery, set
-`skills: ["debugging", "code-review"]` in project configuration and sync.
-Selection is guidance in the index, not an access-control boundary. With no
-project configuration, subsequent commands reuse the recorded selection.
+## Commands
 
 | Command | Effect |
 |---|---|
 | `mix agent_kit.list` | Prints workflow IDs, modes and triggers grouped by area. |
-| `mix agent_kit.install` | Creates or synchronizes references after conflict preflight. |
-| `mix agent_kit.sync` | Same reconciliation, including removal of unmodified legacy generated files. |
+| `mix agent_kit.install` | Creates or synchronizes references after a conflict preflight. |
+| `mix agent_kit.sync` | Same reconciliation, plus removal of unmodified legacy generated files. |
 | `mix agent_kit.check` | Offline, read-only comparison against the loaded package and configuration; fails on drift. |
-| `mix agent_kit.outdated` | Queries public stable Git tags; reports the loaded and latest versions without changing files. |
-| `mix agent_kit.outdated --check` | Also fails when a newer stable tag exists; network failures always fail. |
-| `mix agent_kit.uninstall` | Removes owned unmodified references and state, preserving local content. |
+| `mix agent_kit.outdated` | Queries public stable Git tags and reports loaded versus latest; `--check` fails when a newer tag exists. |
+| `mix agent_kit.uninstall` | Removes owned, unmodified references and state; prunes only directories it emptied. |
 
 Reconciliation tasks accept `--agents codex,claude,generic` and `--skills ID,ID`;
-mutation tasks also accept `--dry-run`. Unknown arguments fail. Prefer persistent
-project configuration over invocation-only flags. Run uninstall before removing
-the dependency. No task starts your application or calls a model.
+mutation tasks accept `--dry-run`. Narrow discovery with
+`skills: ["debugging", "code-review"]` in `project/0`; selection shapes the index
+and the pointer skills, it is not an access boundary. No task starts your
+application or calls a model.
 
-## Upgrade from 0.1 or adopt a later release
+## Upgrades and one shared source
 
-1. Read the release's [changelog](CHANGELOG.md). Optionally query `mix agent_kit.outdated`.
-2. Change the pinned tag in `mix.exs`; run `mix deps.update elixir_agent_kit`.
-3. Run `mix agent_kit.sync --dry-run` and inspect the plan, then `mix agent_kit.sync`.
-4. Run `mix agent_kit.check` and project-required checks; review and commit the diff.
+1. Read the [changelog](CHANGELOG.md); `mix agent_kit.outdated` tells you whether a newer tag exists.
+2. Change the tag in `mix.exs` and run `mix deps.update elixir_agent_kit`.
+3. Run `mix agent_kit.sync --dry-run`, inspect, then `mix agent_kit.sync`.
+4. Run `mix agent_kit.check` and your project gates; commit the diff.
 
-For a 0.1 installation, sync removes the recorded `.elixir-agent-kit/library/`
-files and `.agents/skills/eak-*` / `.claude/skills/eak-*` wrappers. This is a
-migration to dependency references, not a second installation. Unowned files
-survive; empty directories may remain. Do not remove similarly named user files
-by glob or discard the ownership state before migrating.
+Reusable lessons go upstream through the [evolution policy](priv/library/EVOLUTION.md)
+and the [proposal template](priv/library/templates/practice-proposal.md); product
+rules stay in the application. A 0.1 installation migrates the same way: sync
+removes its recorded copies and `eak-*` wrappers and keeps everything it does not
+own. Edited managed content, unknown collisions, malformed markers and symlinked
+outputs block every write before it starts; there is no force switch.
 
-Modified managed files, unknown collisions, malformed markers/state and symlinked
-outputs block mutation before any writes. Preserve edits as local instructions or
-an upstream proposal, restore their recorded originals from Git, then retry.
-There is no force switch. Restore the state and generated files together after
-an interrupted write; preflight is not a filesystem transaction. Use one writer.
+## Guarantees and limits
 
-## Keep one shared source
+- Zero third-party Elixir dependencies, no telemetry, no global client
+  configuration, no credentials.
+- `check` is offline and verifies this installation, not freshness; `outdated` is
+  an explicit network query, never a background updater.
+- A fresh checkout needs `mix deps.get` before any agent can read a workflow, and
+  the client must be able to read ignored `deps/` files. A DeepSeek-backed or
+  custom harness must load `AGENTS.md` or the index in its actual worktree.
+- Structural tests and consumer smoke tests prove links, preservation and
+  migration. They do not prove that a live client discovered or followed a
+  practice. Use the fresh-session procedure in [compatibility](docs/compatibility.md).
 
-Reusable improvements belong in this repository's `priv/library/`. Product rules
-stay in the consuming project. Use the [evolution policy](priv/library/EVOLUTION.md)
-and [proposal template](priv/library/templates/practice-proposal.md) to send a
-sanitized lesson upstream, release it, and adopt it in each application through a
-pinned update PR. Do not edit `deps/` or generated files as a source.
+## Documentation
 
-Use `mix agent_kit.check` in development/CI after fetching dependencies. It checks
-installation consistency, **not** latest-release freshness. Use `outdated` in an
-explicit dependency-maintenance routine; no scheduler or silent auto-update is
-installed. All consumers can share an editable source while adopting versions at
-different times. See [architecture](docs/architecture.md).
-
-## Community and validation
-
-Zero third-party Elixir dependencies. No telemetry, global client configuration
-or credential requirements. This tool supplies guidance; it does not enforce
-model behavior. Structural tests and consumer smoke tests do not certify that a
-live client followed the practices.
-
-- [Contribution process and checks](CONTRIBUTING.md)
-- [Compatibility and live evaluation](docs/compatibility.md)
-- [Security reporting](SECURITY.md)
-- [Workflow provenance](docs/provenance.md)
-- [MIT license](LICENSE)
+[Documentation map](docs/README.md) ·
+[Install with an AI agent](docs/INSTALL_WITH_AI.md) ·
+[Português](docs/README.pt-BR.md) ·
+[Architecture](docs/architecture.md) ·
+[Compatibility and live evaluation](docs/compatibility.md) ·
+[Provenance](docs/provenance.md) ·
+[Contributing](CONTRIBUTING.md) ·
+[Security](SECURITY.md) ·
+[MIT license](LICENSE)

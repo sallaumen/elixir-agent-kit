@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Redesign the README around a how-it-works diagram (`docs/assets/how-it-works.svg`,
+  light and dark), badges, a three-step quick start with the expected output, a
+  worked example of an agent routing one request, and the catalog at a glance.
+  The Portuguese guide follows the same structure. `install` and `sync` now print
+  the next step after listing the paths they changed.
 - Generate one pointer skill per native client (`.claude/skills/elixir-agent-kit/SKILL.md`
   for `:claude`, `.agents/skills/elixir-agent-kit/SKILL.md` for `:codex`) with a
   discovery description, the selected catalog and links into the dependency.

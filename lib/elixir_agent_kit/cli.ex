@@ -35,6 +35,13 @@ defmodule ElixirAgentKit.CLI do
         Mix.shell().info("#{verb} #{length(paths)} paths:")
         Enum.each(paths, &Mix.shell().info("  " <> &1))
 
+        if action in [:install, :sync] and not opts[:dry_run] do
+          Mix.shell().info(
+            "\nNext: run mix agent_kit.check, commit these paths, then ask a fresh agent\n" <>
+              "session to follow .elixir-agent-kit/START.md and name the workflow it selects."
+          )
+        end
+
       {:drift, paths} ->
         Enum.each(paths, &Mix.shell().error("Out of sync: " <> &1))
 
