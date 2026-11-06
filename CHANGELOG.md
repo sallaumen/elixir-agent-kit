@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.5.2 — 2026-11-06
 
 - `START.md` and the pointer skills now share one body: four steps that end in
   stating the workflow ID or NONE before the first edit, followed by the enabled
