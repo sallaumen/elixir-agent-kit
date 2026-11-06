@@ -11,9 +11,10 @@ Default mode: **analyze-and-fix**. Read the [shared contract](../../CONTRACT.md)
 
 Use when a passing suite misses important bugs or the required regression coverage is unclear.
 
-## Useful inputs
+## Inputs to inspect
 
-The requested outcome, affected flow or diff, project instructions, relevant evidence and acceptance criteria. Discover available context before asking for missing information.
+- Changed behavior, public contract, likely failure modes and existing suite boundaries.
+- Available test environments, external dependencies, data isolation and expected execution cost.
 
 ## Workflow
 
@@ -24,6 +25,28 @@ The requested outcome, affected flow or diff, project instructions, relevant evi
 3. Control time, concurrency, persistence and external responses so failures are reproducible. Include an adverse condition when that is where the risk lives.
 
 4. Prove a regression test reaches the intended behavior, preferably by observing it fail before the fix. Do not pursue coverage percentage through redundant assertions.
+
+## Decision points
+
+- Choose the cheapest boundary that can observe the failure, then add integration coverage only for interactions it cannot prove.
+- Use deterministic fakes for unavailable external effects, while keeping one real contract check where feasible and authorized.
+
+## Quality criteria
+
+- Each test has a concrete input, expected observable result and reason the boundary matters.
+- Success, denial, failure and retry cases are selected by risk rather than a fixed quota.
+- Fixtures use the production contract and avoid coupling to private implementation details.
+- The test can run repeatedly without leaking state, relying on timing guesses or paying for outside services.
+
+## Validation and evidence
+
+- Run the focused suite and report skips, fixtures or dependencies that limit confidence.
+- Trace at least one new assertion to the user-visible or public behavior it protects.
+
+## Avoid
+
+- Do not mirror the implementation line for line.
+- Do not call a mock expectation proof of a provider’s actual behavior.
 
 ## Completion
 

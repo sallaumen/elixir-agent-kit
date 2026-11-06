@@ -10,6 +10,7 @@ defmodule ElixirAgentKit.CatalogTest do
       assert Regex.match?(~r/^[a-z0-9]+(-[a-z0-9]+)*$/, skill.id)
       assert String.length("eak-" <> skill.id) <= 64
       assert skill.mode in ["analyze", "review", "analyze-and-fix", "coordinate"]
+      assert skill.area in ["frontend", "backend", "cross-cutting", "delivery"]
       assert String.length(skill.description) < 1024
 
       contents =
@@ -18,7 +19,12 @@ defmodule ElixirAgentKit.CatalogTest do
       for required <- [
             "name: #{skill.id}\n",
             "## When to use",
+            "## Inputs to inspect",
             "## Workflow",
+            "## Decision points",
+            "## Quality criteria",
+            "## Validation and evidence",
+            "## Avoid",
             "## Completion",
             "../../CONTRACT.md"
           ] do

@@ -11,9 +11,10 @@ Default mode: **analyze-and-fix**. Read the [shared contract](../../CONTRACT.md)
 
 Use when teams repeat interface mistakes or create incompatible component and token variations.
 
-## Useful inputs
+## Inputs to inspect
 
-The requested outcome, affected flow or diff, project instructions, relevant evidence and acceptance criteria. Discover available context before asking for missing information.
+- Current DESIGN.md, tokens, components, representative pages and the inconsistencies teams actually repeat.
+- The product’s identity, consuming component APIs, states, themes and accessibility constraints.
 
 ## Workflow
 
@@ -24,6 +25,28 @@ The requested outcome, affected flow or diff, project instructions, relevant evi
 3. Document behavior, states, accessibility and responsive expectations alongside visual values. Make project instructions point to canonical guidance rather than duplicating it.
 
 4. Validate representative consumers after changing a shared component. Provide examples that exist and name unresolved migration work.
+
+## Decision points
+
+- Keep a one-off style local when reuse is speculative; create or refine a shared token/component when a repeated decision needs a stable owner.
+- If the issue is a single screen’s composition, route to ui-identity rather than rebuilding the entire system.
+
+## Quality criteria
+
+- Describe principles by purpose: hierarchy, density, typography, color role, motion, imagery and interaction states, not a fashionable fixed palette.
+- Tie guidance to existing implementation and a real example so a future agent can choose correctly without guessing.
+- Give reusable components clear variants and state contracts; avoid a single component with many unrelated flags.
+- Record exceptions where product meaning requires them, and keep docs, tokens and consumers aligned as the system evolves.
+
+## Validation and evidence
+
+- Apply a changed rule to representative pages and verify a component’s default, error, selected, disabled and responsive states as relevant.
+- Show where the rule lives, which consumers changed and what evidence demonstrates improved consistency.
+
+## Avoid
+
+- Do not import blanket bans on fonts, cards, gradients or motion from another design skill.
+- Do not declare a DESIGN.md authoritative when the implementation and product direction disagree.
 
 ## Completion
 

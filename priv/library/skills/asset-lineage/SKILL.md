@@ -11,9 +11,10 @@ Default mode: **analyze-and-fix**. Read the [shared contract](../../CONTRACT.md)
 
 Use when previews or generated assets lack clear source, version, orientation or ownership.
 
-## Useful inputs
+## Inputs to inspect
 
-The requested outcome, affected flow or diff, project instructions, relevant evidence and acceptance criteria. Discover available context before asking for missing information.
+- Asset sources, licensing or permission, original versus derived files, associated entity/variant/version and display surfaces.
+- Generation and transformation jobs, storage keys, selection rules, loading/error states and cache invalidation.
 
 ## Workflow
 
@@ -24,6 +25,28 @@ The requested outcome, affected flow or diff, project instructions, relevant evi
 3. Represent pending, failed and missing assets honestly. Provide useful fallback behavior without displaying unrelated or invented output.
 
 4. Exercise regeneration, selection changes, refresh and failed processing. Preserve historical associations and verify access controls on stored artifacts.
+
+## Decision points
+
+- Separate a mockup or generated illustration from a verified catalog image when their evidentiary meaning differs.
+- If choosing an old asset changes the selected product revision, pair with version-lineage for that separate state risk.
+
+## Quality criteria
+
+- Carry stable source, version and ownership identifiers through generation, transformation, storage and display.
+- Prevent filename collisions and stale previews from attaching an image to the wrong variant, orientation or approval state.
+- Choose a primary image for the user’s decision and allow inspection of relevant secondary views without silently changing canonical selection.
+- Make missing, pending, failed and unverified visuals explicit; do not imply that an illustration proves a purchasable variant.
+
+## Validation and evidence
+
+- Trace one asset from source to rendered page and test a version/variant switch while another preview is loading.
+- Report what the image proves, which transformations ran, and whether its origin/license and current version are known.
+
+## Avoid
+
+- Do not use a visual resemblance or filename as proof of product identity.
+- Do not publish or overwrite real assets merely to test an unverified generation flow.
 
 ## Completion
 

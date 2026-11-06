@@ -34,10 +34,14 @@ Keep product rules in their application and never edit a downloaded dependency.
 
 ## Workflow changes
 
-Start with a specific trigger and compare neighboring workflows. Preserve the
-shared contract rather than copying its rules into every skill. Use standard
-`name` and `description` frontmatter, a clear mode, workflow and completion test.
-Update `priv/library/catalog.tsv`, `CATALOG.md`, provenance and relevant tests.
+Start with a specific trigger and compare neighboring workflows in the
+[routing guide](priv/library/ROUTING.md). Preserve the shared contract rather
+than copying its rules into every skill. Use standard `name` and `description`
+frontmatter, a clear mode, task-specific inputs and decisions, quality criteria,
+validation evidence, pitfalls, workflow and completion test. Do not expand text
+just for length or import universal style preferences from a reference skill.
+Update the primary area in `priv/library/catalog.tsv`, `CATALOG.md`,
+[the 33-workflow review](docs/source-review.md), provenance and relevant tests.
 Keep routing cases in `evals/`; never ship evaluator answers as workflow context.
 Do not add a skill merely for a synonym of an existing workflow.
 

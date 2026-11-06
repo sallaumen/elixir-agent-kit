@@ -11,9 +11,10 @@ Default mode: **analyze-and-fix**. Read the [shared contract](../../CONTRACT.md)
 
 Use when alerts repeat, historical incidents look current or acknowledging an alert appears to resolve it.
 
-## Useful inputs
+## Inputs to inspect
 
-The requested outcome, affected flow or diff, project instructions, relevant evidence and acceptance criteria. Discover available context before asking for missing information.
+- Source events, issue identity, persisted alert state, severity, owner, acknowledgement and recovery signal.
+- Notification routes, deduplication windows, history retention and current operator actions.
 
 ## Workflow
 
@@ -24,6 +25,28 @@ The requested outcome, affected flow or diff, project instructions, relevant evi
 3. Define deduplication, recurrence and stale-data behavior. Preserve history while keeping current severity tied to observed state.
 
 4. Test repeated detection, acknowledgement, actual recovery and a new recurrence. Use notifications for transport-specific failures.
+
+## Decision points
+
+- Separate a failure event, an ongoing incident and a notification sent to a person.
+- Acknowledged, seen, snoozed or silenced describes human attention; it does not prove the underlying issue recovered.
+
+## Quality criteria
+
+- Repeated events for one active issue update a stable alert rather than flooding the operator.
+- Recovery closes only on evidence of actual resolution, and recurrence opens an understandable new episode.
+- Severity reflects impact, urgency and actionability rather than event count alone.
+- Historical episodes stay attributable without making old incidents look current after restart or replay.
+
+## Validation and evidence
+
+- Exercise open, repeat, acknowledge, recover and recur, including out-of-order or unavailable notification paths.
+- Show what the operator sees and what actually happened in the system for each transition.
+
+## Avoid
+
+- Do not convert “mark as read” into “resolved”.
+- Do not notify about the same failing notifier in an uncontrolled loop.
 
 ## Completion
 

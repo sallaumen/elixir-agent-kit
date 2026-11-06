@@ -46,9 +46,17 @@ The original collection stopped being a second editable source. The shared
 contract now links an evolution policy, and reusable decision, delivery, diagnosis
 and validation templates live in `priv/library/templates/`. Incorporation becomes
 the proposal template and evolution guide, rather than a command to run every
-workflow. The 29 routing cases live in `evals/`, outside the installed payload.
+workflow. The initial 29 routing cases live in `evals/`, outside the installed payload.
 Their metadata is checked; live agent evaluations remain separate.
 
 Original long-form wording and product contexts remain in the source repository's
 Git history. This edition is a concise adaptation, not a claim of literal text
 equivalence. Private product contexts are not part of the public package.
+
+## Depth review in 0.3
+
+All 33 public workflows now have task-specific inputs, decision points, quality
+criteria, validation evidence and pitfalls. The [source review matrix](source-review.md)
+records each original ID, primary area and additional professional reference
+considered. The guidance is rewritten for reuse; no external skill text or
+product-specific instruction is bundled verbatim.

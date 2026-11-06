@@ -5,9 +5,20 @@ defmodule Mix.Tasks.AgentKit.List do
 
   @impl true
   def run([]) do
-    Enum.each(ElixirAgentKit.catalog(), fn skill ->
-      Mix.shell().info("#{skill.id} [#{skill.mode}]\n  #{skill.description}")
-    end)
+    for {area, title} <- [
+          {"frontend", "Frontend and user experience"},
+          {"backend", "Backend and data"},
+          {"cross-cutting", "Cross-cutting engineering"},
+          {"delivery", "Delivery and build"}
+        ] do
+      Mix.shell().info("\n#{title}:")
+
+      ElixirAgentKit.catalog()
+      |> Enum.filter(&(&1.area == area))
+      |> Enum.each(fn skill ->
+        Mix.shell().info("#{skill.id} [#{skill.mode}]\n  #{skill.description}")
+      end)
+    end
   end
 
   def run(_), do: Mix.raise("Usage: mix agent_kit.list")

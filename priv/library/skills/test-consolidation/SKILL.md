@@ -11,9 +11,10 @@ Default mode: **analyze-and-fix**. Read the [shared contract](../../CONTRACT.md)
 
 Use when duplicated tests slow maintenance without protecting distinct failure modes.
 
-## Useful inputs
+## Inputs to inspect
 
-The requested outcome, affected flow or diff, project instructions, relevant evidence and acceptance criteria. Discover available context before asking for missing information.
+- Overlapping tests, covered public behavior, fixtures, failure modes and historical regressions.
+- Test runtime and maintenance cost with examples of repeated assertions or brittle setup.
 
 ## Workflow
 
@@ -24,6 +25,28 @@ The requested outcome, affected flow or diff, project instructions, relevant evi
 3. Remove or combine one supported duplicate at a time and preserve readable fixtures. Avoid replacing meaningful behavior tests with implementation-shaped assertions.
 
 4. Run the affected tests and the required project gate. Record any lost coverage intentionally and explain why remaining tests still detect the relevant regression.
+
+## Decision points
+
+- Remove duplication only where two tests detect the same regression at the same boundary.
+- Retain independent coverage for distinct paths, roles, retries or failure mechanisms even if fixtures look alike.
+
+## Quality criteria
+
+- The consolidated test states its behavioral oracle and fails when the protected contract breaks.
+- Helpers reduce repeated setup without hiding relevant preconditions or assertions.
+- Deleting tests does not erase boundary, integration or migration cases represented only once.
+- Test names and fixtures let a maintainer see what risk each case protects.
+
+## Validation and evidence
+
+- Map old tests to retained behavior and run the focused suite.
+- Where uncertainty is material, introduce or simulate a small mutation of the contract to confirm the test detects it.
+
+## Avoid
+
+- Do not replace several assertions with one snapshot that misses the important condition.
+- Do not optimize runtime by deleting the only failure-path check.
 
 ## Completion
 
