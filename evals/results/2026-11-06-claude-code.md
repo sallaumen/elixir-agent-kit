@@ -271,9 +271,57 @@ example a block that asks for the workflow choice before the investigation start
 or a consumer `AGENTS.md` that lists the kit selection before the maintainer contract.
 A larger turn and budget cap would also let these runs finish.
 
+## Remeasure on v0.5.3 (selection before the code is opened, 60 turns)
+
+agent-board `main` `49806d3`: kit v0.5.3 (block, `START.md` and pointer skills say
+"before opening any source file for a change or a review, select one workflow and name
+it, or NONE", step 4 ends with "then open the code and investigate the way the workflow
+says") and `AGENTS.md` now lists the kit selection as the first required contract, with
+the maintainer contract second ("then read and follow…"). Same client, prompts and
+permissions; `--max-turns 60`, `--max-budget-usd 8`; three repetitions of E32 and E44,
+16:50–17:31 local time, 39.12 USD. "At turn" columns are the assistant turn of the first
+read of `START.md`, the workflow's `SKILL.md`, the maintainer contract and a `lib/` file.
+
+| Run | Expected | Read from kit | Routed | START | SKILL | Contract | First source | Edits | mix test | Ended | Cost (USD) |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| E32-r1 | async-state | START, async-state, CONTRACT | ok | 3 | 7 | 4 | 15 | 4 | yes | turn cap | 6.27 |
+| E32-r2 | async-state | START, async-state, CONTRACT | ok | 3 | 7 | 4 | 11 | 4 | yes | finished | 5.95 |
+| E32-r3 | async-state | START, async-state, CONTRACT | ok | 3 | 6 | 8 | 13 | 4 | yes | turn cap | 6.92 |
+| E44-r1 | provider-calls | START, provider-calls, CONTRACT | ok | 4 | 7 | 9 | 13 | 4 | yes | finished | 7.08 |
+| E44-r2 | provider-calls | START, provider-calls, CONTRACT | ok | 3 | 7 | 10 | 102 | 2 | denied | finished | 5.75 |
+| E44-r3 | provider-calls | START | none | 3 | never | 4 | 10 | 6 | yes | turn cap | 7.15 |
+
+Backend cases across the four measurements (v0.5.0, v0.5.1, v0.5.2, v0.5.3): reached
+the kit 2/6, 5/6, 5/6, 6/6; routed correctly 2/6, 3/6, 3/6, 5/6; opened the workflow
+before any source file 0/6, 0/6, 0/6, 5/6.
+
+- The order moved. Every session opened `START.md` within its first four turns, and
+  five opened the right `SKILL.md` within its first seven, before the maintainer
+  contract in three runs and before any `lib/` file in all five. The selection was
+  named in the text ("Workflow selected: async-state", "That routes to the
+  provider-calls workflow") and the two finished E44 runs closed with a "Workflow
+  chosen" section, which is step 4 as written.
+- E44-r3 announced "the provider-calls workflow" at turn 6, read the maintainer
+  contract instead, and went to the source without opening the `SKILL.md`. One miss
+  of six, inside the kit's entry, after the choice was made.
+- Three runs finished; three hit the 60-turn cap mid-fix, none the 8 USD budget. The
+  finished runs are the first backend sessions in this evaluation to reach a result:
+  E32-r2 named the stale-result-overwrites-state cause and fixed it with tests;
+  E44-r1 found the double charge in the per-provider cache key and fixed it with tests.
+  E44-r2 fixed and could not run the suite: it called `MIX_ENV=test mix test`, which the
+  harness allowlist (`Bash(mix test:*)`) does not match, and reported that honestly
+  under the project's CI-unavailable procedure. A harness limit, not a kit one.
+- E44-r2 reached its first `lib/` file at turn 102 because it read the source through
+  `cat` and `grep` in Bash before that; the column counts `Read` calls only.
+
+Reading: for these two cases on this consumer, the kit is now reached and the workflow
+chosen before the investigation, as the block asks. The remaining misses are a single
+session skipping the workflow body after naming it, and the cap: a backend fix with
+tests on this codebase takes more than 60 turns about half the time.
+
 ## Limits
 
-- One client, one model, 18 runs plus controls, the 18-run rerun on v0.5.1 and the 6-run remeasure on v0.5.2, on the operator's machine with the
+- One client, one model, 18 runs plus controls, the 18-run rerun on v0.5.1 and the 6-run remeasures on v0.5.2 and v0.5.3, on the operator's machine with the
   operator's global instructions present. Codex and the DeepSeek executor were not
   evaluated.
 - "Routed" is measured by which `SKILL.md` was opened, not by whether its criteria were
@@ -295,9 +343,11 @@ v0.5.1) and the rerun above measures them.
 4. Done (v0.5.2). Kit: make `START.md` end with the workflow choice, so a session that
    opens it leaves with one `SKILL.md` path; the remeasure above shows no session
    leaving `START.md` without a workflow.
-5. Kit and consumer: move the selection earlier in the session's order. Candidates:
-   block wording that asks for the workflow choice before the investigation starts,
-   and listing the kit selection before the maintainer contract in `AGENTS.md`.
-   Measure with a 60-turn cap so the backend runs can finish.
-6. Evaluation: a fresh clone per no-deps repetition; the same matrix on a machine
+5. Done (v0.5.3, agent-board#276). Kit and consumer: move the selection earlier in
+   the session's order: block wording that asks for the workflow choice before the
+   code is opened, and the kit selection listed before the maintainer contract in
+   `AGENTS.md`. The remeasure above shows 5 of 6 workflows opened before any source.
+6. Evaluation: match `MIX_ENV=test mix test` in the harness allowlist; use a 90-turn
+   cap for backend fixes with tests.
+7. Evaluation: a fresh clone per no-deps repetition; the same matrix on a machine
    without the operator's global skill rule, and on Codex and the DeepSeek executor.
