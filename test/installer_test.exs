@@ -91,7 +91,8 @@ defmodule ElixirAgentKit.InstallerTest do
 
     start = get(root, ".elixir-agent-kit/START.md")
     assert start =~ "../deps/elixir_agent_kit/priv/library/CONTRACT.md"
-    assert start =~ "4. Before the first edit, state the workflow ID or NONE"
+    assert start =~ "4. State the workflow ID or NONE in your plan or report"
+    assert start =~ "Before opening any source file for a change or a review:"
     assert start =~ "../deps/elixir_agent_kit/priv/library/skills/debugging/SKILL.md"
 
     pointer = get(root, ".claude/skills/elixir-agent-kit/SKILL.md")
@@ -197,7 +198,7 @@ defmodule ElixirAgentKit.InstallerTest do
   test "managed block edits are preserved and reported", %{root: root} do
     Installer.run(:install, root)
     path = Path.join(root, "AGENTS.md")
-    File.write!(path, String.replace(File.read!(path), "Before changing behavior", "LOCAL"))
+    File.write!(path, String.replace(File.read!(path), "Before opening any source file", "LOCAL"))
     before = snapshot(root)
     assert_raise ArgumentError, ~r/locally modified/, fn -> Installer.run(:sync, root) end
     assert snapshot(root) == before

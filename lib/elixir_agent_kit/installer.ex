@@ -91,7 +91,7 @@ defmodule ElixirAgentKit.Installer do
     """
     ---
     name: elixir-agent-kit
-    description: "Use before changing behavior or reviewing code in this Elixir project, when the task matches a shared workflow: screens and accessibility, data and migrations, provider calls, asynchronous or process state, performance, tests, code review, debugging, build or delivery. Routes to the versioned Elixir Agent Kit read from the Mix dependency."
+    description: "Use first, before opening source files to change behavior or review code in this Elixir project, when the task matches a shared workflow: screens and accessibility, data and migrations, provider calls, asynchronous or process state, performance, tests, code review, debugging, build or delivery. Routes to the versioned Elixir Agent Kit read from the Mix dependency."
     ---
 
     """ <> entry(config, target)
@@ -106,17 +106,20 @@ defmodule ElixirAgentKit.Installer do
     """
     # Elixir Agent Kit #{ElixirAgentKit.version()}
 
-    Before changing behavior or reviewing code:
+    Before opening any source file for a change or a review:
 
-    1. Name the task's primary risk in one line: a screen, stored data or a provider
-       call, code quality or process state, an operational domain, or delivery.
+    1. Name the task's primary risk in one line, from the request alone: a screen,
+       stored data or a provider call, code quality or process state, an operational
+       domain, or delivery.
     2. Pick one workflow from the tables below. When two neighbors fit, the
        [routing guide](#{target}/ROUTING.md) separates them. A bounded, fully specified
        edit picks NONE.
     3. Read that workflow's SKILL.md from the dependency together with the
        [shared contract](#{target}/CONTRACT.md); copy neither into this project.
-    4. Before the first edit, state the workflow ID or NONE in your plan or report,
-       with the reason in one line.
+    4. State the workflow ID or NONE in your plan or report, with the reason in one
+       line, then open the code and investigate the way the workflow says. The local
+       contracts say what this project must do; the workflow says how to inspect,
+       decide and prove it.
 
     Project rules and the user's authorized scope govern the work. Use the
     [Elixir context](#{target}/ELIXIR.md) only for technologies present here; send
@@ -163,11 +166,12 @@ defmodule ElixirAgentKit.Installer do
   defp wrap(body), do: @start <> "## Elixir Agent Kit\n\n" <> body <> @finish
 
   defp reference do
-    "Before changing behavior or reviewing code, select one workflow from\n" <>
-      "[.elixir-agent-kit/START.md](.elixir-agent-kit/START.md) and read it with its shared contract,\n" <>
-      "even when a local contract already covers the area; a bounded, fully specified edit needs none.\n" <>
-      "This project's rules keep precedence. If the files are missing, run `mix deps.get`; if you\n" <>
-      "cannot read them, report that instead of claiming the practices were applied.\n"
+    "Before opening any source file for a change or a review, select one workflow from\n" <>
+      "[.elixir-agent-kit/START.md](.elixir-agent-kit/START.md) and name it, or NONE for a bounded,\n" <>
+      "fully specified edit; then read the workflow with its shared contract alongside this project's\n" <>
+      "own contracts, and investigate the way the workflow says. This project's rules keep precedence.\n" <>
+      "If the files are missing, run `mix deps.get`; if you cannot read them, report that instead of\n" <>
+      "claiming the practices were applied.\n"
   end
 
   defp import_agents do
