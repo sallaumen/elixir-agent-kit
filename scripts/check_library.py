@@ -20,7 +20,7 @@ for skill_id, mode, description, area in rows:
         errors.append(f"Frontmatter mismatch: {skill_id}")
     if f"Default mode: **{mode}**" not in text:
         errors.append(f"Mode mismatch: {skill_id}")
-    if area not in {"frontend", "backend", "cross-cutting", "delivery"}:
+    if area not in {"frontend", "backend", "code", "domains", "delivery"}:
         errors.append(f"Invalid area: {skill_id}")
     if f"[{skill_id}](skills/{skill_id}/SKILL.md)" not in (LIBRARY / "CATALOG.md").read_text():
         errors.append(f"Human catalog missing: {skill_id}")

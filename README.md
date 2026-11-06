@@ -8,7 +8,7 @@
 **Shared coding practices for AI agents, versioned with your Elixir project.**
 
 Pin the kit like any Mix dependency. Every agent that touches the project, whether
-Codex, Claude Code or your own harness, reads the same 33 reviewed workflows from
+Codex, Claude Code or your own harness, reads the same 34 reviewed workflows from
 `deps/`: what to inspect, which decisions matter, what "done" looks like and how
 to prove it. No copied skill library to drift, no service, no model calls, nothing
 shipped to production.
@@ -100,30 +100,29 @@ Commit `mix.exs`, `mix.lock` and those paths. Do not commit `deps/`. Add
 4. It reports with the [handoff template](priv/library/HANDOFF.md): outcome,
    workflow and version used, checks actually run, limits.
 
-The routing cases in [`evals/`](evals/README.md) hold 44 requests like that one,
+The routing cases in [`evals/`](evals/README.md) hold 45 requests like that one,
 with the expected workflow and the signals of a good or bad answer. They stay out
 of the installed payload so an agent never sees the answer key.
 
 ## The catalog at a glance
 
 Pick the area, then the narrowest trigger. Every entry links to the full workflow;
-the [catalog](priv/library/CATALOG.md) lists the trigger sentences.
+the [catalog](priv/library/CATALOG.md) lists the trigger sentences. Operational
+domains are product patterns; a project without them can leave those IDs out of
+its `skills:` selection.
 
-| Frontend and user experience | Backend and data | Cross-cutting engineering | Delivery and build |
-|---|---|---|---|
-| [ui-identity](priv/library/skills/ui-identity/SKILL.md) | [abstraction-layers](priv/library/skills/abstraction-layers/SKILL.md) | [architecture-review](priv/library/skills/architecture-review/SKILL.md) | [delivery-coordination](priv/library/skills/delivery-coordination/SKILL.md) |
-| [layout-density](priv/library/skills/layout-density/SKILL.md) | [module-design](priv/library/skills/module-design/SKILL.md) | [code-consolidation](priv/library/skills/code-consolidation/SKILL.md) | [pipeline-design](priv/library/skills/pipeline-design/SKILL.md) |
-| [navigation-ux](priv/library/skills/navigation-ux/SKILL.md) | [data-contracts](priv/library/skills/data-contracts/SKILL.md) | [revision-lineage](priv/library/skills/revision-lineage/SKILL.md) | [build-dependencies](priv/library/skills/build-dependencies/SKILL.md) |
-| [responsive-layout](priv/library/skills/responsive-layout/SKILL.md) | [ai-orchestration](priv/library/skills/ai-orchestration/SKILL.md) | [performance](priv/library/skills/performance/SKILL.md) | [delivery-validation](priv/library/skills/delivery-validation/SKILL.md) |
-| [direct-interactions](priv/library/skills/direct-interactions/SKILL.md) | [notifications](priv/library/skills/notifications/SKILL.md) | [async-state](priv/library/skills/async-state/SKILL.md) | |
-| [accessibility](priv/library/skills/accessibility/SKILL.md) | [integration-setup](priv/library/skills/integration-setup/SKILL.md) | [test-strategy](priv/library/skills/test-strategy/SKILL.md) | |
-| [design-system](priv/library/skills/design-system/SKILL.md) | [commercial-eligibility](priv/library/skills/commercial-eligibility/SKILL.md) | [code-review](priv/library/skills/code-review/SKILL.md) | |
-| [motion-design](priv/library/skills/motion-design/SKILL.md) | [metrics-costs](priv/library/skills/metrics-costs/SKILL.md) | [debugging](priv/library/skills/debugging/SKILL.md) | |
-| | [operational-alerts](priv/library/skills/operational-alerts/SKILL.md) | | |
-| | [simulation-isolation](priv/library/skills/simulation-isolation/SKILL.md) | | |
-| | [security-boundaries](priv/library/skills/security-boundaries/SKILL.md) | | |
-| | [migration-compatibility](priv/library/skills/migration-compatibility/SKILL.md) | | |
-| | [provider-calls](priv/library/skills/provider-calls/SKILL.md) | | |
+| Frontend and user experience | Backend and data | Code structure and quality | Operational domains | Delivery and build |
+|---|---|---|---|---|
+| [ui-identity](priv/library/skills/ui-identity/SKILL.md) | [data-contracts](priv/library/skills/data-contracts/SKILL.md) | [architecture-review](priv/library/skills/architecture-review/SKILL.md) | [ai-orchestration](priv/library/skills/ai-orchestration/SKILL.md) | [delivery-coordination](priv/library/skills/delivery-coordination/SKILL.md) |
+| [layout-density](priv/library/skills/layout-density/SKILL.md) | [migration-compatibility](priv/library/skills/migration-compatibility/SKILL.md) | [abstraction-layers](priv/library/skills/abstraction-layers/SKILL.md) | [notifications](priv/library/skills/notifications/SKILL.md) | [pipeline-design](priv/library/skills/pipeline-design/SKILL.md) |
+| [navigation-ux](priv/library/skills/navigation-ux/SKILL.md) | [security-boundaries](priv/library/skills/security-boundaries/SKILL.md) | [module-design](priv/library/skills/module-design/SKILL.md) | [operational-alerts](priv/library/skills/operational-alerts/SKILL.md) | [build-dependencies](priv/library/skills/build-dependencies/SKILL.md) |
+| [responsive-layout](priv/library/skills/responsive-layout/SKILL.md) | [provider-calls](priv/library/skills/provider-calls/SKILL.md) | [code-consolidation](priv/library/skills/code-consolidation/SKILL.md) | [integration-setup](priv/library/skills/integration-setup/SKILL.md) | [delivery-validation](priv/library/skills/delivery-validation/SKILL.md) |
+| [direct-interactions](priv/library/skills/direct-interactions/SKILL.md) |  | [test-strategy](priv/library/skills/test-strategy/SKILL.md) | [metrics-costs](priv/library/skills/metrics-costs/SKILL.md) |  |
+| [accessibility](priv/library/skills/accessibility/SKILL.md) |  | [code-review](priv/library/skills/code-review/SKILL.md) | [simulation-isolation](priv/library/skills/simulation-isolation/SKILL.md) |  |
+| [design-system](priv/library/skills/design-system/SKILL.md) |  | [debugging](priv/library/skills/debugging/SKILL.md) | [commercial-eligibility](priv/library/skills/commercial-eligibility/SKILL.md) |  |
+| [motion-design](priv/library/skills/motion-design/SKILL.md) |  | [performance](priv/library/skills/performance/SKILL.md) | [revision-lineage](priv/library/skills/revision-lineage/SKILL.md) |  |
+|  |  | [async-state](priv/library/skills/async-state/SKILL.md) |  |  |
+|  |  | [process-lifecycle](priv/library/skills/process-lifecycle/SKILL.md) |  |  |
 
 Three of them keep a different default mode: `code-review` reviews without
 editing, `delivery-validation` analyzes without repairing, `delivery-coordination`

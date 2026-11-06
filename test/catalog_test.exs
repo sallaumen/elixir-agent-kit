@@ -3,14 +3,14 @@ defmodule ElixirAgentKit.CatalogTest do
 
   test "catalog has unique standard skill identifiers and complete workflows" do
     skills = ElixirAgentKit.catalog()
-    assert length(skills) == 33
-    assert length(Enum.uniq_by(skills, & &1.id)) == 33
+    assert length(skills) == 34
+    assert length(Enum.uniq_by(skills, & &1.id)) == 34
 
     for skill <- skills do
       assert Regex.match?(~r/^[a-z0-9]+(-[a-z0-9]+)*$/, skill.id)
       assert String.length("eak-" <> skill.id) <= 64
       assert skill.mode in ["analyze", "review", "analyze-and-fix", "coordinate"]
-      assert skill.area in ["frontend", "backend", "cross-cutting", "delivery"]
+      assert skill.area in ["frontend", "backend", "code", "domains", "delivery"]
       assert String.length(skill.description) < 1024
 
       contents =

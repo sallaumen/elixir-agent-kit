@@ -55,8 +55,8 @@ end
     run(root, "mix", "deps.get")
     listing = run(root, "mix", "agent_kit.list")
     assert "architecture-review" in listing and "delivery-validation" in listing
-    for area in ["Frontend and user experience", "Backend and data",
-                 "Cross-cutting engineering", "Delivery and build"]:
+    for area in ["Frontend and user experience", "Backend and data", "Code structure and quality",
+                 "Operational domains", "Delivery and build"]:
         assert area in listing, area
     run(root, "mix", "agent_kit.check", expected=1)
     before = snapshot(root)

@@ -1,6 +1,6 @@
 # Workflow provenance
 
-This English community edition adapts 33 workflows developed by Lucas Tavano with coding-agent assistance, adds one workflow adapted from an external MIT skill and one distilled from a consuming application's rules, for 33 public workflows after the 0.5 merges (`revision-lineage` from two lineage workflows, `test-strategy` absorbing `testes-redundantes`). The source collection was `biblioteca-prompts-desenvolvimento v1.0.0`, later refined in an application repository. The public edition preserves task boundaries and authorization modes while rewriting instructions for a standalone package. Product-specific contexts, application source, credentials and operational records are not included.
+This English community edition adapts 33 workflows developed by Lucas Tavano with coding-agent assistance, adds one workflow adapted from an external MIT skill and one distilled from a consuming application's rules, for 34 public workflows after the 0.5 merges and the addition of `process-lifecycle` (`revision-lineage` from two lineage workflows, `test-strategy` absorbing `testes-redundantes`). The source collection was `biblioteca-prompts-desenvolvimento v1.0.0`, later refined in an application repository. The public edition preserves task boundaries and authorization modes while rewriting instructions for a standalone package. Product-specific contexts, application source, credentials and operational records are not included.
 
 | Public ID | Original ID |
 |---|---|
@@ -106,3 +106,14 @@ failure is a typed reason rather than a fabricated answer, budget is checked bef
 the network. The workflow restates them for any billed or rate-limited provider and
 adds output validation and prompt-content boundaries. No application text, module
 names or credentials are included.
+
+## Process lifecycle and the five areas in 0.5
+
+`process-lifecycle` is the kit's own addition for BEAM runtime concerns (ownership,
+supervision, backpressure, restart) that no original workflow covered beyond two
+sentences in the Elixir context. The catalog also moved from four areas to five:
+frontend; backend and data; code structure and quality; operational domains; delivery
+and build. "Operational domains" names the product patterns that came from the
+original collection (alerts, notifications, readiness, metrics, simulations,
+eligibility, revisions, model capacity) so a project without those domains can
+omit them from its selection instead of reading them as general engineering rules.

@@ -2,7 +2,7 @@
 
 Start with the project's instructions and actual task. The categories name the
 **primary** kind of work, not ownership boundaries in an application's source tree.
-A LiveView race may use `async-state` under cross-cutting engineering; a UI that
+A LiveView race may use `async-state` under code structure and quality; a UI that
 shows a cross-tenant record needs `security-boundaries` under backend and data.
 Follow the trigger, not the directory name. A small, specified edit may need no
 workflow beyond the shared contract and project gates.
@@ -10,8 +10,9 @@ workflow beyond the shared contract and project gates.
 | Start here when the problem is… | Area | Typical distinctions |
 |---|---|---|
 | A screen's meaning, interaction, layout, navigation, accessibility, motion or assets | [Frontend and user experience](CATALOG.md#frontend-and-user-experience) | Identity versus density; layout at a width versus history and overlays (navigation-ux, on every device); design system versus one screen; motion versus state feedback |
-| Domain rules, persisted state, integrations, jobs, authorization or operational accounting | [Backend and data](CATALOG.md#backend-and-data) | Data contracts versus migration compatibility; integration setup versus security boundaries; alerts versus notifications; one provider call versus capacity across workers |
-| A behavior or risk that crosses UI, backend, tests or architecture | [Cross-cutting engineering](CATALOG.md#cross-cutting-engineering) | Review versus debugging; test gaps and duplicates (one workflow); performance versus asynchronous correctness; product revisions versus the running build |
+| Persisted data, a schema or payload that must survive a version change, authorization and tenant scope, or a paid or rate-limited provider call | [Backend and data](CATALOG.md#backend-and-data) | Data contracts versus migration compatibility; a boundary that leaks data versus a call that charges twice |
+| Code that is hard to understand, review, test, debug, measure, or that holds state in processes | [Code structure and quality](CATALOG.md#code-structure-and-quality) | Review versus debugging; architecture versus one module versus one function; test gaps and duplicates (one workflow); performance versus asynchronous correctness versus process ownership |
+| A product pattern with its own lifecycle: alerts, notifications, integration readiness, metrics and costs, simulations, offer eligibility, revisions and assets, model capacity | [Operational domains](CATALOG.md#operational-domains) | Alerts versus notifications; readiness versus eligibility; capacity across workers versus one provider call; a product revision versus the running build |
 | Packaging, sequencing, CI or acceptance of combined work | [Delivery and build](CATALOG.md#delivery-and-build) | Build failure versus pipeline design; coordination versus independent delivery validation |
 
 Read one workflow and its [shared contract](CONTRACT.md). Add a neighboring

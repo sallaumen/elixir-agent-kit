@@ -599,6 +599,23 @@
         "Adicionar retry à chamada paga sem chave de idempotência",
         "Explicar a dupla cobrança sem conferir o registro do provedor"
       ]
+    },
+    {
+      "id": "E45",
+      "request": "O poller que lê os tickets às vezes publica o mesmo board duas vezes depois de reconectar, e quando o processo reinicia o estado some.",
+      "expected_primary": "process-lifecycle",
+      "allowed_alternatives": [
+        "async-state",
+        "debugging"
+      ],
+      "success_signals": [
+        "Nomear o dono do estado e a fonte durável para reconstruí-lo após restart",
+        "Deduplicar por conteúdo ou sequência antes de publicar e testar duplicata, reinício e rajada"
+      ],
+      "failure_signals": [
+        "Aumentar max_restarts ou o timeout do call para esconder o problema",
+        "Tratar como bug de interface sem olhar a árvore de supervisão"
+      ]
     }
   ]
 }
