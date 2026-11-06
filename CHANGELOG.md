@@ -1,11 +1,21 @@
 # Changelog
 
-## Unreleased
+## 0.4.0
 
 - Make the Claude block import `AGENTS.md` whenever the kit manages that file
   or the project already has one. Claude Code reads `AGENTS.md` only while no
   `CLAUDE.md` applies, so the previous block hid a consumer's own instructions
   from Claude sessions. Existing installations pick this up on `sync`.
+- Add `motion-design`, a frontend workflow for interface motion adapted from
+  motion-kit (MIT, revision `6173e5c`): registers, one curve per property, timing
+  from distance and weight, a lead and uneven reactions, continuity across layout
+  changes, reduced-motion alternatives and browser verification. It carries a
+  `MOTION.md` reference with attributed curves and interface timing floors.
+- Point rendered video, motion graphics and animated decks to the external
+  `motion-designer` skill at a pinned revision; the routing guide states the
+  boundary and does not bundle that skill's text.
+- Add routing cases E42 and E43 (43 total), and update the catalog, provenance,
+  source review and workflow counts.
 
 ## 0.3.1
 

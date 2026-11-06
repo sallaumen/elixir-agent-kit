@@ -1,6 +1,6 @@
 # Workflow provenance
 
-This English community edition adapts 33 workflows developed by Lucas Tavano with coding-agent assistance. The source collection was `biblioteca-prompts-desenvolvimento v1.0.0`, later refined in an application repository. The public edition preserves task boundaries and authorization modes while rewriting instructions for a standalone package. Product-specific contexts, application source, credentials and operational records are not included.
+This English community edition adapts 33 workflows developed by Lucas Tavano with coding-agent assistance, and adds one workflow adapted from an external MIT skill, for 34 public workflows. The source collection was `biblioteca-prompts-desenvolvimento v1.0.0`, later refined in an application repository. The public edition preserves task boundaries and authorization modes while rewriting instructions for a standalone package. Product-specific contexts, application source, credentials and operational records are not included.
 
 | Public ID | Original ID |
 |---|---|
@@ -18,6 +18,7 @@ This English community edition adapts 33 workflows developed by Lucas Tavano wit
 | `direct-interactions` | `interacoes-diretas` |
 | `accessibility` | `acessibilidade` |
 | `design-system` | `design-system` |
+| `motion-design` | — (external adaptation, 0.4) |
 | `performance` | `performance` |
 | `async-state` | `estados-assincronos` |
 | `ai-orchestration` | `orquestracao-ias` |
@@ -55,8 +56,23 @@ equivalence. Private product contexts are not part of the public package.
 
 ## Depth review in 0.3
 
-All 33 public workflows now have task-specific inputs, decision points, quality
+All 33 workflows from the original collection now have task-specific inputs, decision points, quality
 criteria, validation evidence and pitfalls. The [source review matrix](source-review.md)
 records each original ID, primary area and additional professional reference
 considered. The guidance is rewritten for reuse; no external skill text or
 product-specific instruction is bundled verbatim.
+
+## External motion adaptation in 0.4
+
+`motion-design` does not come from the original collection. It adapts the method of
+[motion-kit](https://github.com/hughminhphan/motion-kit) by Hugh Phan (MIT, revision
+`6173e5c408f81f1989435843af3f0788b74bda96`): `skills/motion-designer/SKILL.md`,
+`LIBRARY.md` and `motion-kit.js`. The workflow is rewritten for product interfaces.
+It keeps the register, one-curve-per-property, distance-and-weight timing,
+lead-and-reactions and restraint model; it adds interface timing floors,
+server-rendered and LiveView guidance, reduced-motion alternatives and browser
+verification. Video-only devices (seek-safe GSAP timelines, wiggle, time remapping,
+text ranges) stay in the source and are not packaged. Curve values retain their
+attribution to easings.net, Material 3 and IBM Carbon. The source is MIT and permits
+adaptation; no text is bundled verbatim. For rendered video the routing guide points
+at the external skill instead of copying it into this kit.

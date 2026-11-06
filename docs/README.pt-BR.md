@@ -1,6 +1,6 @@
 # Elixir Agent Kit
 
-Uma biblioteca compartilhada de 33 práticas para agentes, distribuída pelo Mix.
+Uma biblioteca compartilhada de 34 práticas para agentes, distribuída pelo Mix.
 Os agentes leem os textos diretamente da dependência. A instalação mantém apenas
 um índice, um registro de propriedade e referências em `AGENTS.md`/`CLAUDE.md`.
 Não copia a biblioteca nem cria dezenas de skills dentro da aplicação.
@@ -8,7 +8,7 @@ Não copia a biblioteca nem cria dezenas de skills dentro da aplicação.
 ```elixir
 {:elixir_agent_kit,
  git: "https://github.com/sallaumen/elixir-agent-kit.git",
- tag: "v0.3.1",
+ tag: "v0.4.0",
  only: [:dev, :test],
  runtime: false}
 ```
@@ -40,7 +40,7 @@ foi possível determinar a versão atual. Não há atualização automática em 
 
 Melhorias reutilizáveis vão para o kit; regras de domínio ficam no projeto.
 Uma melhoria revisada vira release e cada consumidor adota a versão em um PR.
-As 33 práticas agora estão agrupadas em frontend, backend, engenharia transversal
+As 34 práticas agora estão agrupadas em frontend, backend, engenharia transversal
 e entrega. O agente começa pelo [guia de seleção](../priv/library/ROUTING.md),
 escolhe a prática específica no [catálogo](../priv/library/CATALOG.md) e lê
 seus critérios de qualidade e validação diretamente na dependência.

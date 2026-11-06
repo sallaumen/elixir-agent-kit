@@ -12,6 +12,7 @@ responsive-mobile	analyze-and-fix	Use when mobile navigation, browser history or
 direct-interactions	analyze-and-fix	Use when a simple selection or adjustment requires excessive forms and disconnected controls.	frontend
 accessibility	analyze-and-fix	Use when controls, forms, dialogs or asynchronous changes may exclude keyboard or assistive-technology users.	frontend
 design-system	analyze-and-fix	Use when teams repeat interface mistakes or create incompatible component and token variations.	frontend
+motion-design	analyze-and-fix	Use when interface motion is missing, generic or applied to every change, or when transitions misrepresent state.	frontend
 performance	analyze-and-fix	Use when measured latency, freezes, excessive work or rendering cost affects a real workflow.	cross-cutting
 async-state	analyze-and-fix	Use when progress stalls, success appears too early or stale asynchronous results overwrite current state.	cross-cutting
 ai-orchestration	analyze-and-fix	Use when agent jobs, queues, workers and model capacity are conflated or incorrectly accounted for.	backend
