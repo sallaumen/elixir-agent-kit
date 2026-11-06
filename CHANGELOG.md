@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.5.0 — 2026-11-06
 
 - Reorganize the catalog into five areas: frontend; backend and data (contracts,
   migrations, security, provider calls); code structure and quality (architecture,
