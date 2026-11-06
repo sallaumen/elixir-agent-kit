@@ -157,9 +157,75 @@ maintainer contract first, and every run hit a cap, so this is a direction, not 
 rate: four runs cannot separate the reorder from noise. The next measurement should
 use the released block wording, a 5 USD cap, and at least three repetitions.
 
+## Rerun with the released v0.5.1 wording and a 5 USD cap
+
+agent-board `main` `caea500` (kit v0.5.1: block and pointer skills say "before changing
+behavior or reviewing code, select one workflow…, even when a local contract already
+covers the area"; the `AGENTS.md` ranking from #261 kept). Same client, prompts and
+permissions; `--max-budget-usd 5`; three repetitions of the six cases in three fresh
+worktrees, run 14:19–15:23 local time. Total cost 59.96 USD.
+
+| Run | Expected | Read from kit | Routed | Skill tool | Edits | mix test | Maintainer contract read | Ended | Cost (USD) |
+|---|---|---|---|---|---|---|---|---|---|
+| E05-r1 | layout-density | START, ROUTING, responsive-layout | alt | no | 1 | no | yes | finished | 4.44 |
+| E05-r2 | layout-density | START, CONTRACT, ROUTING, responsive-layout | alt | no | 5 | no | no | finished | 4.10 |
+| E05-r3 | layout-density | CONTRACT, responsive-layout | alt | yes | 1 | no | no | finished | 3.46 |
+| E12-r1 | code-review | START, CONTRACT, code-review | ok | no | 0 | no | no | finished | 1.66 |
+| E12-r2 | code-review | START, code-review | ok | no | 0 | no | no | finished | 2.14 |
+| E12-r3 | code-review | CONTRACT | none | no | 0 | no | no | finished | 1.86 |
+| E18-r1 | NONE | nothing | ok | no | 1 | no | no | finished | 0.19 |
+| E18-r2 | NONE | nothing | ok | no | 1 | no | no | finished | 0.22 |
+| E18-r3 | NONE | nothing | ok | no | 1 | no | no | finished | 0.22 |
+| E30-r1 | accessibility | CONTRACT, ELIXIR, accessibility | ok | yes | 4 | yes | yes | finished | 4.55 |
+| E30-r2 | accessibility | CONTRACT, accessibility | ok | yes | 3 | yes | yes | finished | 3.65 |
+| E30-r3 | accessibility | START, CONTRACT, accessibility | ok | yes | 8 | yes | no | finished | 3.63 |
+| E32-r1 | async-state | START, CONTRACT, ROUTING, async-state | ok | no | 1 | yes | yes | budget cap | 5.01 |
+| E32-r2 | async-state | START, CONTRACT, ROUTING, async-state | ok | no | 2 | yes | yes | budget cap | 5.03 |
+| E32-r3 | async-state | START | none | no | 3 | yes | yes | budget cap | 5.02 |
+| E44-r1 | provider-calls | nothing | none | no | 6 | yes | yes | turn cap | 4.83 |
+| E44-r2 | provider-calls | START, CONTRACT, ROUTING, provider-calls | ok | no | 7 | yes | yes | budget cap | 5.04 |
+| E44-r3 | provider-calls | START | none | no | 2 | yes | yes | finished | 4.92 |
+
+| Case | Routed correctly (v0.5.0 → v0.5.1) | Reached the kit (v0.5.0 → v0.5.1) | Read the maintainer contract | Hit a cap |
+|---|---|---|---|---|
+| E12 code review, read-only | 3/3 → 2/3 | 3/3 → 3/3 | 0/3 | 0/3 |
+| E30 LiveView form accessibility | 3/3 → 3/3 | 3/3 → 3/3 | 2/3 | 0/3 |
+| E05 oversized buttons, ultrawide | 2/3 alt → 3/3 alt | 3/3 → 3/3 | 1/3 | 0/3 |
+| E18 swap one icon | 3/3 → 3/3 (none, correct) | 0/3 → 0/3 | 0/3 | 0/3 |
+| E32 late message after reconnect | 1/3 → 2/3 | 1/3 → 3/3 | 3/3 | 3/3 |
+| E44 empty AI answer, double charge | 1/3 → 1/3 | 1/3 → 2/3 | 3/3 | 2/3 |
+
+What changed and what did not:
+
+- The two backend cases now reach the kit in 5 of 6 runs (2 of 6 before) and route
+  correctly in 3 of 6 (2 of 6 before). Every backend run still opened the maintainer
+  contract first; the new wording gets the session to `START.md` afterwards, but two of
+  the five that got there (E32-r3, E44-r3) stopped at `START.md` and went to the code
+  without opening a `SKILL.md`. The miss is now inside the kit's entry point, not before it.
+- E44-r1 never touched the kit: it read the maintainer contract, then fourteen source
+  files, and hit the turn cap mid-edit. E44-r3 finished with a correct fix and two new
+  tests from the maintainer contract alone, which is the case E46 was written for: the
+  local contract was enough to act, so the workflow was skipped.
+- The frontend and review cases hold: E30 3/3 through the Skill tool every time, E05 3/3
+  on the allowed alternative, E18 0 kit reads at about 0.20 USD. E12 lost one run
+  (E12-r3 read the shared contract through `docs/ui-motion.md` and reviewed without the
+  `code-review` workflow; its review was read-only and found nothing wrong).
+- The 5 USD cap still truncated all three E32 runs and two E44 runs; the first lasted
+  13 to 18 minutes each. Routing happened before the cap in every capped run that routed,
+  so the cap affects the judgment of the fix, not the routing measurement.
+- E05-r3 reached the kit through the pointer skill directly (Skill tool, no `START.md`)
+  and also loaded two of the operator's global skills (`playbook-antislop`,
+  `playbook-unslop`): the operator's `~/.claude/CLAUDE.md` is still in these sessions.
+
+Reading: the wording change and the `AGENTS.md` ranking together moved the backend cases
+from "kit not reached" to "kit reached, workflow sometimes not opened". The next lever is
+`START.md` itself (a session that opens it should leave it with one `SKILL.md` path in
+hand), and the next measurement should run on a machine without the operator's global
+instructions.
+
 ## Limits
 
-- One client, one model, 18 runs plus controls, on the operator's machine with the
+- One client, one model, 18 runs plus controls and the 18-run rerun on v0.5.1, on the operator's machine with the
   operator's global instructions present. Codex and the DeepSeek executor were not
   evaluated.
 - "Routed" is measured by which `SKILL.md` was opened, not by whether its criteria were
@@ -170,11 +236,15 @@ use the released block wording, a 5 USD cap, and at least three repetitions.
 
 ## Follow-ups this suggests
 
-1. Consumer (agent-board): move the kit selection into the "Required contracts" list of
-   `AGENTS.md`, so backend symptoms meet the kit before the maintainer contract.
-2. Kit: reword the generated block from "consult" to "before changing behavior, select
-   one workflow", and consider the same wording in the pointer skill's description.
-3. Kit: add a routing case for a request that names a local contract first, to measure
-   this precedence effect on purpose.
-4. Evaluation: a fresh clone per no-deps repetition; a higher budget cap; the same
-   matrix on a machine without the operator's global skill rule, and on Codex.
+Items 1 to 3 below shipped on the same day (agent-board#261, kit#17, case E46, kit
+v0.5.1) and the rerun above measures them.
+
+1. Done. Consumer (agent-board): move the kit selection into the "Required contracts"
+   list of `AGENTS.md`, so backend symptoms meet the kit before the maintainer contract.
+2. Done. Kit: reword the generated block from "consult" to "before changing behavior,
+   select one workflow", with the same wording in the pointer skill's description.
+3. Done. Kit: add a routing case for a request that names a local contract first.
+4. Kit: make `START.md` end with the workflow choice, so a session that opens it leaves
+   with one `SKILL.md` path; two backend runs stopped at `START.md`.
+5. Evaluation: a fresh clone per no-deps repetition; the same matrix on a machine
+   without the operator's global skill rule, and on Codex and the DeepSeek executor.
