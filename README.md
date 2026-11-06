@@ -134,7 +134,7 @@ for the technologies a project actually uses.
 
 | Path | Purpose |
 |---|---|
-| `.elixir-agent-kit/START.md` | Small index pointing to the dependency's contract, routing guide and catalog. |
+| `.elixir-agent-kit/START.md` | Four steps that end in a named workflow choice, then the enabled catalog linking into the dependency. |
 | `.elixir-agent-kit/state.tsv` | Version, selection and SHA-256 of every file and block the installer owns. |
 | `AGENTS.md` | A bounded block for Codex and generic harnesses (`:codex`, `:generic`). |
 | `CLAUDE.md` | A bounded block for Claude Code (`:claude`). When `AGENTS.md` is managed or already exists, the block imports it with `@AGENTS.md`, because Claude Code stops reading `AGENTS.md` once a `CLAUDE.md` applies. |
