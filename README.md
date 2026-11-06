@@ -8,7 +8,7 @@
 **Shared coding practices for AI agents, versioned with your Elixir project.**
 
 Pin the kit like any Mix dependency. Every agent that touches the project, whether
-Codex, Claude Code or your own harness, reads the same 34 reviewed workflows from
+Codex, Claude Code or your own harness, reads the same 35 reviewed workflows from
 `deps/`: what to inspect, which decisions matter, what "done" looks like and how
 to prove it. No copied skill library to drift, no service, no model calls, nothing
 shipped to production.
@@ -100,7 +100,7 @@ Commit `mix.exs`, `mix.lock` and those paths. Do not commit `deps/`. Add
 4. It reports with the [handoff template](priv/library/HANDOFF.md): outcome,
    workflow and version used, checks actually run, limits.
 
-The routing cases in [`evals/`](evals/README.md) hold 43 requests like that one,
+The routing cases in [`evals/`](evals/README.md) hold 44 requests like that one,
 with the expected workflow and the signals of a good or bad answer. They stay out
 of the installed payload so an agent never sees the answer key.
 
@@ -123,6 +123,7 @@ the [catalog](priv/library/CATALOG.md) lists the trigger sentences.
 | | [simulation-isolation](priv/library/skills/simulation-isolation/SKILL.md) | | |
 | | [security-boundaries](priv/library/skills/security-boundaries/SKILL.md) | | |
 | | [migration-compatibility](priv/library/skills/migration-compatibility/SKILL.md) | | |
+| | [provider-calls](priv/library/skills/provider-calls/SKILL.md) | | |
 
 Three of them keep a different default mode: `code-review` reviews without
 editing, `delivery-validation` analyzes without repairing, `delivery-coordination`

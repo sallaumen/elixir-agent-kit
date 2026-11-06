@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- Rewrite `accessibility`, `async-state` and `test-strategy` with observable
+  completion conditions, required evidence and pointers into the Elixir context:
+  a keyboard transcript and accessibility tree for accessibility; a lifecycle
+  table with one durable owner per transition and out-of-order delivery tests for
+  async state; a ranked risk list with each regression test seen failing for test
+  strategy.
+- Add `provider-calls` (backend), the single paid or rate-limited call: budget
+  before the network, one audit row at the billing moment, typed failure reasons,
+  retries only with provider-honored idempotency, output validated as data.
+  `ai-orchestration` now routes the single call there. Routing case E44 (44 total).
 - Rewrite `ELIXIR.md` by technology (OTP, Phoenix and LiveView, Ecto and
   migrations, Oban, ExUnit and diagnostics, build and releases), each with what to
   inspect, what to do and how to verify, so workflows can point at concrete

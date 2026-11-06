@@ -10,7 +10,7 @@ workflow beyond the shared contract and project gates.
 | Start here when the problem is… | Area | Typical distinctions |
 |---|---|---|
 | A screen's meaning, interaction, layout, navigation, accessibility, motion or assets | [Frontend and user experience](CATALOG.md#frontend-and-user-experience) | Identity versus density; responsive layout versus history/navigation; design system versus one screen; motion versus state feedback |
-| Domain rules, persisted state, integrations, jobs, authorization or operational accounting | [Backend and data](CATALOG.md#backend-and-data) | Data contracts versus migration compatibility; integration setup versus security boundaries; alerts versus notifications |
+| Domain rules, persisted state, integrations, jobs, authorization or operational accounting | [Backend and data](CATALOG.md#backend-and-data) | Data contracts versus migration compatibility; integration setup versus security boundaries; alerts versus notifications; one provider call versus capacity across workers |
 | A behavior or risk that crosses UI, backend, tests or architecture | [Cross-cutting engineering](CATALOG.md#cross-cutting-engineering) | Review versus debugging; test gaps versus duplicate tests; performance versus asynchronous correctness |
 | Packaging, sequencing, CI or acceptance of combined work | [Delivery and build](CATALOG.md#delivery-and-build) | Build failure versus pipeline design; coordination versus independent delivery validation |
 

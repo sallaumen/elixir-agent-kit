@@ -1,4 +1,4 @@
-# Review of all 34 workflows
+# Review of all 35 workflows
 
 This matrix is an editorial audit, not an evaluation of model compliance. The
 earlier public edition preserved each trigger and a short four-step workflow but
@@ -31,6 +31,7 @@ are not packaged. “Original workflow” means the historical authored material
 | Cross-cutting | [`performance`](../priv/library/skills/performance/SKILL.md) | `performance` | original workflow; shared contract | Before/after measurements use comparable inputs, warmup, configuration and statistical summary. |
 | Cross-cutting | [`async-state`](../priv/library/skills/async-state/SKILL.md) | `estados-assincronos` | original workflow; shared contract | The UI and API can reconcile after reconnect or reload using persisted identifiers and a current-state read. |
 | Backend | [`ai-orchestration`](../priv/library/skills/ai-orchestration/SKILL.md) | `orquestracao-ias` | original workflow; shared contract | Acquisition, release, timeout, cancellation and crash recovery keep capacity counters consistent. |
+| Backend | [`provider-calls`](../priv/library/skills/provider-calls/SKILL.md) | none (new in 0.5) | a consuming application's paid-call rules, generalized; shared contract | Every call has one audit row at the provider's billing moment, failures are typed reasons, and a failed round trip never charges twice. |
 | Backend | [`notifications`](../priv/library/skills/notifications/SKILL.md) | `notificacoes-e-bots` | original workflow; shared contract | A source event has stable identity through delivery so duplicate callbacks/retries do not create unexplained sends. |
 | Backend | [`integration-setup`](../priv/library/skills/integration-setup/SKILL.md) | `setup-integracoes` | original workflow; shared contract | The UI and backend use one readiness contract with specific reasons, not several booleans with conflicting meanings. |
 | Backend | [`commercial-eligibility`](../priv/library/skills/commercial-eligibility/SKILL.md) | `elegibilidade-comercial` | original workflow; shared contract | A single domain rule answers whether the exact offer can be produced, sold and fulfilled at its destination. |
@@ -59,7 +60,7 @@ Origins and licenses of every lens below are tabulated in
 - `elixir-antipatterns` and `elixir-ecto-patterns` helped identify module boundaries, changesets, constraints and query behavior. Their numerical heuristics and illustrative code are not imported as enforceable rules.
 - `motion-kit` supplied the motion method (registers, curve per property, distance-and-weight duration, lead and reactions, restraint) for `motion-design`; its video-only tools and its text are not imported. Material 3, IBM Carbon and easings.net supplied public curve values, as credited in the source.
 - `tdd` helped distinguish public behavior, failure cases and test oracles. The kit does not mandate test-first for every change or reward a test that only mirrors implementation.
-- The original 33 workflows supply the domain-specific distinctions, including async identity, eligibility per variant and destination, notification delivery, simulations, persisted migration contracts and coordinated delivery. The thirty-fourth, `motion-design`, is the external adaptation recorded in [provenance](provenance.md).
+- The original 33 workflows supply the domain-specific distinctions, including async identity, eligibility per variant and destination, notification delivery, simulations, persisted migration contracts and coordinated delivery. The thirty-fourth, `motion-design`, is the external adaptation recorded in [provenance](provenance.md); the thirty-fifth, `provider-calls`, generalizes rules a consuming application kept locally for paid calls (one audit row per call, no retry without idempotency, failure as a typed reason, budget before the network).
 
 ## Gaps and resolution
 

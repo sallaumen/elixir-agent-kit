@@ -28,6 +28,7 @@ copy of a workflow body.
 | [module-design](skills/module-design/SKILL.md) | analyze-and-fix | Use when module names, locations or public APIs obscure responsibilities that are already understood. |
 | [data-contracts](skills/data-contracts/SKILL.md) | analyze-and-fix | Use when layers disagree about data, rules are duplicated or a write leaves records inconsistent. |
 | [ai-orchestration](skills/ai-orchestration/SKILL.md) | analyze-and-fix | Use when agent jobs, queues, workers and model capacity are conflated or incorrectly accounted for. |
+| [provider-calls](skills/provider-calls/SKILL.md) | analyze-and-fix | Use when code calls a paid, rate-limited or externally billed provider and its retries, budget, audit trail or failure reasons are unclear. |
 | [notifications](skills/notifications/SKILL.md) | analyze-and-fix | Use when bots or notifications fail, repeat or produce unexplained message volume. |
 | [integration-setup](skills/integration-setup/SKILL.md) | analyze-and-fix | Use when an integration looks configured but required steps or operational readiness remain unclear. |
 | [commercial-eligibility](skills/commercial-eligibility/SKILL.md) | analyze-and-fix | Use when an offering is presented without evidence that its exact variant and destination are supported. |

@@ -50,6 +50,6 @@ Use when agent jobs, queues, workers and model capacity are conflated or incorre
 
 ## Completion
 
-An explicit execution/capacity contract and accounting aligned with observed behavior. Visual style belongs to the project design context.
+An explicit execution/capacity contract and accounting aligned with observed behavior. The single call's budget gate, audit row, retry rule and failure reasons belong to [provider-calls](../provider-calls/SKILL.md); visual style belongs to the project design context.
 
 Use the [Elixir context](../../ELIXIR.md) only for technology present in the project. Record a useful [handoff](../../HANDOFF.md) when another person or agent will continue the work.
