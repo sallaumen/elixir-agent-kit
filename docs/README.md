@@ -6,7 +6,7 @@
 | Select a workflow | [Area routing](../priv/library/ROUTING.md), then [the grouped catalog](../priv/library/CATALOG.md) |
 | Understand expected execution quality | [Shared contract](../priv/library/CONTRACT.md) and the selected `SKILL.md` |
 | Understand what is distributed and why | [Architecture](architecture.md) and [client compatibility](compatibility.md) |
-| Review how the 33 workflows were deepened, and where each lens and its license came from | [Source review matrix](source-review.md) and [provenance](provenance.md#review-lenses-and-their-licenses) |
+| Review how the 34 workflows were deepened, and where each lens and its license came from | [Source review matrix](source-review.md) and [provenance](provenance.md#review-lenses-and-their-licenses) |
 | Contribute a reusable improvement | [Evolution policy](../priv/library/EVOLUTION.md) and [contributing guide](../CONTRIBUTING.md) |
 | Distinguish tests from live agent behavior | [Verification](verification.md) and [evaluator-only cases](../evals/README.md) |
 

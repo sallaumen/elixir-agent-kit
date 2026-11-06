@@ -3,7 +3,7 @@
 **Práticas de código compartilhadas para agentes de IA, versionadas junto com o seu projeto Elixir.**
 
 Fixe o kit como qualquer dependência Mix. Todo agente que trabalhar no projeto, seja
-Codex, Claude Code ou o seu próprio harness, lê os mesmos 33 workflows revisados
+Codex, Claude Code ou o seu próprio harness, lê os mesmos 34 workflows revisados
 direto de `deps/`: o que inspecionar, quais decisões importam, o que é "pronto" e
 como provar. Sem biblioteca copiada que envelhece, sem serviço, sem chamada a
 modelo, nada vai para produção.
@@ -69,8 +69,8 @@ instalação até ser renomeada.
    encontra a skill `elixir-agent-kit` no seu diretório nativo de skills.
 2. Lê o [contrato compartilhado](../priv/library/CONTRACT.md) e o
    [guia de seleção](../priv/library/ROUTING.md); escolhe o workflow mais estreito
-   no [catálogo](../priv/library/CATALOG.md), agrupado em frontend, backend,
-   engenharia transversal e entrega.
+   no [catálogo](../priv/library/CATALOG.md), agrupado em frontend, backend e dados,
+   estrutura e qualidade de código, domínios operacionais e entrega.
 3. Aplica os critérios de qualidade e validação daquele `SKILL.md` e entrega com o
    [template de handoff](../priv/library/HANDOFF.md): resultado, workflow e versão
    usados, checks executados, limites.

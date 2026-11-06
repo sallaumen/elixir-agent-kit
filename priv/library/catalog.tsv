@@ -1,10 +1,3 @@
-delivery-coordination	coordinate	Use when consolidating a product or dividing an authorized change into reviewable deliveries.	delivery
-architecture-review	analyze-and-fix	Use when changes cross many modules, rules repeat, dependencies cycle or domain ownership is unclear.	cross-cutting
-abstraction-layers	analyze-and-fix	Use when functions mix business decisions, low-level details and effects at incompatible levels.	backend
-module-design	analyze-and-fix	Use when module names, locations or public APIs obscure responsibilities that are already understood.	backend
-code-consolidation	analyze-and-fix	Use when unfinished features, abandoned paths or competing implementations make a codebase ambiguous.	cross-cutting
-revision-lineage	analyze-and-fix	Use when a revision, preview, asset or selection is associated with the wrong version, or viewing an old version silently changes the current one.	cross-cutting
-data-contracts	analyze-and-fix	Use when layers disagree about data, rules are duplicated or a write leaves records inconsistent.	backend
 ui-identity	analyze-and-fix	Use when a working interface lacks product-specific hierarchy, identity or visual coherence.	frontend
 layout-density	analyze-and-fix	Use when spacing, alignment or information density makes a screen hard to scan or use.	frontend
 navigation-ux	analyze-and-fix	Use when users lose context or need unnecessary steps to complete a multi-screen task.	frontend
@@ -13,21 +6,29 @@ direct-interactions	analyze-and-fix	Use when a simple selection or adjustment re
 accessibility	analyze-and-fix	Use when controls, forms, dialogs or asynchronous changes may exclude keyboard or assistive-technology users.	frontend
 design-system	analyze-and-fix	Use when teams repeat interface mistakes or create incompatible component and token variations.	frontend
 motion-design	analyze-and-fix	Use when interface motion is missing, generic or applied to every change, or when transitions misrepresent state.	frontend
-performance	analyze-and-fix	Use when measured latency, freezes, excessive work or rendering cost affects a real workflow.	cross-cutting
-async-state	analyze-and-fix	Use when progress stalls, success appears too early or stale asynchronous results overwrite current state.	cross-cutting
-ai-orchestration	analyze-and-fix	Use when agent jobs, queues, workers and model capacity are conflated or incorrectly accounted for.	backend
-provider-calls	analyze-and-fix	Use when code calls a paid, rate-limited or externally billed provider and its retries, budget, audit trail or failure reasons are unclear.	backend
-notifications	analyze-and-fix	Use when bots or notifications fail, repeat or produce unexplained message volume.	backend
-integration-setup	analyze-and-fix	Use when an integration looks configured but required steps or operational readiness remain unclear.	backend
-commercial-eligibility	analyze-and-fix	Use when an offering is presented without evidence that its exact variant and destination are supported.	backend
-metrics-costs	analyze-and-fix	Use when totals, model costs or operational metrics have unclear scope, origin or meaning.	backend
-operational-alerts	analyze-and-fix	Use when alerts repeat, historical incidents look current or acknowledging an alert appears to resolve it.	backend
-simulation-isolation	analyze-and-fix	Use when simulation, training or demo flows share code and data paths with real operations.	backend
-test-strategy	analyze-and-fix	Use when a passing suite misses important bugs, the required regression coverage is unclear, or duplicated tests protect nothing distinct.	cross-cutting
-code-review	review	Use when reviewing a bounded diff or pull request for actionable defects and regressions.	cross-cutting
-debugging	analyze-and-fix	Use when a wrong result, exception or intermittent failure has no demonstrated root cause.	cross-cutting
-security-boundaries	analyze-and-fix	Use when untrusted input, credentials, permissions or tenant boundaries may permit unintended access.	backend
+data-contracts	analyze-and-fix	Use when layers disagree about data, rules are duplicated or a write leaves records inconsistent.	backend
 migration-compatibility	analyze-and-fix	Use when stored schemas, identifiers, jobs or public payloads must survive a version change.	backend
+security-boundaries	analyze-and-fix	Use when untrusted input, credentials, permissions or tenant boundaries may permit unintended access.	backend
+provider-calls	analyze-and-fix	Use when code calls a paid, rate-limited or externally billed provider and its retries, budget, audit trail or failure reasons are unclear.	backend
+architecture-review	analyze-and-fix	Use when changes cross many modules, rules repeat, dependencies cycle or domain ownership is unclear.	code
+abstraction-layers	analyze-and-fix	Use when functions mix business decisions, low-level details and effects at incompatible levels.	code
+module-design	analyze-and-fix	Use when module names, locations or public APIs obscure responsibilities that are already understood.	code
+code-consolidation	analyze-and-fix	Use when unfinished features, abandoned paths or competing implementations make a codebase ambiguous.	code
+test-strategy	analyze-and-fix	Use when a passing suite misses important bugs, the required regression coverage is unclear, or duplicated tests protect nothing distinct.	code
+code-review	review	Use when reviewing a bounded diff or pull request for actionable defects and regressions.	code
+debugging	analyze-and-fix	Use when a wrong result, exception or intermittent failure has no demonstrated root cause.	code
+performance	analyze-and-fix	Use when measured latency, freezes, excessive work or rendering cost affects a real workflow.	code
+async-state	analyze-and-fix	Use when progress stalls, success appears too early or stale asynchronous results overwrite current state.	code
+process-lifecycle	analyze-and-fix	Use when a GenServer, Task, poller or supervised process holds state, leaks, blocks callers, duplicates work or behaves differently after a restart.	code
+ai-orchestration	analyze-and-fix	Use when agent jobs, queues, workers and model capacity are conflated or incorrectly accounted for.	domains
+notifications	analyze-and-fix	Use when bots or notifications fail, repeat or produce unexplained message volume.	domains
+operational-alerts	analyze-and-fix	Use when alerts repeat, historical incidents look current or acknowledging an alert appears to resolve it.	domains
+integration-setup	analyze-and-fix	Use when an integration looks configured but required steps or operational readiness remain unclear.	domains
+metrics-costs	analyze-and-fix	Use when totals, model costs or operational metrics have unclear scope, origin or meaning.	domains
+simulation-isolation	analyze-and-fix	Use when simulation, training or demo flows share code and data paths with real operations.	domains
+commercial-eligibility	analyze-and-fix	Use when an offering is presented without evidence that its exact variant and destination are supported.	domains
+revision-lineage	analyze-and-fix	Use when a revision, preview, asset or selection is associated with the wrong version, or viewing an old version silently changes the current one.	domains
+delivery-coordination	coordinate	Use when consolidating a product or dividing an authorized change into reviewable deliveries.	delivery
 pipeline-design	analyze-and-fix	Use when validation pipelines lack clear ownership, local/CI parity or predictable command effects.	delivery
 build-dependencies	analyze-and-fix	Use when dependencies, builds or CI fail or behave differently across environments.	delivery
 delivery-validation	analyze	Use when checking whether an integrated change actually satisfies its acceptance criteria.	delivery

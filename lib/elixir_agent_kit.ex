@@ -16,7 +16,8 @@ defmodule ElixirAgentKit do
   @areas [
     {"frontend", "Frontend and user experience"},
     {"backend", "Backend and data"},
-    {"cross-cutting", "Cross-cutting engineering"},
+    {"code", "Code structure and quality"},
+    {"domains", "Operational domains"},
     {"delivery", "Delivery and build"}
   ]
   def areas, do: @areas

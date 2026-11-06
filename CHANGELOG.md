@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- Reorganize the catalog into five areas: frontend; backend and data (contracts,
+  migrations, security, provider calls); code structure and quality (architecture,
+  modules, consolidation, tests, review, debugging, performance, async and process
+  state); operational domains (alerts, notifications, readiness, metrics,
+  simulations, eligibility, revisions, model capacity), which a project without
+  those domains can omit from `skills:`; delivery and build. Area keys in
+  `catalog.tsv` and `mix agent_kit.list` change accordingly.
+- Add `process-lifecycle` (code): when a process is warranted, who owns its state
+  and how it is rebuilt after restart, blocking callbacks, dedupe and backpressure,
+  restart strategy, with tests for restart, duplicates and bursts. Routing case E45
+  (45 total).
 - Merge `version-lineage` and `asset-lineage` into `revision-lineage` (one identity
   model: entity, immutable revisions, explicit pointers, artifacts that carry their
   parent revision; viewing never selects). Fold `test-consolidation` into
