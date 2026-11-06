@@ -64,6 +64,7 @@ are not packaged. “Original workflow” means the historical authored material
 | Short workflows did not specify the evidence an agent should inspect. | Each workflow names task-specific inputs and decision points. |
 | Completion language was easy to satisfy by assertion alone. | Each workflow names quality criteria and representative validation evidence. |
 | Source skills contained product-bound and sometimes overly prescriptive advice. | The public bodies retain reusable mechanisms, with local product rules left to consuming repositories. |
+| Game and canvas interfaces had no route. | The routing guide points to one pinned external `game-ui-ux` skill when the source has a canvas or game scene, beside a kit frontend workflow. |
 | Structural package checks could be mistaken for proof that GPT, DeepSeek or Claude followed instructions. | Compatibility docs retain an explicit live-client evaluation boundary. |
 
 The matrix establishes content coverage. It does not prove that each agent client

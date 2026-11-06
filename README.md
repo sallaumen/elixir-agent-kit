@@ -14,7 +14,7 @@ skill library, service, model calls or production dependency.
 
 ## Quick start
 
-Requires Elixir 1.15+, compatible Erlang/OTP and Git. Version 0.3.0 is distributed
+Requires Elixir 1.15+, compatible Erlang/OTP and Git. Version 0.3.1 is distributed
 through public GitHub tags, **not Hex**. No token is required.
 
 Add to your existing `deps/0`:
@@ -22,7 +22,7 @@ Add to your existing `deps/0`:
 ```elixir
 {:elixir_agent_kit,
  git: "https://github.com/sallaumen/elixir-agent-kit.git",
- tag: "v0.3.0",
+ tag: "v0.3.1",
  only: [:dev, :test],
  runtime: false}
 ```

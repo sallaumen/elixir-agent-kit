@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.1
+
+- Point game and canvas interface work to one pinned external skill,
+  `game-ui-ux` from awesome-gamedev-agent-skills, beside the kit's frontend
+  workflows. The routing guide links it; no external text is packaged.
+- Add routing case E41 (41 total) for a canvas HUD and pause menu.
+
 ## 0.3.0
 
 - Rework all 33 workflows with task-specific inputs, decision points, quality
