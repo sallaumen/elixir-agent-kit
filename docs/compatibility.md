@@ -24,7 +24,10 @@ setup complete. Do not silently copy the whole library as a workaround.
 3. Ask it to name the contract and selected workflow files it actually read.
 4. Observe that only relevant guidance is loaded, local scope is respected and
    the review does not become an unsolicited edit or publication.
-5. Record package revision, client/harness version, paths and observed behavior.
+5. For a large request, observe that the session names the size, writes a plan in
+   `.elixir-agent-kit/plans/` before its first edit, and stops for approval only on
+   a stop-and-ask trigger from the contract.
+6. Record package revision, client/harness version, paths and observed behavior.
 
 Repeat in isolated executor worktrees; a parent session's access proves nothing
 about a worker. Filesystem and Mix smoke tests verify links, preservation,

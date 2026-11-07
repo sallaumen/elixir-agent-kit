@@ -42,6 +42,7 @@ This workflow treats only measured cost on a path that returns the right result.
 - A cache needs an invalidation rule and a scope before it is written; without them it is a correctness bug waiting to be found.
 - An index is a migration with live-data consequences; coordinate with [migration-compatibility](../migration-compatibility/SKILL.md) when the table is large.
 - When the slow stage is a blocked process, stop and route to [process-lifecycle](../process-lifecycle/SKILL.md).
+- Memory that grows with the input is fixed by streaming (`Stream`, `Repo.stream/2` in short transactions) before tuning; messages between processes are copied, so a large term sent per message is a cost to measure; a flow of many items with delivery guarantees is [data-pipelines](../data-pipelines/SKILL.md).
 
 ## Quality criteria
 

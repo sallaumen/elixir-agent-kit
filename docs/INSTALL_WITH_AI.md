@@ -30,7 +30,7 @@ https://github.com/sallaumen/elixir-agent-kit/blob/v0.7.0/docs/compatibility.md
    If edited managed content blocks migration, preserve the edits as project rules
    or upstream proposals and restore only their recorded originals before retrying.
 6. Verify the only kit-managed content remaining is the generated START.md,
-   state.tsv, bounded blocks in AGENTS.md/CLAUDE.md and, for :claude and :codex,
+   state.tsv, .elixir-agent-kit/plans/.gitignore (commit it), bounded blocks in AGENTS.md/CLAUDE.md and, for :claude and :codex,
    one generated pointer skill each (.claude/skills/elixir-agent-kit/SKILL.md,
    .agents/skills/elixir-agent-kit/SKILL.md). Preserve other tools' skills and
    all local instructions. Do not copy workflow bodies or register per-workflow
@@ -51,7 +51,7 @@ https://github.com/sallaumen/elixir-agent-kit/blob/v0.7.0/docs/compatibility.md
    EVOLUTION.md; product-specific rules remain local. Use mix agent_kit.outdated
    explicitly to discover stable releases; no background or unpinned update.
 11. Run project-required checks, inspect the diff and stage files by name. Commit
-    dependency, lock, index/state, references and removal of obsolete owned files
+    dependency, lock, index/state, plans/.gitignore, references and removal of obsolete owned files
     together. Follow existing PR/merge authority. Report exact files/counts,
     validation, selected version, any blocked steps and unverified live clients.
 ```

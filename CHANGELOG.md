@@ -2,6 +2,40 @@
 
 ## 0.7.0 — 2026-11-07
 
+- A deeper Elixir review before 0.7 (Elixir anti-pattern and library guides, the
+  1.18 to 1.20 changelogs, Phoenix 1.8 usage rules and guides, Ecto, Broadway and
+  Mox docs, `boundary`, public style guides and agent rule sets) adds four
+  references: `elixir/pipelines.md` (pipe idioms, normalized `with` errors, token
+  pipelines, `Repo.transact/2` and `Ecto.Multi`, query composition, Enum versus
+  Stream, `Task.async_stream` options, GenStage, Flow and Broadway failure
+  semantics), `elixir/architecture.md` (dependency direction, scopes, behaviours as
+  contracts, configuration in libraries, `boundary`, umbrellas, compile-time
+  coupling and `mix xref` gates), `elixir/library-authoring.md` and
+  `elixir/agent-loop.md` (docs of the locked version through `mix help`,
+  dependency usage rules, the feedback ladder, commands to avoid, Tidewave only
+  when present). `elixir/code-shape.md` now uses the anti-pattern vocabulary
+  (assertive code, data modeling, errors, naming, docs, the type checker, macros);
+  LiveView, Ecto, security, OTP, ExUnit, build and libraries gain the matching
+  rules, and `Repo.transaction/2` advice moves to `Repo.transact/2`.
+- New workflow `data-pipelines` (backend) for flows of many items: a flow card,
+  idempotent effects proven against a duplicate, a poisoned item that leaves the
+  flow with a record, bounded memory and concurrency. `pipeline-design` points data
+  pipelines to it. `architecture-review` gates compile-time cycles and records the
+  substitution seam; `abstraction-layers`, `module-design`, `code-review`,
+  `test-strategy`, `performance`, `process-lifecycle` and `house-patterns` gain
+  their Elixir rules.
+- Fix: `house-patterns` no longer suggests `mix xref callers` with a function,
+  which Elixir 1.19 rejects; it uses `mix xref graph --sink`. LiveView tests assert
+  on elements by DOM id, as Phoenix's usage rules ask, not on raw HTML.
+- Evaluation cases E57 to E62, each with an `expected_size`.
+- The shared contract plans in proportion to size: `START.md` step 1 names the task
+  size (small, medium or large) and a new step 5 asks a large task to write a plan
+  from `templates/task-plan.md` in `.elixir-agent-kit/plans/` before the first edit,
+  to reread it after compaction and to ask for approval of the plan only on a stop-and-ask trigger, while authority rules still apply.
+- The installer owns `.elixir-agent-kit/plans/.gitignore`, which ignores the
+  folder's contents without touching the project's `.gitignore`; uninstall keeps
+  existing plans. `check` reports the file as drift when missing or edited.
+- Every evaluation case carries `expected_size`; E55 and E56 add two large cases.
 - New workflow `house-patterns` (code area): bring existing code to patterns the
   project already established, with a pattern card, a deviation table, a public-seam
   test pinned before each one-rule, one-site step, defects reported apart and the

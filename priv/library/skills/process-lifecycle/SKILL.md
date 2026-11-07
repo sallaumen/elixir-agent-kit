@@ -11,7 +11,7 @@ Default mode: **analyze-and-fix**. Read the [shared contract](../../CONTRACT.md)
 
 Use when a process is the suspect: a poller that broadcasts the same thing twice, a mailbox that grows, a `GenServer.call` that times out under load, state that vanishes or doubles after a crash or deploy, a `Task` nobody awaits, or a new feature that someone wants to "make a GenServer". Use it before writing the process as well as when one misbehaves.
 
-The user-visible side of asynchronous work (what the interface shows after reconnect, stale results) belongs to [async-state](../async-state/SKILL.md); this workflow is about the BEAM runtime: ownership, supervision, backpressure and restart.
+The user-visible side of asynchronous work (what the interface shows after reconnect, stale results) belongs to [async-state](../async-state/SKILL.md); this workflow is about the BEAM runtime: ownership, supervision, backpressure and restart. A flow of many items (an import, a stream, a queue consumer) and its delivery guarantees is [data-pipelines](../data-pipelines/SKILL.md).
 
 ## Inputs to inspect
 
@@ -42,6 +42,7 @@ The user-visible side of asynchronous work (what the interface shows after recon
 - `call` for a reply the caller needs now, with an explicit timeout the caller handles; `cast` or a message when it does not, with backpressure defined.
 - Restart rebuilds from durable truth; a process that cannot be rebuilt is a bug waiting for a deploy.
 - Timers and monitors are matched by reference; a stale `:tick` or `:DOWN` is dropped, not acted on.
+- One module owns every message to a process; a `GenServer.call/3` on its registered name from another module is a finding (scattered process interface). Send the fields a process needs, not a whole conn, socket or large struct, because messages are copied.
 - A periodic process reschedules inside its tick handler and survives a known flaky source (rescue that failure and keep the schedule); otherwise one bad read per tick spends the supervisor's restart budget and takes siblings down with it. Its interval is configuration, stretched in the test environment.
 
 ## Quality criteria

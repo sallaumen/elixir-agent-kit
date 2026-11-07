@@ -42,6 +42,7 @@ The separating rule among the code workflows: one function, or a small cluster a
 - Actions, calculations and data are lenses for reading the table, not three mandatory directories or a new context.
 - Keep co-changing details together; a parameter bundle of eight fields created to claim purity is worse than the original mix.
 - Effect count, order, error handling and transaction semantics are frozen by step 2; any change to them is a separate, named decision.
+- A chain of fallible steps reads as one `with` whose steps each return a normalized `{:error, reason}`, not nested `case` or a long `else`; a multi-write step is one `Repo.transact/2` or `Ecto.Multi`, with external effects after the commit. See [Pipelines and control flow](../../elixir/pipelines.md).
 
 ## Quality criteria
 

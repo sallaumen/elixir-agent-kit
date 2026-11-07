@@ -10,6 +10,7 @@ data-contracts	analyze-and-fix	Use when layers disagree about data, rules are du
 migration-compatibility	analyze-and-fix	Use when stored schemas, identifiers, jobs or public payloads must survive a version change.	backend
 security-boundaries	analyze-and-fix	Use when untrusted input, credentials, permissions or tenant boundaries may permit unintended access.	backend
 provider-calls	analyze-and-fix	Use when code calls a paid, rate-limited or externally billed provider and its retries, budget, audit trail or failure reasons are unclear.	backend
+data-pipelines	analyze-and-fix	Use when a flow of many items (an import, a stream, a fan-out or a queue consumer) loses, duplicates, stalls or runs out of memory, or its back-pressure, batching or acknowledgement is unclear.	backend
 architecture-review	analyze-and-fix	Use when changes cross many modules, rules repeat, dependencies cycle or domain ownership is unclear.	code
 abstraction-layers	analyze-and-fix	Use when functions mix business decisions, low-level details and effects at incompatible levels.	code
 module-design	analyze-and-fix	Use when module names, locations or public APIs obscure responsibilities that are already understood.	code

@@ -11,7 +11,7 @@ Default mode: **analyze-and-fix**. Read the [shared contract](../../CONTRACT.md)
 
 Use when the operations screen shows "8 agents running" while the provider console shows two requests in flight; when an Oban queue with `concurrency: 10` is treated as the model's rate limit, or the other way around; when a job that only sometimes calls a model is counted as a model slot from the moment it is enqueued; when a job that delegates to a second job is billed or counted twice; when a provider returns 429 and nobody can say which queue should slow down; or when a crashed worker leaves a capacity counter that never comes back down.
 
-This workflow owns capacity and accounting across many jobs, queues, workers and providers. The single outbound call, its budget gate and its audit row belong to [provider-calls](../provider-calls/SKILL.md); the state of one worker process (init, timeout, crash, restart) belongs to [process-lifecycle](../process-lifecycle/SKILL.md); whether a stuck queue should page someone belongs to [operational-alerts](../operational-alerts/SKILL.md).
+This workflow owns capacity and accounting across many jobs, queues, workers and providers. The single outbound call, its budget gate and its audit row belong to [provider-calls](../provider-calls/SKILL.md); the state of one worker process (init, timeout, crash, restart) belongs to [process-lifecycle](../process-lifecycle/SKILL.md); whether a stuck queue should page someone belongs to [operational-alerts](../operational-alerts/SKILL.md); a flow of items that loses, duplicates or stalls them, apart from model capacity, belongs to [data-pipelines](../data-pipelines/SKILL.md).
 
 ## Inputs to inspect
 

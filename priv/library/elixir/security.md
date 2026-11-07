@@ -1,6 +1,7 @@
 # Security
 
-Part of the [Elixir context](../ELIXIR.md). Applies when the project serves HTTP, takes user input or reads secrets.
+Part of the [Elixir context](../ELIXIR.md). Applies when the project serves
+HTTP, takes user input or reads secrets.
 
 Inspect: the browser pipeline (`protect_from_forgery`,
 `put_secure_browser_headers`), every place a token is verified, every call
@@ -23,7 +24,9 @@ where secrets are read.
 - Database input: build changes through `Ecto.Changeset.cast/3` with an explicit
   field list, or an explicit allowlist of fields and operators for filters and
   sorts; never interpolate params into a query or map a param to a column name
-  without a lookup. Scope every read by the current tenant or scope.
+  without a lookup. Scope every read by the current tenant or scope. A field the
+  server sets (`user_id`, `org_id`, a role, a price) is never in the `cast/3`
+  list; set it from the scope or with `put_change/3` after casting.
 - LiveView: `handle_event/3` params are untrusted exactly like controller params,
   including ids of records the user may not own; load through the scoped context
   function, not `Repo.get/2`. Authorization belongs in `live_session`

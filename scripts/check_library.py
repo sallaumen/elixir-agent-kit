@@ -17,6 +17,29 @@ HEADINGS = [
     "## Completion",
 ]
 errors = []
+contract = (LIBRARY / "CONTRACT.md").read_text()
+if "## Plan in proportion to size" not in contract:
+    errors.append("CONTRACT.md lacks the 'Plan in proportion to size' section")
+for size in ["| Small |", "| Medium |", "| Large |"]:
+    if size not in contract:
+        errors.append(f"CONTRACT.md size table lacks the row {size}")
+task_plan = LIBRARY / "templates/task-plan.md"
+if not task_plan.is_file():
+    errors.append("templates/task-plan.md is missing")
+else:
+    plan_text = task_plan.read_text()
+    for field in [
+        "- Request, authorized scope and exclusions:",
+        "- Size and why; workflow ID and version:",
+        "- Baseline: branch, revision, pre-existing failures:",
+        "- Stop-and-ask triggers hit",
+        "| # | Slice | Files/contracts | Check that proves it | Status |",
+        "- Order and safe intermediate states:",
+        "- Stop conditions:",
+        "- Notes after compaction",
+    ]:
+        if field not in plan_text:
+            errors.append(f"templates/task-plan.md lacks: {field}")
 
 
 def heading_anchor(line):
@@ -80,6 +103,8 @@ for case in cases:
         errors.append(f"Unknown evaluation route: {case['id']}")
     if not all(case[field] for field in ["request", "success_signals", "failure_signals"]):
         errors.append(f"Incomplete evaluation case: {case['id']}")
+    if case.get("expected_size") not in {"small", "medium", "large"}:
+        errors.append(f"Evaluation case lacks expected_size small, medium or large: {case['id']}")
 evals_readme = (ROOT / "evals/README.md").read_text()
 if f"These {len(cases)} cases" not in evals_readme:
     errors.append(f"evals/README.md does not state the case count {len(cases)}")

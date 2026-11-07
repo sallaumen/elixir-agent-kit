@@ -1,6 +1,7 @@
 # OTP processes and supervision
 
-Part of the [Elixir context](../ELIXIR.md). Applies when the project starts its own processes (`GenServer`, `Task`, `Agent`, a supervision tree).
+Part of the [Elixir context](../ELIXIR.md). Applies when the project starts its
+own processes (`GenServer`, `Task`, `Agent`, a supervision tree).
 
 Inspect: the supervision tree (`Application.start/2`, child specs), which process
 owns each piece of state, every `GenServer.call/3` timeout, and what happens on
@@ -11,9 +12,11 @@ restart.
 - Pick the restart strategy for the failure you expect; a crash that loses state
   the user depends on needs persistence or a recovery read, not a tighter restart.
 - Give long `call`s an explicit timeout and a caller that survives `:timeout`.
-  Move blocking work out of callbacks with `Task.Supervisor` or `handle_continue/2`.
+  Move blocking work out of callbacks with `Task.Supervisor` or
+  `handle_continue/2`.
 - Watch mailbox growth on pollers and broadcasters: dedupe by content hash or
-  sequence before broadcasting; `Process.info(pid, :message_queue_len)` measures it.
+  sequence before broadcasting; `Process.info(pid, :message_queue_len)` measures
+  it.
 - A periodic process schedules its next tick inside `handle_info/2` (scheduling
   only in `init/1` runs once), reads the interval from application config so the
   test environment can stretch it, and rescues a known flaky source inside the
@@ -29,6 +32,18 @@ restart.
 - Before renaming a module, search behaviours, callbacks, configuration, child
   specs, dynamic dispatch (`apply/3`, `String.to_existing_atom/1`), serialized
   references and persisted jobs. A direct-call search proves nothing.
+- One module owns every message to a given process; callers use its functions,
+  never `GenServer.call/3` on its name from elsewhere ("scattered process
+  interfaces").
+- Messages are copied between processes: send the fields the receiver needs,
+  not a whole socket, conn or large struct, and let the receiver fetch the rest
+  ("sending unnecessary data"). Rarely changing global data read by many
+  processes fits `:persistent_term`, whose updates are expensive.
+- Start every long-running process under a supervisor (`Task.Supervisor`,
+  `DynamicSupervisor` with a named child spec), never a bare `spawn` or
+  `Task.start` from a request ("unsupervised processes"). Bounded parallel work
+  over a collection is `Task.async_stream/3` (see [Pipelines and control
+  flow](pipelines.md)).
 - Never expose a private function only for tests.
 
 Verify: `start_supervised!/1` in tests, a restart scenario, `:sys.get_state/1` for
