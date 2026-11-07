@@ -5,7 +5,7 @@
 - The shared contract plans in proportion to size: `START.md` step 1 names the task
   size (small, medium or large) and a new step 5 asks a large task to write a plan
   from `templates/task-plan.md` in `.elixir-agent-kit/plans/` before the first edit,
-  to reread it after compaction and to stop only on a stop-and-ask trigger.
+  to reread it after compaction and to ask for approval of the plan only on a stop-and-ask trigger, while authority rules still apply.
 - The installer owns `.elixir-agent-kit/plans/.gitignore`, which ignores the
   folder's contents without touching the project's `.gitignore`; uninstall keeps
   existing plans. `check` reports the file as drift when missing or edited.

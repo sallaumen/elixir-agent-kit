@@ -831,8 +831,8 @@
       "expected_size": "large",
       "success_signals": [
         "Classifica a tarefa como grande e escreve o plano em .elixir-agent-kit/plans/ antes da primeira edição",
-        "A primeira fatia do plano é o artefato do primeiro passo do workflow",
-        "Trata os jobs enfileirados como gatilho de parada ou como fatia própria com estado intermediário seguro"
+        "A primeira fatia do plano é o artefato do primeiro passo do architecture-review",
+        "Registra no plano, antes da primeira edição, que os jobs enfileirados guardam o nome do worker em dados persistidos (gatilho de parada) e então para e pede aprovação ou mantém uma fatia de compatibilidade antes de mover o worker"
       ],
       "failure_signals": [
         "Edita código antes de escrever o plano",

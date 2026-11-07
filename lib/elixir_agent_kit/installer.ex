@@ -125,16 +125,16 @@ defmodule ElixirAgentKit.Installer do
 
     Before opening any source file for a change or a review:
 
-    1. Name the task's primary risk and its size (small, medium or large) in one line,
-       from the request alone: a screen, stored data or a provider call, code quality
-       or process state, an operational domain, or delivery. Revise the size after the
-       first inspection when the code shows otherwise.
+    1. Name the task's primary risk in one line, from the request alone: a screen,
+       stored data or a provider call, code quality or process state, an operational
+       domain, or delivery. Then name its size (small, medium or large), revising it
+       after the first inspection when the code shows otherwise.
     2. Pick one workflow from the tables below. When two neighbors fit, the
        [routing guide](#{target}/ROUTING.md) separates them. A bounded, fully specified
        edit picks NONE.
     3. Read that workflow's SKILL.md from the dependency together with the
        [shared contract](#{target}/CONTRACT.md); copy neither into this project.
-    4. State the workflow ID or NONE and the size in your plan or report, with the
+    4. State the workflow ID or NONE and the size in your reply or report, with the
        reason in one line and the workflow's `Start at` input as the first thing you
        open; then investigate the way the workflow says, producing the artifact its
        first step asks for. The local contracts say what this project must do; the

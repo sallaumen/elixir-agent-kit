@@ -95,7 +95,7 @@ defmodule ElixirAgentKit.InstallerTest do
     assert start =~ "../deps/elixir_agent_kit/priv/library/CONTRACT.md"
     assert length(Regex.scan(~r/^\d\. /m, start)) == 5
     assert start =~ "`Start at`"
-    assert start =~ "its size (small, medium or large)"
+    assert start =~ "name its size (small, medium or large)"
     assert start =~ "../deps/elixir_agent_kit/priv/library/templates/task-plan.md"
     assert start =~ "../deps/elixir_agent_kit/priv/library/CONTRACT.md#plan-in-proportion-to-size"
 

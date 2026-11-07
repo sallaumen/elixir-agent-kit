@@ -65,10 +65,11 @@ mix agent_kit.check
 You will see the paths the installer wrote and the next step:
 
 ```text
-Changed 6 paths:
+Changed 7 paths:
   .agents/skills/elixir-agent-kit/SKILL.md
   .claude/skills/elixir-agent-kit/SKILL.md
   .elixir-agent-kit/START.md
+  .elixir-agent-kit/plans/.gitignore
   .elixir-agent-kit/state.tsv
   AGENTS.md
   CLAUDE.md
@@ -93,7 +94,7 @@ its own skill directory. Either one asks for five steps before any source file
 is opened:
 
 1. It names the task's primary risk in one line, from the request alone: here,
-   process state. It also names the size: small, medium or large.
+   process state. It also names the size: here, medium.
 2. It picks one workflow from the tables in `START.md`, the narrowest that fits:
    [`async-state`](priv/library/skills/async-state/SKILL.md). Only when two
    neighbors fit does it open the [routing guide](priv/library/ROUTING.md) to
@@ -105,7 +106,8 @@ is opened:
    effect), what quality looks like (the UI reconciles after reload from persisted
    identifiers; retries never advance state falsely) and what evidence to show
    (duplicate, delayed and out-of-order delivery exercised on the real flow).
-4. It states the workflow ID, or NONE, in its plan with the reason in one line,
+4. It states the workflow ID, or NONE, and the size in its reply with the reason
+   in one line,
    opens the workflow's `Start at` input before anything else and produces the
    artifact the workflow's first step asks for; then it investigates the way the
    workflow says and reports with the [handoff template](priv/library/HANDOFF.md):
@@ -114,8 +116,9 @@ is opened:
    together, needs more than one delivery or will not fit one session), it writes
    a plan from the [task-plan template](priv/library/templates/task-plan.md) in
    `.elixir-agent-kit/plans/` before the first edit and rereads it after a
-   compaction. It stops for approval only when the plan widens the requested
-   scope, changes persisted data or a public contract, or has an irreversible step.
+   compaction. It asks for approval of the plan only when it widens the requested
+   scope, changes persisted data or a public contract, or has an irreversible step;
+   authority rules, the mode and the workflow's own stop conditions still apply.
 
 The routing cases in [`evals/`](evals/README.md) hold 56 requests like that one,
 with the expected workflow and the signals of a good or bad answer. They stay out
@@ -156,7 +159,7 @@ project's `mix.lock` calls for.
 |---|---|
 | `.elixir-agent-kit/START.md` | Five steps that end in a named workflow choice and a task size, then the enabled catalog linking into the dependency. |
 | `.elixir-agent-kit/state.tsv` | Version, selection and SHA-256 of every file and block the installer owns. |
-| `.elixir-agent-kit/plans/.gitignore` | Keeps the plans folder out of Git without touching your `.gitignore`; large tasks write their plans next to it, and uninstall keeps those plans. |
+| `.elixir-agent-kit/plans/.gitignore` | Keeps the plans folder out of Git without touching your `.gitignore`; large tasks write their plans next to it, and uninstall keeps those plans, no longer ignored. The folder is not versioned, so a plan does not follow the task into another worktree. |
 | `AGENTS.md` | A bounded block for Codex and generic harnesses (`:codex`, `:generic`). |
 | `CLAUDE.md` | A bounded block for Claude Code (`:claude`). When `AGENTS.md` is managed or already exists, the block imports it with `@AGENTS.md`, because Claude Code stops reading `AGENTS.md` once a `CLAUDE.md` applies. |
 | `.claude/skills/elixir-agent-kit/SKILL.md` | One generated skill for Claude Code's native discovery: a description, the catalog filtered by your selection and links into the dependency. |
