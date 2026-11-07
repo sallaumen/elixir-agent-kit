@@ -8,7 +8,7 @@
 **Shared coding practices for AI agents, versioned with your Elixir project.**
 
 Pin the kit like any Mix dependency. Every agent that touches the project, whether
-Codex, Claude Code or your own harness, reads the same 35 reviewed workflows from
+Codex, Claude Code or your own harness, reads the same 36 reviewed workflows from
 `deps/`: what to inspect, which decisions matter, what "done" looks like and how
 to prove it. No copied skill library to drift, no service, no model calls, nothing
 shipped to production.
@@ -128,7 +128,7 @@ its `skills:` selection.
 | [layout-density](priv/library/skills/layout-density/SKILL.md) | [migration-compatibility](priv/library/skills/migration-compatibility/SKILL.md) | [abstraction-layers](priv/library/skills/abstraction-layers/SKILL.md) | [notifications](priv/library/skills/notifications/SKILL.md) | [pipeline-design](priv/library/skills/pipeline-design/SKILL.md) |
 | [navigation-ux](priv/library/skills/navigation-ux/SKILL.md) | [security-boundaries](priv/library/skills/security-boundaries/SKILL.md) | [module-design](priv/library/skills/module-design/SKILL.md) | [operational-alerts](priv/library/skills/operational-alerts/SKILL.md) | [build-dependencies](priv/library/skills/build-dependencies/SKILL.md) |
 | [responsive-layout](priv/library/skills/responsive-layout/SKILL.md) | [provider-calls](priv/library/skills/provider-calls/SKILL.md) | [code-consolidation](priv/library/skills/code-consolidation/SKILL.md) | [integration-setup](priv/library/skills/integration-setup/SKILL.md) | [delivery-validation](priv/library/skills/delivery-validation/SKILL.md) |
-| [direct-interactions](priv/library/skills/direct-interactions/SKILL.md) |  | [test-strategy](priv/library/skills/test-strategy/SKILL.md) | [metrics-costs](priv/library/skills/metrics-costs/SKILL.md) |  |
+| [direct-interactions](priv/library/skills/direct-interactions/SKILL.md) | [data-pipelines](priv/library/skills/data-pipelines/SKILL.md) | [test-strategy](priv/library/skills/test-strategy/SKILL.md) | [metrics-costs](priv/library/skills/metrics-costs/SKILL.md) |  |
 | [accessibility](priv/library/skills/accessibility/SKILL.md) |  | [code-review](priv/library/skills/code-review/SKILL.md) | [simulation-isolation](priv/library/skills/simulation-isolation/SKILL.md) |  |
 | [design-system](priv/library/skills/design-system/SKILL.md) |  | [debugging](priv/library/skills/debugging/SKILL.md) | [commercial-eligibility](priv/library/skills/commercial-eligibility/SKILL.md) |  |
 | [motion-design](priv/library/skills/motion-design/SKILL.md) |  | [performance](priv/library/skills/performance/SKILL.md) | [revision-lineage](priv/library/skills/revision-lineage/SKILL.md) |  |
@@ -139,10 +139,11 @@ its `skills:` selection.
 Three of them keep a different default mode: `code-review` reviews without
 editing, `delivery-validation` analyzes without repairing, `delivery-coordination`
 coordinates. The user's explicit scope always wins over a default. The
-[Elixir context](priv/library/ELIXIR.md) indexes one short reference per technology
-(code shape, OTP, Phoenix and LiveView, Ecto, Oban, ExUnit, HTTP clients, security,
-telemetry, builds) and the recommended libraries; an agent reads only the ones the
-project's `mix.lock` calls for.
+[Elixir context](priv/library/ELIXIR.md) indexes one short reference per subject
+(code shape, pipelines, dependency architecture, OTP, Phoenix and LiveView, Ecto,
+Oban, ExUnit, HTTP clients, security, telemetry, builds, library authoring, the
+agent's working loop) and the recommended libraries; an agent reads only the ones
+the project's `mix.lock` and task call for.
 
 ## What lands in your project
 

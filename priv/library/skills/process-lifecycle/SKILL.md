@@ -42,6 +42,7 @@ The user-visible side of asynchronous work (what the interface shows after recon
 - `call` for a reply the caller needs now, with an explicit timeout the caller handles; `cast` or a message when it does not, with backpressure defined.
 - Restart rebuilds from durable truth; a process that cannot be rebuilt is a bug waiting for a deploy.
 - Timers and monitors are matched by reference; a stale `:tick` or `:DOWN` is dropped, not acted on.
+- One module owns every message to a process; a `GenServer.call/3` on its registered name from another module is a finding (scattered process interface). Send the fields a process needs, not a whole conn, socket or large struct, because messages are copied.
 - A periodic process reschedules inside its tick handler and survives a known flaky source (rescue that failure and keep the schedule); otherwise one bad read per tick spends the supervisor's restart budget and takes siblings down with it. Its interval is configuration, stretched in the test environment.
 
 ## Quality criteria

@@ -1,4 +1,4 @@
-# Review of all 35 workflows
+# Review of all 36 workflows
 
 This matrix is an editorial audit, not an evaluation of model compliance. The
 earlier public edition preserved each trigger and a short four-step workflow but
@@ -34,6 +34,7 @@ are not packaged. “Original workflow” means the historical authored material
 | Code | [`async-state`](../priv/library/skills/async-state/SKILL.md) | `estados-assincronos` | original workflow; shared contract | The UI and API can reconcile after reconnect or reload using persisted identifiers and a current-state read. |
 | Domains | [`ai-orchestration`](../priv/library/skills/ai-orchestration/SKILL.md) | `orquestracao-ias` | original workflow; shared contract | Acquisition, release, timeout, cancellation and crash recovery keep capacity counters consistent. |
 | Backend | [`provider-calls`](../priv/library/skills/provider-calls/SKILL.md) | none (new in 0.5) | a consuming application's paid-call rules, generalized; shared contract | Every call has one audit row at the provider's billing moment, failures are typed reasons, and a failed round trip never charges twice. |
+| Backend | [`data-pipelines`](../priv/library/skills/data-pipelines/SKILL.md) | none (new in 0.7) | Elixir, Ecto, GenStage, Flow and Broadway documentation; shared contract | Every stage is bounded, a duplicate delivery produces one effect, and a poisoned item leaves the flow with a record without blocking the rest. |
 | Domains | [`notifications`](../priv/library/skills/notifications/SKILL.md) | `notificacoes-e-bots` | original workflow; shared contract | A source event has stable identity through delivery so duplicate callbacks/retries do not create unexplained sends. |
 | Domains | [`integration-setup`](../priv/library/skills/integration-setup/SKILL.md) | `setup-integracoes` | original workflow; shared contract | The UI and backend use one readiness contract with specific reasons, not several booleans with conflicting meanings. |
 | Domains | [`commercial-eligibility`](../priv/library/skills/commercial-eligibility/SKILL.md) | `elegibilidade-comercial` | original workflow; shared contract | A single domain rule answers whether the exact offer can be produced, sold and fulfilled at its destination. |

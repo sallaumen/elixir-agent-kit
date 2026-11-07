@@ -44,6 +44,7 @@ This workflow reads a bounded diff and reports findings; it does not edit, comme
 - A missing test is a finding only when the uncovered behavior has a failure scenario; otherwise it is a coverage note.
 - When the diff changes a contract (function signature, event name, schema field, job args), every caller that was not updated is a finding.
 - Uncertainty is stated as such; a hypothesis is never reported as a defect.
+- In Elixir, check the defect classes the compiler and Credo do not catch: a lenient match that hides an impossible shape, a `with` whose `else` cannot tell which step failed, a raise that reaches a LiveView or controller, a server-set field in a `cast/3` list, a new compile-time dependency (`mix xref graph --format cycles --label compile-connected`), a process message sent from outside its owning module, an effect inside a transaction. Cite the anti-pattern name from [Module and function shape](../../elixir/code-shape.md) when one applies.
 
 ## Quality criteria
 

@@ -30,6 +30,7 @@ copy of a workflow body.
 | [migration-compatibility](skills/migration-compatibility/SKILL.md) | analyze-and-fix | Use when stored schemas, identifiers, jobs or public payloads must survive a version change. |
 | [security-boundaries](skills/security-boundaries/SKILL.md) | analyze-and-fix | Use when untrusted input, credentials, permissions or tenant boundaries may permit unintended access. |
 | [provider-calls](skills/provider-calls/SKILL.md) | analyze-and-fix | Use when code calls a paid, rate-limited or externally billed provider and its retries, budget, audit trail or failure reasons are unclear. |
+| [data-pipelines](skills/data-pipelines/SKILL.md) | analyze-and-fix | Use when a flow of many items (an import, a stream, a fan-out or a queue consumer) loses, duplicates, stalls or runs out of memory, or its back-pressure, batching or acknowledgement is unclear. |
 
 ## Code structure and quality
 

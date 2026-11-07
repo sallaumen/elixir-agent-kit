@@ -16,8 +16,8 @@ The separating rule among the code workflows: code that drifts from a pattern th
 ## Inputs to inspect
 
 - Start at: the written source of the pattern (the project's contract section, an architecture decision record, `AGENTS.md`, a style guide) or, when only code shows it, the exemplar modules the request or the owner names; then one search that narrows to candidate deviations, such as `grep -rn "Req\.new(" lib/` for clients built at each call. A candidate becomes a deviation only after reading it confirms it breaks the card.
-- The [Elixir context](../../ELIXIR.md) reference for the technology involved, read as a default the project's own rule overrides, never as the project's rule.
-- For each deviating site: its public callers (`mix xref callers Module.fun/arity`), what they observe today (return shapes, raises, messages, broadcasts, rows written, telemetry), and the tests that reach it.
+- The [Elixir context](../../ELIXIR.md) reference for the technology involved, read as a default the project's own rule overrides, never as the project's rule; the anti-pattern names in [Module and function shape](../../elixir/code-shape.md) give a shared vocabulary for the card when the project's rule matches one.
+- For each deviating site: its callers (`mix xref graph --sink lib/<path>.ex --only-nodes` lists the files that depend on it; `grep -rn "fun_name("` narrows them to the function), what they observe today (return shapes, raises, messages, broadcasts, rows written, telemetry), and the tests that reach it.
 - The project's gate and lint configuration (`mix precommit` or `mix gate`, `.credo.exs`, formatter), and generated framework files the project keeps out of its own patterns.
 - Documented exceptions: a contract line, a comment or a decision record that keeps a site deliberately different.
 

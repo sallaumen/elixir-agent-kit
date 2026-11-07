@@ -15,11 +15,11 @@ The separating rule among the code workflows: many modules, cycles or unclear ow
 
 ## Inputs to inspect
 
-- Start at: the requested change (diff, issue or failing test), then `mix xref graph --format cycles` and `mix xref graph --sink <file> --only-nodes` for each touched module to see who depends on it.
+- Start at: the requested change (diff, issue or failing test), then `mix xref graph --format cycles --label compile-connected` (cycles that force recompilation; since Elixir 1.19 each strongly connected group is reported once), `mix xref graph --format cycles` for runtime cycles, and `mix xref graph --sink <file> --only-nodes` for each touched module to see who depends on it; `mix xref trace <file>` explains why one file depends on another.
 - The `lib/` layout: contexts, web modules, workers and their namespaces, compared with the boundaries the README or docs claim.
 - Each schema in the change, the table it maps, and every module outside its context that inserts or updates it. See [Ecto and migrations](../../elixir/ecto.md).
 - The entry points of one representative operation: router or `live_session`, controller or LiveView, context, job, PubSub broadcast, and the processes it starts. See [Phoenix and LiveView](../../elixir/phoenix-liveview.md) and [OTP processes and supervision](../../elixir/otp.md).
-- Existing decisions: ADRs, module docs, and the tests that encode a boundary (a context test that goes through the public API versus one that reaches into another context).
+- Existing decisions: ADRs, module docs, and the tests that encode a boundary (a context test that goes through the public API versus one that reaches into another context); the `boundary` library's declarations when the project uses it; every `Application.get_env/3` that selects a module and the behaviour it implements. See [Dependency architecture](../../elixir/architecture.md).
 
 ## Workflow
 
@@ -38,7 +38,9 @@ The separating rule among the code workflows: many modules, cycles or unclear ow
 ## Decision points
 
 - An owner is the context that writes the table; any other writer is a finding unless the project's documented decision says otherwise.
-- Dependency direction is one way: web to context, context to schema and repo, jobs to context; a reverse edge is repaired by an event, a callback registered by the lower layer, or a function move.
+- Dependency direction is one way: web to context, context to schema and repo, jobs to context; a reverse edge is repaired by an event, a callback registered by the lower layer, or a function move. A schema association across contexts is allowed when the data truly depends on it; a call into another context's private queries or writes is not.
+- A compile-time cycle is fixed before a runtime one: it recompiles every file in it on each change. Cut it by moving calls out of module bodies and attributes, replacing `use` with `import` or `alias`, or expanding a macro's module argument at runtime; never by building the module name with `Module.concat/2`.
+- An external service or a swappable implementation sits behind a behaviour the project owns; pick a function argument with a default for few call sites and a single config-reading module for many, and record which in the map.
 - A rule repeated in two layers is collapsed into the owner; the other layer calls it.
 - Repair now only when the risk is in the change and the fix is bounded; otherwise record the follow-up with the map and the consequence.
 - Pages are not domains, line counts are not quality, and moving folders without changing dependencies is not an architectural improvement.
@@ -53,7 +55,7 @@ The separating rule among the code workflows: many modules, cycles or unclear ow
 
 ## Validation and evidence
 
-- Minimum: the ownership map and the `mix xref graph --format cycles` output before and after, plus the trace of one real operation from entry point to effect naming each module crossed.
+- Minimum: the ownership map and the `mix xref graph --format cycles --label compile-connected` output before and after (with its exit status under `--fail-above 0` when the project gates on it), plus the trace of one real operation from entry point to effect naming each module crossed.
 - When turns allow: the existing tests of the traced operation and its failure path, run after the correction.
 - When a public boundary moved: the list of callers, callbacks, configuration and persisted job names checked, with the search used.
 - When a correction was only proposed: the migration cost and a verification path per recommendation.

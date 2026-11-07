@@ -34,6 +34,13 @@ under test.
 - Point an external store the application reads (another program's database
   file, a directory of logs) at a fixture created in `test_helper.exs` and removed
   with `System.at_exit/1`, so a developer's real state never reaches a test.
+- Synchronize with a process instead of sleeping: `Process.monitor/1` and
+  `assert_receive {:DOWN, ^ref, :process, _, _}` for its exit, `_ =
+  :sys.get_state(pid)` as a barrier after a cast, and no `Process.alive?/1` checks.
+- Pure functions with invariants (round trips, ordering, idempotence) get
+  property tests with `StreamData` (`check all`) when the project has it; a
+  doctest is an example, not coverage. ExUnit 1.18 `use ExUnit.Case,
+  parameterize: [...]` runs a module once per parameter set.
 - Processes a test starts inherit its sandbox connection and its private
   `Req.Test` stubs through `$callers`: a `Task`, a `start_async/3` job and the
   LiveView process that `live/2` starts (LiveView 1.2 passes the test process as

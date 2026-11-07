@@ -766,6 +766,93 @@
         "Varrer o projeto inteiro em busca de outros clientes sem pedido",
         "Abrir provider-calls para um cliente sem custo"
       ]
+    },
+    {
+      "id": "E57",
+      "request": "O consumidor Broadway da fila RabbitMQ trava num pedido malformado: a mesma mensagem volta para a fila sem parar e as outras atrasam. Às vezes um pedido também é gravado duas vezes.",
+      "expected_primary": "data-pipelines",
+      "allowed_alternatives": [],
+      "expected_size": "medium",
+      "success_signals": [
+        "Escrever a semântica de falha do produtor RabbitMQ a partir da documentação antes de mudar a configuração",
+        "Tornar o efeito idempotente pela identidade da mensagem e provar com uma entrega duplicada",
+        "Tirar a mensagem envenenada do fluxo com registro (dead-letter ou rejeição) sem bloquear as demais"
+      ],
+      "failure_signals": [
+        "Aumentar a concorrência até o sintoma sumir",
+        "Abrir pipeline-design por causa da palavra pipeline",
+        "Reescrever o consumidor como um GenServer próprio"
+      ]
+    },
+    {
+      "id": "E58",
+      "request": "Mudar um schema recompila trezentos arquivos e Billing chama Accounts, que chama Billing de volta. Quero entender as dependências e cortar o que dá.",
+      "expected_primary": "architecture-review",
+      "allowed_alternatives": [
+        "build-dependencies"
+      ],
+      "expected_size": "large",
+      "success_signals": [
+        "Separar ciclos de compilação (mix xref graph --format cycles --label compile-connected) de ciclos só de runtime",
+        "Usar mix xref trace para achar a linha que cria cada dependência de compilação",
+        "Cortar a dependência movendo chamadas para fora do corpo do módulo ou trocando use por import/alias"
+      ],
+      "failure_signals": [
+        "Esconder a dependência com Module.concat",
+        "Mover pastas sem mudar as dependências",
+        "Criar um umbrella para desacoplar"
+      ]
+    },
+    {
+      "id": "E59",
+      "request": "A importação de um CSV de 2 GB estoura a memória do servidor e, quando reiniciamos, algumas linhas entram duplicadas.",
+      "expected_primary": "data-pipelines",
+      "allowed_alternatives": [
+        "performance"
+      ],
+      "expected_size": "medium",
+      "success_signals": [
+        "Processar em stream em vez de carregar o arquivo inteiro",
+        "Dar identidade às linhas e tornar a gravação idempotente antes de reprocessar",
+        "Provar o limite de memória com uma entrada grande em escala de teste"
+      ],
+      "failure_signals": [
+        "Aumentar a memória da máquina como solução",
+        "Abrir uma transação única para o arquivo inteiro"
+      ]
+    },
+    {
+      "id": "E60",
+      "request": "Nesta função, troque o Enum.map seguido de Enum.filter por um for com filtro; o teste dela já existe.",
+      "expected_primary": "NONE",
+      "allowed_alternatives": [],
+      "expected_size": "small",
+      "success_signals": [
+        "Fazer a edição delimitada e rodar o teste existente",
+        "Manter o resultado idêntico"
+      ],
+      "failure_signals": [
+        "Abrir data-pipelines ou performance para uma troca local",
+        "Reescrever outras funções do módulo"
+      ]
+    },
+    {
+      "id": "E61",
+      "request": "Temos um ADR dizendo para usar Repo.transact em vez de Repo.transaction. Ainda há seis lugares com transaction; atualize-os.",
+      "expected_primary": "house-patterns",
+      "allowed_alternatives": [
+        "NONE"
+      ],
+      "expected_size": "medium",
+      "success_signals": [
+        "Usar o ADR como fonte do padrão e a busca por Repo.transaction como candidatos",
+        "Fixar com teste o comportamento de rollback de cada ponto antes de mudar",
+        "Converter um ponto por passo, mantendo o retorno {:ok, _} | {:error, _} que os chamadores esperam"
+      ],
+      "failure_signals": [
+        "Trocar por busca e substituição sem olhar o formato de retorno",
+        "Aproveitar para renomear funções ou mudar efeitos externos"
+      ]
     }
   ]
 }

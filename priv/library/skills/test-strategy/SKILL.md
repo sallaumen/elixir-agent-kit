@@ -42,6 +42,7 @@ The output is a short list of risks, each with the cheapest test that can observ
 - Fixtures use the production contract (the same changeset, the same factory the app uses); a fixture that bypasses validation tests a state the application cannot reach.
 - Keep one real contract check for an external provider when the session authorizes it and a safe path exists; otherwise fake it and say the provider's behavior is assumed, not verified.
 - A test that must be rewritten after a refactor that preserved behavior was coupled to implementation; move it to the public seam.
+- A pure function with an invariant (a parser and its printer round trip, an ordering, idempotence) gets a property test with generated inputs when the project has `StreamData`; examples alone pin only the cases someone thought of. LiveView tests assert on elements by DOM id (`has_element?/2`), not on raw HTML.
 
 ## Quality criteria
 

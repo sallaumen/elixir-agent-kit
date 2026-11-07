@@ -2,6 +2,33 @@
 
 ## Unreleased
 
+- A deeper Elixir review before 0.7 (Elixir anti-pattern and library guides, the
+  1.18 to 1.20 changelogs, Phoenix 1.8 usage rules and guides, Ecto, Broadway and
+  Mox docs, `boundary`, public style guides and agent rule sets) adds four
+  references: `elixir/pipelines.md` (pipe idioms, normalized `with` errors, token
+  pipelines, `Repo.transact/2` and `Ecto.Multi`, query composition, Enum versus
+  Stream, `Task.async_stream` options, GenStage, Flow and Broadway failure
+  semantics), `elixir/architecture.md` (dependency direction, scopes, behaviours as
+  contracts, configuration in libraries, `boundary`, umbrellas, compile-time
+  coupling and `mix xref` gates), `elixir/library-authoring.md` and
+  `elixir/agent-loop.md` (docs of the locked version through `mix help`,
+  dependency usage rules, the feedback ladder, commands to avoid, Tidewave only
+  when present). `elixir/code-shape.md` now uses the anti-pattern vocabulary
+  (assertive code, data modeling, errors, naming, docs, the type checker, macros);
+  LiveView, Ecto, security, OTP, ExUnit, build and libraries gain the matching
+  rules, and `Repo.transaction/2` advice moves to `Repo.transact/2`.
+- New workflow `data-pipelines` (backend) for flows of many items: a flow card,
+  idempotent effects proven against a duplicate, a poisoned item that leaves the
+  flow with a record, bounded memory and concurrency. `pipeline-design` points data
+  pipelines to it. `architecture-review` gates compile-time cycles and records the
+  substitution seam; `abstraction-layers`, `module-design`, `code-review`,
+  `test-strategy`, `performance`, `process-lifecycle` and `house-patterns` gain
+  their Elixir rules.
+- Fix: `house-patterns` no longer suggests `mix xref callers` with a function,
+  which Elixir 1.19 rejects; it uses `mix xref graph --sink`. LiveView tests assert
+  on elements by DOM id, as Phoenix's usage rules ask, not on raw HTML.
+- Evaluation cases E57 to E61, each with an `expected_size`.
+
 - New workflow `house-patterns` (code area): bring existing code to patterns the
   project already established, with a pattern card, a deviation table, a public-seam
   test pinned before each one-rule, one-site step, defects reported apart and the
