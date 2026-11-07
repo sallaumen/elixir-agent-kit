@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.7.0 — 2026-11-07
 
 - A deeper Elixir review before 0.7 (Elixir anti-pattern and library guides, the
   1.18 to 1.20 changelogs, Phoenix 1.8 usage rules and guides, Ecto, Broadway and
