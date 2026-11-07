@@ -385,12 +385,61 @@ finished with a tested fix 0, 0, 0, 3, 4.
   to read two skills under the operator's home directory and reported the refusal.
   Follow-up 7 stands.
 
+## Controls on v0.6.0: delegation off, and no global instructions
+
+Two more matrices on agent-board `ee83962` with the same client, prompts and harness as
+the v0.6.0 remeasure (90 turns, 10 USD, `MIX_ENV=test mix test` allowed), early on
+2026-11-07.
+
+**Delegation off** (follow-up 8): E32 three times with the Agent tool disallowed,
+21.34 USD.
+
+| Run | Routed | START | SKILL | Contract | First source | Edits | mix test | Ended | Turns | Cost (USD) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| E32-r1 | ok | 5 | 9 | 6 | 15 | 5 | 9 | finished | 131 | 7.28 |
+| E32-r2 | ok | 3 | 7 | 11 | 16 | 6 | 7 | finished | 134 | 6.28 |
+| E32-r3 | ok | 4 | 8 | 5 | 14 | 8 | 4 | finished | 144 | 7.78 |
+
+All three finished with a tested fix, against one of three with delegation allowed.
+The harness now disallows the Agent tool by default for this evaluation; a run that
+needs delegation is its own experiment.
+
+**No global instructions** (follow-up 7, simulated): the operator's `~/.claude/CLAUDE.md`
+moved aside for the duration of the run and restored by the script; E32, E44 and E05
+three times each, 53.44 USD. No transcript mentions the operator's skill catalog or
+playbooks.
+
+| Run | Expected | Routed | START | SKILL | Contract | First source | Edits | mix test | Ended | Turns | Cost (USD) |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| E32-r1 | async-state | ok | 3 | 7 | 10 | 15 | 5 | 5 | finished | 142 | 8.08 |
+| E32-r2 | async-state | ok | 3 | 7 | 11 | 22 | 5 | 4 | finished | 150 | 7.06 |
+| E32-r3 | async-state | ok | 3 | 6 | 9 | 12 | 4 | 6 | finished | 108 | 4.69 |
+| E44-r1 | provider-calls | ok | 4 | 8 | 5 | 14 | 9 | 11 | finished | 180 | 9.72 |
+| E44-r2 | provider-calls | ok | 4 | 8 | 5 | 14 | 10 | 7 | finished | 134 | 6.41 |
+| E44-r3 | provider-calls | ok | 4 | 8 | 5 | 13 | 4 | 5 | finished | 123 | 6.93 |
+| E05-r1 | responsive-layout | ok | 4 | 7 | 11 | 30 | 0 | 0 | finished | 90 | 3.46 |
+| E05-r2 | responsive-layout | ok | 3 | 7 | - | 15 | 0 | 0 | finished | 80 | 3.75 |
+| E05-r3 | responsive-layout | ok (+layout-density) | 4 | 9 | 13 | 20 | 0 | 0 | finished | 86 | 3.34 |
+
+- Routing and order are unchanged without the global file: 9/9 on the expected workflow,
+  `START.md` at turns 3 to 4, the `SKILL.md` at 6 to 9, before any `lib/` file in all
+  nine. The kit's entry does not depend on the operator's instructions.
+- Every backend run finished with a tested fix (6/6; with the global file and delegation
+  allowed, 4/6). None delegated.
+- The three E05 runs changed nothing: each found the request's three symptoms match
+  unstyled markup from uncompiled assets, said so, and asked for the build or a browser
+  rather than editing CSS blind. The same honest refusal as with the global file, now
+  without the attempts to read the operator's playbooks.
+- Codex was evaluated separately on the same consumer and cases:
+  [2026-11-07-codex.md](2026-11-07-codex.md).
+
 ## Limits
 
 - One client, one model, 18 runs plus controls, the 18-run rerun on v0.5.1, the 6-run
-  remeasures on v0.5.2 and v0.5.3 and the 9-run remeasure on v0.6.0, on the
-  operator's machine with the operator's global instructions present. Codex and the DeepSeek executor were not
-  evaluated.
+  remeasures on v0.5.2 and v0.5.3, the 9-run remeasure on v0.6.0 and the two v0.6.0
+  controls (3 runs with delegation off, 9 runs with the operator's global instructions
+  hidden), on the operator's machine. Codex has its own record; the DeepSeek executor
+  was not evaluated.
 - "Routed" is measured by which `SKILL.md` was opened, not by whether its criteria were
   followed; the judgment section covers that for finished runs only.
 - The budget cap truncated five runs; routing happened before the cap in all of them.
@@ -417,13 +466,15 @@ v0.5.1) and the rerun above measures them.
 6. Done (v0.6.0 remeasure). Evaluation: match `MIX_ENV=test mix test` in the harness
    allowlist; use a 90-turn cap for backend fixes with tests. With both, every
    backend session ran the suite and four of six finished.
-7. Evaluation: a fresh clone per no-deps repetition; the same matrix on a machine
-   without the operator's global skill rule, and on Codex and the DeepSeek executor.
-8. Evaluation: decide whether a session may delegate (the two unfinished v0.6.0
-   runs spent their budget in a subagent after writing the cause down); either
-   disallow the Agent tool in the harness or raise the budget and record
-   delegation as its own column.
+7. Done in part (2026-11-07). The matrix without the operator's global skill rule
+   (hidden for the run) and the Codex evaluation are recorded above and in
+   [2026-11-07-codex.md](2026-11-07-codex.md). Still open: a fresh clone per no-deps
+   repetition, and the DeepSeek executor.
+8. Done (2026-11-07). With the Agent tool disallowed, 3/3 E32 runs finished; the
+   harness disallows it by default now.
 9. Kit, measured only after v0.6.0: whether the `Minimum` line changes how a
    session ends. In nine runs no session cited it; the finished runs ran the suite
    three to nine times instead. A later measurement should count the tests written
    against the workflow's `Minimum`.
+10. Evaluation harness: forbid starting servers and browsers explicitly (three Codex
+    E05 runs tried); give the Codex sandbox local network so `Mix.PubSub` can start.
