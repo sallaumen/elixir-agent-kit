@@ -997,9 +997,7 @@
       "id": "E65",
       "request": "Refatore o módulo Billing: para testar uma regra os testes precisam congelar o relógio e mexer no Application env, e as funções são enormes e cheias de case aninhado.",
       "expected_primary": "functional-refactoring",
-      "allowed_alternatives": [
-        "readable-code"
-      ],
+      "allowed_alternatives": [],
       "expected_size": "large",
       "success_signals": [
         "Classifica como grande e planeja functional-refactoring primeiro e readable-code como fatia posterior do mesmo plano",

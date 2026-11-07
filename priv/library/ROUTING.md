@@ -36,7 +36,9 @@ then by scope:
   [readable-code](skills/readable-code/SKILL.md); a misleading module name,
   location or public function name: [module-design](skills/module-design/SKILL.md).
 - Code that drifts from a pattern the project already chose:
-  [house-patterns](skills/house-patterns/SKILL.md), whatever style the request names.
+  [house-patterns](skills/house-patterns/SKILL.md), whatever style the request names; a
+  convention still to be chosen for many modules:
+  [architecture-review](skills/architecture-review/SKILL.md).
 
 "In a functional style" or "like Grokking Simplicity" points to
 functional-refactoring, and "clean" or "like Clean Code" to readable-code, unless

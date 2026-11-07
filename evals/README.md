@@ -71,7 +71,7 @@ edit, and stopping for approval only on a stop-and-ask trigger.
 E63 to E66 cover the refactoring workflows. E63 asks for a functional-style
 refactor of a module whose rules read the clock and the database
 (`functional-refactoring`); E64 asks for a readable, Clean Code style cleanup of
-working code (`readable-code`); E65 is a vague "refactor module X" with both
+working code (`readable-code`); E65 is a request that names no style ("refactor module X") but shows both
 symptoms, where the expected route is `functional-refactoring` first with
 `readable-code` planned as a later slice; E66 renames a public function, a
 negative case for `readable-code` (`module-design`, or `NONE` for the bounded

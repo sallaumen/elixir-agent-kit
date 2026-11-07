@@ -118,7 +118,7 @@ abrir qualquer arquivo-fonte:
    de autoridade, o modo e as condições de parada do workflow continuam valendo.
 
 Os casos de seleção em [`evals/`](https://github.com/sallaumen/elixir-agent-kit/blob/main/evals/README.md)
-guardam 62 pedidos como esse, com o workflow esperado e os sinais de uma resposta
+guardam 66 pedidos como esse, com o workflow esperado e os sinais de uma resposta
 boa ou ruim. Ficam fora do payload instalado para que um agente nunca veja o
 gabarito.
 

@@ -9,7 +9,7 @@ Default mode: **analyze-and-fix**. Read the [shared contract](../../CONTRACT.md)
 
 ## When to use
 
-Use when a reviewer must hold four nested `case` and `if` levels in mind to follow one `handle_event/3`; when a function called `process/2` binds results named `res2` and `tmp`; when `mix credo --strict` reports complexity or nesting for functions nobody wants to touch; when every other line carries a comment that repeats the code below it; when errors travel through `{:ok, _}` and `{:error, _}` matches repeated at each step instead of one `with`; or when the user asks to make a module readable or clean without changing what it does.
+Use when a reviewer must hold four nested `case` and `if` levels in mind to follow one `handle_event/3`; when a private `process/2` binds results named `res2` and `tmp`; when `mix credo --strict` reports complexity or nesting for functions nobody wants to touch; when every other line carries a comment that repeats the code below it; when errors travel through `{:ok, _}` and `{:error, _}` matches repeated at each step instead of one `with`; or when the user asks to make a module readable or clean without changing what it does.
 
 The separating rule among the code workflows: working, tested code that is hard to read inside its function bodies is this workflow; a module's name, location or public API is [module-design](../module-design/SKILL.md); hidden inputs and effects interleaved across a module are [functional-refactoring](../functional-refactoring/SKILL.md), which runs first when both symptoms appear; one function mixing a decision with effects is [abstraction-layers](../abstraction-layers/SKILL.md); drift from a pattern the project already chose is [house-patterns](../house-patterns/SKILL.md). Code whose behavior no test pins gets those tests first, as step 2 says.
 
@@ -24,11 +24,11 @@ The separating rule among the code workflows: working, tested code that is hard 
 
 1. Write the reading notes: one row per function with each obstacle found (a vague or misleading name, nesting depth, length that mixes levels of detail, a comment that restates code, a repeated error match, non-assertive matching or map access), the `credo` finding or the [code-shape](../../elixir/code-shape.md) anti-pattern name it maps to, and the planned change. This table is the artifact every later step reports against. Done when every function the request covers has a row, including those with no obstacle.
 
-2. Pin behavior and the lint baseline: the public functions' tests pass on the unchanged code, characterization tests are added where a function has none, and the current `credo` output is saved. Done when both exist.
+2. Pin behavior and the lint baseline: the public functions' tests pass on the unchanged code, characterization tests are added where a function has none, and the current `credo` output is saved (when the project runs no linter, the reading notes are the baseline and steps 4 and 6 compare against them). Done when both exist.
 
 3. Rename local variables and private functions to the domain's vocabulary, one name per concept, using the project's glossary when it exists. Public function and module names go to [module-design](../module-design/SKILL.md) as handoff rows. Done when no private name in the notes is still vague and `mix compile --warnings-as-errors` is clean.
 
-4. Reshape control flow by meaning: branch with function heads and pattern matching instead of nested `case` and `if`, chain fallible steps with one `with` whose `else` handles each error once, use the pipe for successive transformations of one value, and split a function where its level of detail changes, not at a line count. Done when each function reads at one level and `credo` reports no nesting or complexity finding beyond those the baseline already accepted.
+4. Reshape control flow by meaning: branch with function heads and pattern matching instead of nested `case` and `if`, chain fallible steps with one `with` per [Pipelines and control flow](../../elixir/pipelines.md#with-for-fallible-steps), keeping every error value the function returned before (a step whose error needs reshaping gets a small private function, not a long `else`), use the pipe for successive transformations of one value, and split a function where its level of detail changes, not at a line count. Done when each function reads at one level and `credo` reports no nesting or complexity finding beyond those the baseline already accepted.
 
 5. Clean up comments and docs: delete comments that restate the code, keep those that record a constraint, a reason or a measured fact, and make `@moduledoc` and `@doc` state promises per [code-shape](../../elixir/code-shape.md#documentation-and-types). Done when every remaining comment says something the code cannot.
 
@@ -64,7 +64,7 @@ The separating rule among the code workflows: working, tested code that is hard 
 - Do not rename public functions, modules or stored keys here.
 - Do not change behavior, effects or error values while cleaning up, including obvious-looking fixes; report them as defects.
 - Do not restate the code in new comments or add docs that only repeat the function name.
-- Do not move effects or extract calculations across the module; that is [functional-refactoring](../functional-refactoring/SKILL.md).
+- Do not move effects between functions, read hidden inputs in a new place or layer the module; that is [functional-refactoring](../functional-refactoring/SKILL.md).
 
 ## Completion
 

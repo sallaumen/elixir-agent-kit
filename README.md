@@ -120,7 +120,7 @@ is opened:
    scope, changes persisted data or a public contract, or has an irreversible step;
    authority rules, the mode and the workflow's own stop conditions still apply.
 
-The routing cases in [`evals/`](evals/README.md) hold 62 requests like that one,
+The routing cases in [`evals/`](evals/README.md) hold 66 requests like that one,
 with the expected workflow and the signals of a good or bad answer. They stay out
 of the installed payload so an agent never sees the answer key.
 
