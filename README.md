@@ -27,7 +27,8 @@ shipped to production.
   validates the result and the pitfalls. See
   [`async-state`](priv/library/skills/async-state/SKILL.md) for the shape.
 - **Honest by design.** The installer writes references and checksums, never a
-  copy of a workflow. `mix agent_kit.check` runs offline in CI and fails on drift.
+  copy of a workflow. `mix agent_kit.check` runs offline in CI and fails on drift
+  or when a library file the links point at is missing.
   Nothing here claims that a model followed the text; that is checked in a fresh
   session, as [compatibility](docs/compatibility.md) describes.
 
@@ -86,19 +87,29 @@ Commit `mix.exs`, `mix.lock` and those paths. Do not commit `deps/`. Add
 > "After reconnecting, a late message marks the previous task as done and hides
 > the progress of the current one."
 
-1. The session loads `AGENTS.md` or `CLAUDE.md` and follows the block to
-   `.elixir-agent-kit/START.md`, or finds the generated `elixir-agent-kit` skill
-   in its own skill directory.
-2. It reads the [shared contract](priv/library/CONTRACT.md) and the
-   [routing guide](priv/library/ROUTING.md), and picks the narrowest workflow:
-   [`async-state`](priv/library/skills/async-state/SKILL.md).
-3. The workflow tells it what to inspect (event and job lifecycle, stable IDs,
+The session loads `AGENTS.md` or `CLAUDE.md` and follows the block to
+`.elixir-agent-kit/START.md`, or finds the generated `elixir-agent-kit` skill in
+its own skill directory. Either one asks for four steps before any source file
+is opened:
+
+1. It names the task's primary risk in one line, from the request alone: here,
+   process state.
+2. It picks one workflow from the tables in `START.md`, the narrowest that fits:
+   [`async-state`](priv/library/skills/async-state/SKILL.md). Only when two
+   neighbors fit does it open the [routing guide](priv/library/ROUTING.md) to
+   separate them; a bounded, fully specified edit picks NONE.
+3. It reads that workflow's `SKILL.md` from the dependency together with the
+   [shared contract](priv/library/CONTRACT.md), copying neither into the project.
+   The workflow tells it what to inspect (event and job lifecycle, stable IDs,
    reconnect behavior), what to decide (one durable state owner; idempotency per
    effect), what quality looks like (the UI reconciles after reload from persisted
    identifiers; retries never advance state falsely) and what evidence to show
    (duplicate, delayed and out-of-order delivery exercised on the real flow).
-4. It reports with the [handoff template](priv/library/HANDOFF.md): outcome,
-   workflow and version used, checks actually run, limits.
+4. It states the workflow ID, or NONE, in its plan with the reason in one line,
+   opens the workflow's `Start at` input before anything else and produces the
+   artifact the workflow's first step asks for; then it investigates the way the
+   workflow says and reports with the [handoff template](priv/library/HANDOFF.md):
+   outcome, workflow and version used, checks actually run, limits.
 
 The routing cases in [`evals/`](evals/README.md) hold 46 requests like that one,
 with the expected workflow and the signals of a good or bad answer. They stay out
@@ -145,7 +156,11 @@ Text outside the managed blocks is yours and survives every sync. No workflow
 body is ever copied; the library stays in `deps/elixir_agent_kit/priv/library/`.
 A pre-existing skill named `elixir-agent-kit` blocks installation until renamed.
 Custom dependency paths are resolved by Mix; an external local path dependency
-produces absolute links and needs a resync after moving.
+produces absolute links and needs a resync after moving. In an umbrella, run the
+tasks from the umbrella root: from an application directory the shared `deps/`
+lies outside the project root, so the links come out absolute. `mix agent_kit.check`
+compares every owned path with what the loaded package would generate and also
+verifies that the library files the links point at exist.
 
 ## Commands
 
@@ -184,8 +199,8 @@ outputs block every write before it starts; there is no force switch.
 
 ## Guarantees and limits
 
-- Zero third-party Elixir dependencies, no telemetry, no global client
-  configuration, no credentials.
+- Zero third-party Elixir dependencies in your project, no telemetry, no global
+  client configuration, no credentials.
 - `check` is offline and verifies this installation, not freshness; `outdated` is
   an explicit network query, never a background updater.
 - A fresh checkout needs `mix deps.get` before any agent can read a workflow, and

@@ -42,6 +42,12 @@
   the path the links point at; `uninstall` refuses selection flags; the tasks print a
   note when `CLAUDE.md` exists without `:claude` selected; `outdated` times out
   instead of hanging on a stalled network. Task docs describe each task's own flags.
+- `docs/README.pt-BR.md` mirrors `README.md` section by section.
+- `mix.exs` carries a `docs:` configuration for maintainers who add `ex_doc` to a
+  local checkout; the package itself still declares no dependency, because a nested
+  dev dependency would be fetched by every consumer. Publish with
+  `mix hex.publish package`.
+- CI lints `scripts/` with pyflakes.
 
 ## 0.5.3 — 2026-11-06
 

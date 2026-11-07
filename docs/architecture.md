@@ -23,7 +23,11 @@ without `AGENTS.md` carries the reference itself. For `:claude` and `:codex` it
 also writes one pointer skill in the client's native skill directory, holding a
 discovery description, the selected catalog and relative links into the
 dependency; it creates no library copies and no per-workflow wrappers, and
-removal prunes only directories the kit itself emptied.
+removal prunes only directories the kit itself emptied. A block is found and
+hashed from its start marker to its end marker; the blank line between the user's
+text and the block belongs to the user's text, and the block keeps the line
+endings of the file it lives in, so a CRLF checkout, a linter that trims blank
+lines or a stripped final newline is not drift.
 Configuration selects instruction adapters and workflow IDs for routing. It does
 not prevent reading other workflows. Clients must load project instructions and
 be able to read the ignored dependency directory after `mix deps.get`.
@@ -46,8 +50,8 @@ can remove obsolete copied payload and wrappers safely. State is data, not code.
 Unknown collisions, modified owned content, malformed markers/state, unsafe paths
 or symlinked outputs cause an error. Local text outside managed blocks survives.
 Unmodified obsolete owned files are removed; unowned files and pre-existing empty
-instruction files survive. Empty directories may remain. `uninstall` uses the
-same preflight; `check` reports drift without writes.
+instruction files survive. `uninstall` uses the same preflight; `check` reports
+drift without writes.
 
 This is a single-writer development tool, not a concurrent filesystem transaction.
 Interrupted writes require restoring the previous state and generated content

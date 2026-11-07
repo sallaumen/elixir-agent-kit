@@ -35,9 +35,10 @@ https://github.com/sallaumen/elixir-agent-kit/blob/v0.5.3/docs/compatibility.md
    .agents/skills/elixir-agent-kit/SKILL.md). Preserve other tools' skills and
    all local instructions. Do not copy workflow bodies or register per-workflow
    files. Library text must be read directly from the Mix dependency.
-7. Run mix agent_kit.check and verify every index link resolves to the downloaded
-   library. Verify a second sync makes no changes. Add check to the appropriate
-   existing local/CI gate after fetching dependencies; never auto-sync in CI.
+7. Run mix agent_kit.check: it verifies both drift and the presence of the
+   library files the links point at in the downloaded dependency. Verify a second
+   sync makes no changes. Add check to the appropriate existing local/CI gate
+   after fetching dependencies; never auto-sync in CI.
 8. In a fresh agent session, read the project's instructions, the generated
    START.md, the dependency's ROUTING.md and one task-appropriate SKILL.md. Name
    its inputs, decision and validation criteria in the agent's work. A file-link

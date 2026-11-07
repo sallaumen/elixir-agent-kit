@@ -21,7 +21,7 @@ in the test environment. The library check validates metadata, provenance covera
 and local Markdown references. The smoke test builds a disposable consuming Mix
 project, installs from a local path, checks repeatability, and uninstalls. It cleans
 up its temporary project. The migration smoke fetches public v0.1.1 over the
-network and checks migration, conflict refusal and preservation in a disposable project. `mix hex.build` creates a local tarball; it does not publish.
+network and checks migration, conflict refusal and preservation in a disposable project. `mix hex.build` creates a local tarball; it does not publish. Publish with `mix hex.publish package` (the package declares no `ex_doc` dependency, so docs are built only from a local checkout that adds it).
 
 Use branches and pull requests after initial repository bootstrap. Stage only the
 files you changed. Avoid unrelated refactors and preserve other contributors' work.
