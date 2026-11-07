@@ -24,7 +24,11 @@ without `AGENTS.md` carries the reference itself. For `:claude` and `:codex` it
 also writes one pointer skill in the client's native skill directory, holding a
 discovery description, the selected catalog and relative links into the
 dependency; it creates no library copies and no per-workflow wrappers, and
-removal prunes only directories the kit itself emptied. A block is found and
+removal prunes only directories the kit itself emptied.
+It also owns `.elixir-agent-kit/plans/.gitignore`, which ignores the folder's
+contents so large tasks can keep a plan there across compaction without the
+installer editing the project's `.gitignore`; uninstall removes that file and
+keeps any plan beside it. A block is found and
 hashed from its start marker to its end marker; the blank line between the user's
 text and the block belongs to the user's text, and the block keeps the line
 endings of the file it lives in, so a CRLF checkout, a linter that trims blank

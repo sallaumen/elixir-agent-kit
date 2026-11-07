@@ -85,11 +85,11 @@ configuração.
 
 A sessão carrega `AGENTS.md` ou `CLAUDE.md` e segue o bloco até
 `.elixir-agent-kit/START.md`, ou encontra a skill gerada `elixir-agent-kit` no
-seu próprio diretório de skills. Qualquer um dos dois pede quatro passos antes de
+seu próprio diretório de skills. Qualquer um dos dois pede cinco passos antes de
 abrir qualquer arquivo-fonte:
 
 1. Nomeia em uma linha o risco principal da tarefa, só a partir do pedido: aqui,
-   estado de processo.
+   estado de processo. Também nomeia o tamanho: pequeno, médio ou grande.
 2. Escolhe um workflow nas tabelas do `START.md`, o mais estreito que sirva:
    [`async-state`](../priv/library/skills/async-state/SKILL.md). Só quando dois
    vizinhos servem é que abre o [guia de seleção](../priv/library/ROUTING.md)
@@ -107,9 +107,15 @@ abrir qualquer arquivo-fonte:
    artefato que o primeiro passo do workflow pede; depois investiga do jeito que o
    workflow diz e entrega com o [template de handoff](../priv/library/HANDOFF.md):
    resultado, workflow e versão usados, checks de fato executados, limites.
+5. Quando a tarefa é grande (cruza contextos, mexe em dado armazenado e em código
+   juntos, pede mais de uma entrega ou não cabe numa sessão), escreve um plano a
+   partir do [template de plano](../priv/library/templates/task-plan.md) em
+   `.elixir-agent-kit/plans/` antes da primeira edição e o relê depois de uma
+   compactação. Só para e pede aprovação quando o plano amplia o escopo pedido,
+   muda dado persistido ou contrato público, ou tem passo irreversível.
 
 Os casos de seleção em [`evals/`](https://github.com/sallaumen/elixir-agent-kit/blob/main/evals/README.md)
-guardam 46 pedidos como esse, com o workflow esperado e os sinais de uma resposta
+guardam 56 pedidos como esse, com o workflow esperado e os sinais de uma resposta
 boa ou ruim. Ficam fora do payload instalado para que um agente nunca veja o
 gabarito.
 
@@ -146,8 +152,9 @@ o `mix.lock` do projeto pede.
 
 | Caminho | Para quê |
 |---|---|
-| `.elixir-agent-kit/START.md` | Quatro passos que terminam na escolha nomeada de um workflow, depois o catálogo habilitado com links para a dependência. |
+| `.elixir-agent-kit/START.md` | Cinco passos que terminam na escolha nomeada de um workflow e no tamanho da tarefa, depois o catálogo habilitado com links para a dependência. |
 | `.elixir-agent-kit/state.tsv` | Versão, seleção e SHA-256 de cada arquivo e bloco que o instalador possui. |
+| `.elixir-agent-kit/plans/.gitignore` | Mantém a pasta de planos fora do Git sem mexer no seu `.gitignore`; tarefas grandes escrevem seus planos ao lado dele, e o uninstall preserva esses planos. |
 | `AGENTS.md` | Bloco delimitado para Codex e harnesses genéricos (`:codex`, `:generic`). |
 | `CLAUDE.md` | Bloco delimitado para Claude Code (`:claude`). Quando `AGENTS.md` é gerenciado ou já existe, o bloco o importa com `@AGENTS.md`, porque o Claude Code deixa de ler `AGENTS.md` assim que um `CLAUDE.md` se aplica. |
 | `.claude/skills/elixir-agent-kit/SKILL.md` | Uma skill gerada para a descoberta nativa do Claude Code: descrição, catálogo filtrado pela sua seleção e links para a dependência. |
