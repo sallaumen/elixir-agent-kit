@@ -2,16 +2,24 @@ defmodule ElixirAgentKit.Releases do
   @moduledoc false
   @repository "https://github.com/sallaumen/elixir-agent-kit.git"
 
-  def latest(repository \\ @repository) do
-    case System.cmd("git", ["ls-remote", "--tags", "--refs", repository],
-           stderr_to_stdout: true,
-           env: [{"GIT_TERMINAL_PROMPT", "0"}]
-         ) do
-      {output, 0} -> latest_stable(output)
-      {_output, _status} -> {:error, :unavailable}
+  @timeout 20_000
+
+  def latest(repository \\ @repository, timeout \\ @timeout) do
+    task =
+      Task.async(fn ->
+        System.cmd("git", ["ls-remote", "--tags", "--refs", repository],
+          stderr_to_stdout: true,
+          env: [{"GIT_TERMINAL_PROMPT", "0"}]
+        )
+      end)
+
+    # A stalled network must fail, never hang the task indefinitely.
+    case Task.yield(task, timeout) || Task.shutdown(task, :brutal_kill) do
+      {:ok, {output, 0}} -> latest_stable(output)
+      {:ok, {_output, _status}} -> {:error, :unavailable}
+      {:exit, _reason} -> {:error, :unavailable}
+      nil -> {:error, :timeout}
     end
-  rescue
-    _error in ErlangError -> {:error, :unavailable}
   end
 
   def latest_stable(output) do

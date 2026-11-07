@@ -1,5 +1,24 @@
 # Changelog
 
+## Unreleased
+
+- The managed block is found and hashed from marker to marker, so a linter that
+  removes the blank lines around it, a CRLF checkout or a stripped final newline no
+  longer reports "malformed" markers; blocks keep the file's line endings and owned
+  files converted to CRLF are not drift. Blocks recorded by earlier versions are
+  still recognized on upgrade.
+- Generated `AGENTS.md` and `CLAUDE.md` start at the first line, and a block is
+  appended after exactly one blank line.
+- A `CLAUDE.md` that already imports `AGENTS.md` is not given a second `@AGENTS.md`.
+- `START.md` step 4 asks for the workflow's `Start at` input as the first file opened
+  and the artifact its first step produces, so a named workflow is also a read one.
+- A declared `:elixir_agent_kit` entry in `mix.exs` is the source of truth; keys
+  removed there fall back to defaults instead of the recorded state.
+- `install`, `sync` and `check` fail when the dependency's library is incomplete at
+  the path the links point at; `uninstall` refuses selection flags; the tasks print a
+  note when `CLAUDE.md` exists without `:claude` selected; `outdated` times out
+  instead of hanging on a stalled network. Task docs describe each task's own flags.
+
 ## 0.5.3 — 2026-11-06
 
 - Move the selection to the start of the session: the generated block, `START.md` and

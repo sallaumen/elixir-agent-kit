@@ -9,7 +9,12 @@ defmodule ElixirAgentKit.CLI do
       do: Mix.raise("Expected --agents codex,claude,generic, --skills ID,ID and/or --dry-run")
 
     if action == :check and flags[:dry_run], do: Mix.raise("check is already read-only")
-    config = Mix.Project.config()[:elixir_agent_kit] || []
+
+    if action == :uninstall and (flags[:agents] || flags[:skills]),
+      do: Mix.raise("uninstall removes everything the kit owns; it takes no selection flags")
+
+    configured = Mix.Project.config()[:elixir_agent_kit]
+    config = configured || []
 
     unless Keyword.keyword?(config),
       do: Mix.raise(":elixir_agent_kit configuration must be a keyword list")
@@ -19,14 +24,40 @@ defmodule ElixirAgentKit.CLI do
     unless unknown == [],
       do: Mix.raise("Unknown Elixir Agent Kit configuration keys: #{inspect(unknown)}")
 
+    # A declared :elixir_agent_kit entry is the source of truth, so a key removed
+    # from mix.exs falls back to the default rather than to the recorded state.
+    config =
+      if configured,
+        do: config |> Keyword.put_new(:agents, [:generic]) |> Keyword.put_new(:skills, :all),
+        else: config
+
+    library = library_path()
+
     opts =
       config
       |> override(:agents, flags[:agents])
       |> override(:skills, flags[:skills])
       |> Keyword.put(:dry_run, flags[:dry_run] || false)
-      |> Keyword.put(:library_path, library_path())
+      |> Keyword.put(:library_path, library)
 
-    case ElixirAgentKit.Installer.run(action, File.cwd!(), opts) do
+    if action != :uninstall do
+      skills = if is_list(opts[:skills]), do: Enum.map(opts[:skills], &to_string/1), else: ["all"]
+
+      case ElixirAgentKit.Installer.missing_library_files(library, skills) do
+        [] ->
+          :ok
+
+        missing ->
+          Mix.raise(
+            "Elixir Agent Kit library is incomplete at #{library}; missing #{Enum.join(missing, ", ")}. Run mix deps.get."
+          )
+      end
+    end
+
+    result = ElixirAgentKit.Installer.run(action, File.cwd!(), opts)
+    if action != :uninstall, do: warn_hidden_claude()
+
+    case result do
       {:ok, []} ->
         Mix.shell().info("Elixir Agent Kit #{ElixirAgentKit.version()}: no changes needed.")
 
@@ -51,6 +82,29 @@ defmodule ElixirAgentKit.CLI do
     end
   rescue
     error in ArgumentError -> Mix.raise(Exception.message(error))
+  end
+
+  # Claude Code ignores AGENTS.md once a CLAUDE.md applies, so a project with a
+  # CLAUDE.md and no :claude selection hides the kit from that client silently.
+  defp warn_hidden_claude do
+    agents =
+      case File.read(".elixir-agent-kit/state.tsv") do
+        {:ok, state} ->
+          case Regex.run(~r/^agents\t(.*)$/m, state) do
+            [_, list] -> String.split(String.trim(list), ",")
+            nil -> []
+          end
+
+        _ ->
+          []
+      end
+
+    if File.regular?("CLAUDE.md") and agents != [] and "claude" not in agents do
+      Mix.shell().info(
+        "Note: CLAUDE.md exists but :claude is not selected, so Claude Code will not see the kit.\n" <>
+          "Add :claude to agents in mix.exs and run mix agent_kit.sync if that client is used here."
+      )
+    end
   end
 
   defp library_path do
