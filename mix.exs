@@ -16,6 +16,20 @@ defmodule ElixirAgentKit.MixProject do
         files:
           ~w(lib priv docs mix.exs README.md LICENSE CHANGELOG.md CONTRIBUTING.md SECURITY.md)
       ],
+      # No dependency is declared for ex_doc: a nested dev dependency is fetched by
+      # every consumer's mix deps.get. Publish with mix hex.publish package, or add
+      # ex_doc to a local checkout to build these extras.
+      docs: [
+        main: "readme",
+        extras: [
+          "README.md",
+          "CHANGELOG.md",
+          "docs/README.pt-BR.md",
+          "docs/INSTALL_WITH_AI.md",
+          "docs/architecture.md",
+          "docs/compatibility.md"
+        ]
+      ],
       aliases: [check: ["format --check-formatted", "compile --warnings-as-errors", "test"]]
     ]
   end

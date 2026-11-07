@@ -27,8 +27,12 @@ jobs:
           otp-version: ${{ matrix.otp }}
       - run: mix check
       - run: python3 scripts/check_library.py
+      - run: python3 -m pip install --user pyflakes
+      - run: python3 -m pyflakes scripts/
       - run: python3 scripts/smoke_install.py
       - name: Git consumer relocation and custom dependency path
+        # Mix fetches a Git dependency's branches and then checks out the ref, so
+        # a pull request's merge commit must sit on a branch of this clone.
         run: |
           git branch agent-kit-ci-consumer "$GITHUB_SHA"
           python3 scripts/smoke_install.py --git-url "$GITHUB_WORKSPACE" --ref "$GITHUB_SHA" --deps-path "vendor/deps (shared)"
