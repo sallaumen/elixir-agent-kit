@@ -103,6 +103,8 @@ for case in cases:
         errors.append(f"Unknown evaluation route: {case['id']}")
     if not all(case[field] for field in ["request", "success_signals", "failure_signals"]):
         errors.append(f"Incomplete evaluation case: {case['id']}")
+    if case.get("expected_size") not in {"small", "medium", "large"}:
+        errors.append(f"Evaluation case lacks expected_size small, medium or large: {case['id']}")
 evals_readme = (ROOT / "evals/README.md").read_text()
 if f"These {len(cases)} cases" not in evals_readme:
     errors.append(f"evals/README.md does not state the case count {len(cases)}")
