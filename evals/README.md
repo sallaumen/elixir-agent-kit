@@ -44,7 +44,7 @@ freeze follows a deploy.
 
 E51 to E54 cover `house-patterns`: a contract rule that two clients break (E51,
 primary), two copies of one job that belong to `code-consolidation` (E52), a request
-to standardize where no pattern was chosen yet, so the workflow stops for a recorded
-decision and `architecture-review` is acceptable (E53), and a single fully specified
+to standardize where no pattern was chosen yet, which is `architecture-review` with
+`house-patterns` acceptable only if it stops for a recorded decision (E53), and a single fully specified
 client edit that needs no workflow (E54, `NONE` with `house-patterns` as the
 alternative) so over-routing on a one-site conformance edit is measurable.

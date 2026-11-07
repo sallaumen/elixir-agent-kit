@@ -705,14 +705,14 @@
     },
     {
       "id": "E51",
-      "request": "O contrato do projeto diz que cliente de rede nunca levanta exceção e devolve {:error, motivo}; os clientes de CEP e de clima ainda usam Req.get! e a exceção chega na LiveView. Traga os dois para o padrão sem mudar o que a tela mostra.",
+      "request": "O contrato do projeto diz que todo cliente de rede é construído uma vez e recebido como argumento; os clientes de CEP e de clima ainda montam o Req dentro de cada função. Traga os dois para o padrão sem mudar o que os chamadores recebem.",
       "expected_primary": "house-patterns",
       "allowed_alternatives": [],
       "success_signals": [
-        "Escrever o padrão a partir do contrato e a busca que acha os desvios antes de editar",
+        "Escrever o padrão a partir do contrato e a busca que acha candidatos antes de editar, confirmando cada desvio pela leitura",
         "Fixar com teste o comportamento atual de cada cliente na fronteira pública antes de mudar",
-        "Converter um cliente por passo, atualizando todos os chamadores do formato novo no mesmo passo",
-        "Reportar à parte, com teste de regressão, a exceção que derruba a LiveView"
+        "Converter um cliente por passo, sem renomear nem reformatar, com o teste fixado passando antes e depois",
+        "Tratar como defeito, com teste de regressão próprio, qualquer desvio cuja correção mude o que o usuário vê"
       ],
       "failure_signals": [
         "Reescrever todos os clientes HTTP do projeto ou trocar de biblioteca",
@@ -737,13 +737,14 @@
     {
       "id": "E53",
       "request": "Cada cliente HTTP daqui faz de um jeito: uns levantam exceção, outros devolvem tupla, um usa retry. Quero padronizar todos.",
-      "expected_primary": "house-patterns",
+      "expected_primary": "architecture-review",
       "allowed_alternatives": [
-        "architecture-review"
+        "house-patterns"
       ],
       "success_signals": [
-        "Verificar se o projeto já escolheu um padrão (contrato, decisão ou exemplares confirmados) antes de refatorar",
-        "Sem padrão estabelecido, registrar a escolha com o modelo de decisão e pedir a decisão do dono antes de mudar código"
+        "Constatar que o projeto ainda não escolheu um padrão (sem contrato, decisão ou exemplares confirmados)",
+        "Registrar as opções e a escolha com o modelo de decisão e pedir a decisão do dono antes de mudar código",
+        "Deixar a refatoração dos clientes para depois da decisão, com house-patterns"
       ],
       "failure_signals": [
         "Inventar um padrão a partir de um módulo ou dos padrões do kit e refatorar tudo",

@@ -8,7 +8,7 @@ how pools are sized per provider host, and how tests replace the transport.
 
 - Build each client once as a value: `Req.new/1` with `base_url`, headers, an
   explicit `retry:` and timeouts, in a `build/0`. Call sites take the client as an
-  argument with a default (`def load(client \\ client())`), so a test passes a
+  argument with a default (`def load(client \\ build())`), so a test passes a
   stubbed one and production code needs no mock.
 - `Req.get!/2` and the other bang functions raise only on transport errors; a
   4xx or 5xx is a response. Check `status` before using `body`, and give a rate
@@ -34,8 +34,9 @@ how pools are sized per provider host, and how tests replace the transport.
 - A retry policy other than the default is a named two-argument function,
   `retry: &MyApp.Provider.Retry.decide/2`, that receives the request and the
   response or exception and returns `{:delay, ms}` or `false`, with
-  `max_retries:` as the bound. Retry only failures with nothing to pay for (a
-  transport error before a response, a 429 honoring a capped `retry-after`, a
+  `max_retries:` as the bound and no `retry_delay:` (Req rejects that option
+  when the function returns `{:delay, ms}`). Retry only failures with nothing to
+  pay for (a transport error before a response, a 429 honoring a capped `retry-after`, a
   500, 502, 503 or 504), never a 4xx about the input or the key, never a stream
   after its first chunk reached the caller, and record each retry where
   operators see it.
