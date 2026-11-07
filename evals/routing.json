@@ -992,6 +992,40 @@
         "Renomeia funções públicas",
         "Mede legibilidade por número de linhas ou de funções"
       ]
+    },
+    {
+      "id": "E65",
+      "request": "Refatore o módulo Billing: para testar uma regra os testes precisam congelar o relógio e mexer no Application env, e as funções são enormes e cheias de case aninhado.",
+      "expected_primary": "functional-refactoring",
+      "allowed_alternatives": [
+        "readable-code"
+      ],
+      "expected_size": "large",
+      "success_signals": [
+        "Classifica como grande e planeja functional-refactoring primeiro e readable-code como fatia posterior do mesmo plano",
+        "Escreve o plano em .elixir-agent-kit/plans/ antes da primeira edição"
+      ],
+      "failure_signals": [
+        "Mistura renomeações e limpeza de comentários nos passos estruturais",
+        "Começa pela legibilidade e deixa as dependências escondidas"
+      ]
+    },
+    {
+      "id": "E66",
+      "request": "Renomeie a função pública Billing.process/2 para charge_invoice/2 e atualize quem chama.",
+      "expected_primary": "module-design",
+      "allowed_alternatives": [
+        "NONE"
+      ],
+      "expected_size": "small",
+      "success_signals": [
+        "Trata como mudança de API pública e atualiza todos os chamadores",
+        "Não seleciona readable-code"
+      ],
+      "failure_signals": [
+        "Seleciona readable-code e faz uma limpeza geral do módulo",
+        "Renomeia sem procurar os chamadores"
+      ]
     }
   ]
 }

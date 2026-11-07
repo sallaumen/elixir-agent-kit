@@ -9,7 +9,7 @@ every reference here.
 
 | Reference | Read when | It covers |
 |---|---|---|
-| [Module and function shape](elixir/code-shape.md) | Elixir code is written or refactored | pure decisions beside effects, assertive code, data modeling, errors, naming, docs and the type checker, macros; named after the Elixir anti-pattern guides |
+| [Module and function shape](elixir/code-shape.md) | Elixir code is written or refactored | pure decisions beside effects, assertive code, data modeling, errors, naming, docs and the type checker, macros; named after the Elixir anti-pattern guides; the refactoring workflows that apply it are [functional-refactoring](skills/functional-refactoring/SKILL.md) and [readable-code](skills/readable-code/SKILL.md) |
 | [Pipelines and control flow](elixir/pipelines.md) | data passes through steps: pipe chains, `with`, transactions, streams, fan-out, queue consumers | pipe idioms, normalized `with` errors, token pipelines, `Repo.transact/2` and `Ecto.Multi`, query composition, Enum versus Stream, `Task.async_stream`, GenStage, Flow, Broadway |
 | [Dependency architecture](elixir/architecture.md) | modules, contexts or applications depend on each other | direction, cross-context rules, scopes, behaviours as contracts, configuration in libraries, `boundary`, umbrellas, compile-time coupling and `mix xref` gates |
 | [OTP processes and supervision](elixir/otp.md) | the project starts its own processes | process or function, restarts, call timeouts, mailbox dedupe, periodic ticks, short-TTL ETS caches, renames |

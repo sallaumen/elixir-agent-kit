@@ -17,6 +17,10 @@ contracts win over this reference.
   reads, calls and writes. The pure module is tested with `async: true` and no
   database, the thin one with one test per effect. A single function mixing the
   two is the [abstraction-layers](../skills/abstraction-layers/SKILL.md) workflow.
+  A whole module whose functions interleave hidden inputs and effects is
+  [functional-refactoring](../skills/functional-refactoring/SKILL.md); making
+  working code readable without changing it is
+  [readable-code](../skills/readable-code/SKILL.md).
 - `@moduledoc` states the module's promise and what it never does ("no call
   raises", "every call is recorded"), so a reader learns the contract without
   reading every clause.
