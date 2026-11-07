@@ -1,6 +1,6 @@
 # Workflow provenance
 
-This English community edition adapts 33 workflows developed by Lucas Tavano with coding-agent assistance, adds one workflow adapted from an external MIT skill and one distilled from a consuming application's rules, for 34 public workflows after the 0.5 merges and the addition of `process-lifecycle` (`revision-lineage` from two lineage workflows, `test-strategy` absorbing `testes-redundantes`), and 36 since `house-patterns` and `data-pipelines` in 0.7. The source collection was `biblioteca-prompts-desenvolvimento v1.0.0`, later refined in an application repository. The public edition preserves task boundaries and authorization modes while rewriting instructions for a standalone package. Product-specific contexts, application source, credentials and operational records are not included.
+This English community edition adapts 33 workflows developed by Lucas Tavano with coding-agent assistance, adds one workflow adapted from an external MIT skill and one distilled from a consuming application's rules, for 34 public workflows after the 0.5 merges and the addition of `process-lifecycle` (`revision-lineage` from two lineage workflows, `test-strategy` absorbing `testes-redundantes`), and 36 since `house-patterns` and `data-pipelines` in 0.7, and 38 with `functional-refactoring` and `readable-code` in 0.8. The source collection was `biblioteca-prompts-desenvolvimento v1.0.0`, later refined in an application repository. The public edition preserves task boundaries and authorization modes while rewriting instructions for a standalone package. Product-specific contexts, application source, credentials and operational records are not included.
 
 | Public ID | Original ID |
 |---|---|
@@ -151,3 +151,17 @@ review added `pipelines.md`, `architecture.md`, `library-authoring.md` and
 added the `data-pipelines` workflow for flows of many items, whose CI namesake
 `pipeline-design` now points to it.
 
+## Refactoring workflows in 0.8
+
+`functional-refactoring` is the kit's own addition. It applies the ideas of
+*Grokking Simplicity* by Eric Normand (actions, calculations and data; implicit
+inputs and outputs; stratified design; functions passed as arguments) to Elixir
+modules, alongside the stratified-design reference above. The book is a
+concept-only reference: no passage was consulted for wording or reproduced, and
+the workflow is written in the kit's own words.
+
+`readable-code` is also the kit's own addition. It applies the ideas of
+*Clean Code* by Robert C. Martin (names that reveal intent, functions at one level of
+detail, comments that carry information, visible error flow) through the Elixir
+anti-pattern vocabulary in `elixir/code-shape.md`. The book is a concept-only
+reference in the same way: no passage was consulted for wording or reproduced.

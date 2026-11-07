@@ -8,7 +8,7 @@
 **Shared coding practices for AI agents, versioned with your Elixir project.**
 
 Pin the kit like any Mix dependency. Every agent that touches the project, whether
-Codex, Claude Code or your own harness, reads the same 36 reviewed workflows from
+Codex, Claude Code or your own harness, reads the same 38 reviewed workflows from
 `deps/`: what to inspect, which decisions matter, what "done" looks like and how
 to prove it. No copied skill library to drift, no service, no model calls, nothing
 shipped to production.
@@ -120,7 +120,7 @@ is opened:
    scope, changes persisted data or a public contract, or has an irreversible step;
    authority rules, the mode and the workflow's own stop conditions still apply.
 
-The routing cases in [`evals/`](evals/README.md) hold 62 requests like that one,
+The routing cases in [`evals/`](evals/README.md) hold 66 requests like that one,
 with the expected workflow and the signals of a good or bad answer. They stay out
 of the installed payload so an agent never sees the answer key.
 
@@ -144,6 +144,8 @@ its `skills:` selection.
 |  |  | [async-state](priv/library/skills/async-state/SKILL.md) |  |  |
 |  |  | [process-lifecycle](priv/library/skills/process-lifecycle/SKILL.md) |  |  |
 |  |  | [house-patterns](priv/library/skills/house-patterns/SKILL.md) |  |  |
+|  |  | [functional-refactoring](priv/library/skills/functional-refactoring/SKILL.md) |  |  |
+|  |  | [readable-code](priv/library/skills/readable-code/SKILL.md) |  |  |
 
 Three of them keep a different default mode: `code-review` reviews without
 editing, `delivery-validation` analyzes without repairing, `delivery-coordination`

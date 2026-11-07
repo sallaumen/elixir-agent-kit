@@ -1,6 +1,6 @@
 # Routing evaluation cases
 
-These 62 cases keep the original requests (all in Portuguese) and their evaluator
+These 66 cases keep the original requests (all in Portuguese) and their evaluator
 criteria, in either language, with public workflow IDs. `EVOLUTION` routes to the maintenance guide;
 `NONE` means a bounded task does not need a broader workflow. Cases stay outside
 the installed library so expected answers are not injected into agent instructions.
@@ -67,3 +67,12 @@ context and two Oban workers while queued jobs keep working) and E56 (progress
 events out of order across a worker, PubSub and a LiveView) are large cases: the
 expected behavior is a plan file in `.elixir-agent-kit/plans/` before the first
 edit, and stopping for approval only on a stop-and-ask trigger.
+
+E63 to E66 cover the refactoring workflows. E63 asks for a functional-style
+refactor of a module whose rules read the clock and the database
+(`functional-refactoring`); E64 asks for a readable, Clean Code style cleanup of
+working code (`readable-code`); E65 is a request that names no style ("refactor module X") but shows both
+symptoms, where the expected route is `functional-refactoring` first with
+`readable-code` planned as a later slice; E66 renames a public function, a
+negative case for `readable-code` (`module-design`, or `NONE` for the bounded
+edit).

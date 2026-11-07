@@ -3,7 +3,7 @@
 **Práticas de código compartilhadas para agentes de IA, versionadas junto com o seu projeto Elixir.**
 
 Fixe o kit como qualquer dependência Mix. Todo agente que trabalhar no projeto, seja
-Codex, Claude Code ou o seu próprio harness, lê os mesmos 36 workflows revisados
+Codex, Claude Code ou o seu próprio harness, lê os mesmos 38 workflows revisados
 direto de `deps/`: o que inspecionar, quais decisões importam, o que é "pronto" e
 como provar. Sem biblioteca copiada que envelhece, sem serviço, sem chamada a
 modelo, nada vai para produção.
@@ -118,7 +118,7 @@ abrir qualquer arquivo-fonte:
    de autoridade, o modo e as condições de parada do workflow continuam valendo.
 
 Os casos de seleção em [`evals/`](https://github.com/sallaumen/elixir-agent-kit/blob/main/evals/README.md)
-guardam 62 pedidos como esse, com o workflow esperado e os sinais de uma resposta
+guardam 66 pedidos como esse, com o workflow esperado e os sinais de uma resposta
 boa ou ruim. Ficam fora do payload instalado para que um agente nunca veja o
 gabarito.
 
@@ -142,6 +142,8 @@ deixar esses IDs fora da sua seleção `skills:`.
 |  |  | [async-state](../priv/library/skills/async-state/SKILL.md) |  |  |
 |  |  | [process-lifecycle](../priv/library/skills/process-lifecycle/SKILL.md) |  |  |
 |  |  | [house-patterns](../priv/library/skills/house-patterns/SKILL.md) |  |  |
+|  |  | [functional-refactoring](../priv/library/skills/functional-refactoring/SKILL.md) |  |  |
+|  |  | [readable-code](../priv/library/skills/readable-code/SKILL.md) |  |  |
 
 Três deles têm um modo padrão diferente: `code-review` revisa sem editar,
 `delivery-validation` analisa sem reparar, `delivery-coordination` coordena. O

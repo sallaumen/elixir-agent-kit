@@ -958,6 +958,72 @@
         "Escolher data-pipelines porque chegam muitos eventos",
         "Trocar o GenServer por Broadway sem uma fila externa"
       ]
+    },
+    {
+      "id": "E63",
+      "request": "Este módulo de cobrança é impossível de testar sem banco: as regras de desconto chamam DateTime.utc_now e Repo.get! no meio do cálculo. Refatore no estilo funcional, como no Grokking Simplicity, sem mudar o comportamento.",
+      "expected_primary": "functional-refactoring",
+      "allowed_alternatives": [
+        "abstraction-layers"
+      ],
+      "expected_size": "medium",
+      "success_signals": [
+        "Faz o inventário do módulo com entradas e saídas implícitas antes de editar",
+        "Lê o relógio e o Repo uma vez na ação pública e testa as regras sem stub nem banco",
+        "Mantém as assinaturas públicas e os efeitos na mesma quantidade e ordem"
+      ],
+      "failure_signals": [
+        "Muda a assinatura pública para receber o Repo ou o relógio",
+        "Cria um GenServer ou novos diretórios como prova de refatoração"
+      ]
+    },
+    {
+      "id": "E64",
+      "request": "O módulo de relatórios funciona e tem testes, mas ninguém consegue ler: funções de 80 linhas com quatro níveis de case, variáveis res2 e tmp e comentários repetindo o código. Deixe legível, estilo Clean Code, sem mudar nada do que ele faz.",
+      "expected_primary": "readable-code",
+      "allowed_alternatives": [],
+      "expected_size": "medium",
+      "success_signals": [
+        "Escreve as notas de leitura com o achado do credo ou o nome do anti-pattern por função",
+        "Divide as funções por significado e troca o aninhamento por cabeças de função ou with",
+        "Mantém testes e nomes públicos inalterados, sem achado novo do credo"
+      ],
+      "failure_signals": [
+        "Renomeia funções públicas",
+        "Mede legibilidade por número de linhas ou de funções"
+      ]
+    },
+    {
+      "id": "E65",
+      "request": "Refatore o módulo Billing: para testar uma regra os testes precisam congelar o relógio e mexer no Application env, e as funções são enormes e cheias de case aninhado.",
+      "expected_primary": "functional-refactoring",
+      "allowed_alternatives": [],
+      "expected_size": "large",
+      "success_signals": [
+        "Classifica como grande e planeja functional-refactoring primeiro e readable-code como fatia posterior do mesmo plano",
+        "Escreve o plano em .elixir-agent-kit/plans/ antes da primeira edição"
+      ],
+      "failure_signals": [
+        "Mistura renomeações e limpeza de comentários nos passos estruturais",
+        "Começa pela legibilidade e deixa as dependências escondidas"
+      ]
+    },
+    {
+      "id": "E66",
+      "request": "Renomeie a função pública Billing.process/2 para charge_invoice/2 e atualize quem chama.",
+      "expected_primary": "module-design",
+      "allowed_alternatives": [
+        "NONE"
+      ],
+      "expected_size": "small",
+      "success_signals": [
+        "Trata como mudança de API pública e atualiza todos os chamadores",
+        "Não seleciona readable-code"
+      ],
+      "failure_signals": [
+        "Seleciona readable-code e faz uma limpeza geral do módulo",
+        "Renomeia sem procurar os chamadores"
+      ]
     }
   ]
 }

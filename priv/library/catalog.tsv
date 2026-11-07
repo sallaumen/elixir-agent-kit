@@ -16,6 +16,8 @@ abstraction-layers	analyze-and-fix	Use when functions mix business decisions, lo
 module-design	analyze-and-fix	Use when module names, locations or public APIs obscure responsibilities that are already understood.	code
 code-consolidation	analyze-and-fix	Use when unfinished features, abandoned paths or competing implementations make a codebase ambiguous.	code
 house-patterns	analyze-and-fix	Use when existing code drifts from patterns the project has already established and must be refactored to them without changing behavior.	code
+functional-refactoring	analyze-and-fix	Use when a module is hard to test or change because decisions, hidden inputs such as the clock, configuration or the database, and effects are interleaved across its functions.	code
+readable-code	analyze-and-fix	Use when a module works and is tested but is hard to read: vague names, long or deeply nested functions, comments that restate the code or a tangled error flow.	code
 test-strategy	analyze-and-fix	Use when a passing suite misses important bugs, the required regression coverage is unclear, or duplicated tests protect nothing distinct.	code
 code-review	review	Use when reviewing a bounded diff or pull request for actionable defects and regressions.	code
 debugging	analyze-and-fix	Use when a wrong result, exception or intermittent failure has no demonstrated root cause.	code

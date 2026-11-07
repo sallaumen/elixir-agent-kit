@@ -41,6 +41,8 @@ copy of a workflow body.
 | [module-design](skills/module-design/SKILL.md) | analyze-and-fix | Use when module names, locations or public APIs obscure responsibilities that are already understood. |
 | [code-consolidation](skills/code-consolidation/SKILL.md) | analyze-and-fix | Use when unfinished features, abandoned paths or competing implementations make a codebase ambiguous. |
 | [house-patterns](skills/house-patterns/SKILL.md) | analyze-and-fix | Use when existing code drifts from patterns the project has already established and must be refactored to them without changing behavior. |
+| [functional-refactoring](skills/functional-refactoring/SKILL.md) | analyze-and-fix | Use when a module is hard to test or change because decisions, hidden inputs such as the clock, configuration or the database, and effects are interleaved across its functions. |
+| [readable-code](skills/readable-code/SKILL.md) | analyze-and-fix | Use when a module works and is tested but is hard to read: vague names, long or deeply nested functions, comments that restate the code or a tangled error flow. |
 | [test-strategy](skills/test-strategy/SKILL.md) | analyze-and-fix | Use when a passing suite misses important bugs, the required regression coverage is unclear, or duplicated tests protect nothing distinct. |
 | [code-review](skills/code-review/SKILL.md) | review | Use when reviewing a bounded diff or pull request for actionable defects and regressions. |
 | [debugging](skills/debugging/SKILL.md) | analyze-and-fix | Use when a wrong result, exception or intermittent failure has no demonstrated root cause. |

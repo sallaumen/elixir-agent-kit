@@ -1,5 +1,20 @@
 # Changelog
 
+## Unreleased
+
+- New workflows `functional-refactoring` and `readable-code` (code area), both
+  behavior-preserving and analyze-and-fix. `functional-refactoring` makes a
+  module's hidden inputs explicit at the edge, extracts its decisions as pure
+  functions tested without stubs and layers its functions (ideas from *Grokking
+  Simplicity*, concept only). `readable-code` resolves reading obstacles inside
+  working code (names, nesting, comments, error flow) through the `code-shape`
+  vocabulary (ideas from *Clean Code*, concept only).
+- `ROUTING.md` routes refactoring requests by symptom; a vague request with both
+  symptoms runs `functional-refactoring` first and `readable-code` as a later
+  slice. `abstraction-layers`, `module-design`, `code-consolidation` and
+  `house-patterns` name the new boundaries.
+- Evaluation cases E63 to E66 (66 total).
+
 ## 0.7.0 — 2026-11-07
 
 - A deeper Elixir review before 0.7 (Elixir anti-pattern and library guides, the
