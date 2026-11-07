@@ -319,10 +319,77 @@ chosen before the investigation, as the block asks. The remaining misses are a s
 session skipping the workflow body after naming it, and the cap: a backend fix with
 tests on this codebase takes more than 60 turns about half the time.
 
+## Remeasure on v0.6.0 (deepened workflows, `Start at`, 90 turns)
+
+agent-board `main` `ee83962`: kit v0.6.0 (every workflow opens with symptoms and
+linked neighbors, orders its inputs from a `Start at` line, ends each step in a
+condition with a written artifact from step 1, and marks the `Minimum` evidence;
+`START.md` step 4 asks for the `Start at` input as the first file opened; the
+routing guide separates density within one width from behavior across widths)
+and `AGENTS.md` with one kit entry instead of three. Same client, prompts and
+permissions, plus the harness fixes from follow-up 6: `--max-turns 90`,
+`--max-budget-usd 10`, allowlist matching `MIX_ENV=test mix test`. Three
+repetitions of E32, E44 and E05, 22:40 to 23:39 local time, 76.20 USD. E05 is
+included because its expectation moved to `responsive-layout` in this release.
+Columns as in the v0.5.3 table; "Turns" counts assistant messages, including
+those of delegated subagents.
+
+| Run | Expected | Read from kit | Routed | START | SKILL | Contract | First source | Edits | mix test | Ended | Turns | Cost (USD) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| E32-r1 | async-state | START, async-state, CONTRACT | ok | 3 | 6 | 9 | 74 | 5 | 5 | finished | 103 | 4.86 |
+| E32-r2 | async-state | START, async-state, CONTRACT | ok | 3 | 6 | 10 | 13 | 5 | 3 | budget cap | 152 | 10.10 |
+| E32-r3 | async-state | START, async-state, CONTRACT | ok | 3 | 8 | 12 | 19 | 6 | 2 | budget cap | 206 | 10.01 |
+| E44-r1 | provider-calls | START, provider-calls, CONTRACT | ok | 2 | 6 | 3 | 10 | 5 | 9 | finished | 122 | 6.75 |
+| E44-r2 | provider-calls | START, provider-calls, CONTRACT | ok | 3 | 8 | 4 | 11 | 4 | 9 | finished | 130 | 6.57 |
+| E44-r3 | provider-calls | START, provider-calls, CONTRACT | ok | 3 | 7 | 4 | 11 | 7 | 6 | finished | 124 | 6.00 |
+| E05-r1 | responsive-layout | START, responsive-layout, layout-density, CONTRACT | ok | 4 | 7 | 13 | 31 | 1 | 0 | finished | 87 | 3.38 |
+| E05-r2 | responsive-layout | START, responsive-layout, CONTRACT, ROUTING | ok | 4 | 9 | - | 29 | 0 | 0 | finished | 81 | 2.73 |
+| E05-r3 | responsive-layout | START, responsive-layout, CONTRACT | ok | 5 | 10 | - | 34 | 1 | 0 | finished | 117 | 5.69 |
+
+Backend cases across the five measurements (v0.5.0, v0.5.1, v0.5.2, v0.5.3,
+v0.6.0): reached the kit 2/6, 5/6, 5/6, 6/6, 6/6; routed correctly 2/6, 3/6, 3/6,
+5/6, 6/6; opened the workflow before any source file 0/6, 0/6, 0/6, 5/6, 6/6;
+finished with a tested fix 0, 0, 0, 3, 4.
+
+- The v0.5.3 miss is gone: all six backend sessions opened the right `SKILL.md`
+  between turns 6 and 8, before the maintainer contract in four of them and before
+  any `lib/` file in all six. Every one ran the suite, now that the allowlist matches
+  `MIX_ENV=test mix test`; every one wrote tests next to the fix.
+- Four backend sessions finished, the most so far. All three E44 runs closed with a
+  tested fix in `lib/agent_board/ai.ex` or the composer's timeout and named the
+  provider-calls rules they applied ("a timeout is not evidence the work was not
+  done", "every call has exactly one audit row"); two reported in Portuguese, the
+  request's language. E32-r1 found the stale-overlay cause (two ticket rows for one
+  issue, applied in arbitrary order) and fixed it with tests at turn 103.
+- The two E32 runs that did not finish hit the 10 USD budget, not the 90-turn cap,
+  and both for the same reason: at turn 56 and turn 119 they delegated the
+  reproduction to a subagent, whose turns and cost count against the session. Each
+  had the cause written down before delegating (E32-r2: "state must follow a
+  ticket's mandate scope, not its channel references"; E32-r3 named the next change
+  and its regression test). A bound on delegation is a harness choice, not a kit
+  rule; the shared contract already says delegation needs to be authorized and
+  beneficial.
+- E05 routes to `responsive-layout` 3/3 under the new expectation; one session also
+  read `layout-density` as the neighbor, which the guide now separates. All three
+  found that the worktree's assets were never compiled and that the request's three
+  symptoms match unstyled markup; two hardened one control, one changed nothing and
+  reported that no execution (`mix assets.build`, a dev server, a browser) was
+  allowed, instead of editing CSS blind. That is the workflow's step 1 (render the
+  route at the width) refused honestly by a session that could not run it.
+- `Start at` reached the sessions: E05 named it in all three runs and E44-r3 in
+  one; the backend runs opened the named input (the shared client, the overwriting
+  `handle_info` clauses) within two turns of the `SKILL.md` without naming the line.
+  The step-1 artifact appeared as a hypothesis table in the E32 runs and an
+  ownership table in E32-r2; the E44 runs reported a call map in prose.
+- The operator's global instructions still enter the sessions: the E05 runs tried
+  to read two skills under the operator's home directory and reported the refusal.
+  Follow-up 7 stands.
+
 ## Limits
 
-- One client, one model, 18 runs plus controls, the 18-run rerun on v0.5.1 and the 6-run remeasures on v0.5.2 and v0.5.3, on the operator's machine with the
-  operator's global instructions present. Codex and the DeepSeek executor were not
+- One client, one model, 18 runs plus controls, the 18-run rerun on v0.5.1, the 6-run
+  remeasures on v0.5.2 and v0.5.3 and the 9-run remeasure on v0.6.0, on the
+  operator's machine with the operator's global instructions present. Codex and the DeepSeek executor were not
   evaluated.
 - "Routed" is measured by which `SKILL.md` was opened, not by whether its criteria were
   followed; the judgment section covers that for finished runs only.
@@ -347,7 +414,16 @@ v0.5.1) and the rerun above measures them.
    the session's order: block wording that asks for the workflow choice before the
    code is opened, and the kit selection listed before the maintainer contract in
    `AGENTS.md`. The remeasure above shows 5 of 6 workflows opened before any source.
-6. Evaluation: match `MIX_ENV=test mix test` in the harness allowlist; use a 90-turn
-   cap for backend fixes with tests.
+6. Done (v0.6.0 remeasure). Evaluation: match `MIX_ENV=test mix test` in the harness
+   allowlist; use a 90-turn cap for backend fixes with tests. With both, every
+   backend session ran the suite and four of six finished.
 7. Evaluation: a fresh clone per no-deps repetition; the same matrix on a machine
    without the operator's global skill rule, and on Codex and the DeepSeek executor.
+8. Evaluation: decide whether a session may delegate (the two unfinished v0.6.0
+   runs spent their budget in a subagent after writing the cause down); either
+   disallow the Agent tool in the harness or raise the budget and record
+   delegation as its own column.
+9. Kit, measured only after v0.6.0: whether the `Minimum` line changes how a
+   session ends. In nine runs no session cited it; the finished runs ran the suite
+   three to nine times instead. A later measurement should count the tests written
+   against the workflow's `Minimum`.
