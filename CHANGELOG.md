@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.6.0 — 2026-11-06
 
 - The routing guide separates the pairs live sessions confused: density within one
   width versus behavior across widths, code review versus delivery validation,
