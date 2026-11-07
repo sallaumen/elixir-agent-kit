@@ -1,6 +1,6 @@
 # Routing evaluation cases
 
-These 62 cases keep the original requests (all in Portuguese) and their evaluator
+These 63 cases keep the original requests (all in Portuguese) and their evaluator
 criteria, in either language, with public workflow IDs. `EVOLUTION` routes to the maintenance guide;
 `NONE` means a bounded task does not need a broader workflow. Cases stay outside
 the installed library so expected answers are not injected into agent instructions.

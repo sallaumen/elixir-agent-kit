@@ -958,6 +958,24 @@
         "Escolher data-pipelines porque chegam muitos eventos",
         "Trocar o GenServer por Broadway sem uma fila externa"
       ]
+    },
+    {
+      "id": "E63",
+      "request": "Este módulo de cobrança é impossível de testar sem banco: as regras de desconto chamam DateTime.utc_now e Repo.get! no meio do cálculo. Refatore no estilo funcional, como no Grokking Simplicity, sem mudar o comportamento.",
+      "expected_primary": "functional-refactoring",
+      "allowed_alternatives": [
+        "abstraction-layers"
+      ],
+      "expected_size": "medium",
+      "success_signals": [
+        "Faz o inventário do módulo com entradas e saídas implícitas antes de editar",
+        "Lê o relógio e o Repo uma vez na ação pública e testa as regras sem stub nem banco",
+        "Mantém as assinaturas públicas e os efeitos na mesma quantidade e ordem"
+      ],
+      "failure_signals": [
+        "Muda a assinatura pública para receber o Repo ou o relógio",
+        "Cria um GenServer ou novos diretórios como prova de refatoração"
+      ]
     }
   ]
 }

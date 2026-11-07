@@ -144,6 +144,7 @@ its `skills:` selection.
 |  |  | [async-state](priv/library/skills/async-state/SKILL.md) |  |  |
 |  |  | [process-lifecycle](priv/library/skills/process-lifecycle/SKILL.md) |  |  |
 |  |  | [house-patterns](priv/library/skills/house-patterns/SKILL.md) |  |  |
+|  |  | [functional-refactoring](priv/library/skills/functional-refactoring/SKILL.md) |  |  |
 
 Three of them keep a different default mode: `code-review` reviews without
 editing, `delivery-validation` analyzes without repairing, `delivery-coordination`

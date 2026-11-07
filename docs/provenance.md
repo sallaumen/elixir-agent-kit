@@ -151,3 +151,11 @@ review added `pipelines.md`, `architecture.md`, `library-authoring.md` and
 added the `data-pipelines` workflow for flows of many items, whose CI namesake
 `pipeline-design` now points to it.
 
+## Refactoring workflows in 0.8
+
+`functional-refactoring` is the kit's own addition. It applies the ideas of
+*Grokking Simplicity* by Eric Normand (actions, calculations and data; implicit
+inputs and outputs; stratified design; functions passed as arguments) to Elixir
+modules, alongside the stratified-design reference above. The book is a
+concept-only reference: no passage was consulted for wording or reproduced, and
+the workflow is written in the kit's own words.

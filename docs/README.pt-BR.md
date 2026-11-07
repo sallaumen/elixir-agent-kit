@@ -142,6 +142,7 @@ deixar esses IDs fora da sua seleção `skills:`.
 |  |  | [async-state](../priv/library/skills/async-state/SKILL.md) |  |  |
 |  |  | [process-lifecycle](../priv/library/skills/process-lifecycle/SKILL.md) |  |  |
 |  |  | [house-patterns](../priv/library/skills/house-patterns/SKILL.md) |  |  |
+|  |  | [functional-refactoring](../priv/library/skills/functional-refactoring/SKILL.md) |  |  |
 
 Três deles têm um modo padrão diferente: `code-review` revisa sem editar,
 `delivery-validation` analisa sem reparar, `delivery-coordination` coordena. O
