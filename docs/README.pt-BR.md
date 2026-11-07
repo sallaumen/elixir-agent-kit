@@ -3,7 +3,7 @@
 **Práticas de código compartilhadas para agentes de IA, versionadas junto com o seu projeto Elixir.**
 
 Fixe o kit como qualquer dependência Mix. Todo agente que trabalhar no projeto, seja
-Codex, Claude Code ou o seu próprio harness, lê os mesmos 36 workflows revisados
+Codex, Claude Code ou o seu próprio harness, lê os mesmos 38 workflows revisados
 direto de `deps/`: o que inspecionar, quais decisões importam, o que é "pronto" e
 como provar. Sem biblioteca copiada que envelhece, sem serviço, sem chamada a
 modelo, nada vai para produção.
