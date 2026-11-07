@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.8.0 — 2026-11-07
 
 - New workflows `functional-refactoring` and `readable-code` (code area), both
   behavior-preserving and analyze-and-fix. `functional-refactoring` makes a
