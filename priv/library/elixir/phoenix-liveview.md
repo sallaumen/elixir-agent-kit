@@ -1,11 +1,15 @@
 # Phoenix and LiveView
 
-Part of the [Elixir context](../ELIXIR.md). Applies when `mix.lock` lists `phoenix` or `phoenix_live_view`.
+Part of the [Elixir context](../ELIXIR.md). Applies when `mix.lock` lists
+`phoenix` or `phoenix_live_view`.
 
 Inspect: `mount/3` versus `handle_params/3`, whether a subscription runs only when
 `connected?(socket)`, how navigation is done (`push_patch` keeps the process,
 `push_navigate` remounts, `redirect` leaves LiveView), `live_session` and
-`on_mount` hooks, and where asynchronous work starts.
+`on_mount` hooks, and where asynchronous work starts. On Phoenix 1.8+, read the
+rules the locked Phoenix ships in `deps/phoenix/usage-rules/` (`liveview.md`,
+`html.md`, `phoenix.md`) for HEEx syntax, the app layout, hooks and icons; they
+track the version in `mix.lock` and are not repeated here.
 
 - Authorize and scope by tenant in `on_mount` and `handle_params`, not only in
   templates. Hiding a control is not authorization.
@@ -25,10 +29,12 @@ Inspect: `mount/3` versus `handle_params/3`, whether a subscription runs only wh
   `Process.send_after(self(), {:job_timeout, ref}, ms)`, whose handler calls
   `cancel_async/3` and names the failure. A second submit while the job runs is
   refused in `handle_event/3`; `phx-disable-with` is feedback, not a guard.
-- Push state from the server (PubSub subscribe in connected mount, `handle_info`),
-  never poll the database from the browser. When the shown resource changes,
-  unsubscribe from the old topic before subscribing to the new one; subscribing
-  again on every reload delivers each broadcast twice.
+- Push state from the server (PubSub subscribe in connected mount,
+  `handle_info`), never poll the database from the browser. With scopes,
+  subscribe through a scoped context function, not a topic built from a raw id.
+  When the shown resource changes, unsubscribe from the old topic before
+  subscribing to the new one; subscribing again on every reload delivers each
+  broadcast twice.
 - Read the page's data in `handle_params/3`, not in both `mount/3` and
   `handle_params/3`: both run on the dead render and again on the connected one,
   so a read in each doubles the work. Skip the read for a `push_patch` that keeps
@@ -40,10 +46,15 @@ Inspect: `mount/3` versus `handle_params/3`, whether a subscription runs only wh
   after a deploy or a recovered form otherwise crashes the view and drops its
   state. An event the view expects validates its own params in its own clause.
 - Use streams (`stream/4`, `stream_insert/4`) for large or growing collections;
-  assigns re-render whole lists.
-- Forms: `to_form/2`, `phx-change` for validation, `phx-submit` for the write,
-  `phx-disable-with` on the submit control; optimistic UI is the exception, not
-  the default round-trip. A form that mirrors saved settings sets
+  assigns re-render whole lists. The container has `phx-update="stream"` and a
+  DOM id, and each child takes the id the stream gives it. A stream is not
+  enumerable: filter or refresh it with `stream(socket, :items, items, reset:
+  true)`, keep counts and empty-state flags in separate assigns, and re-insert an
+  item when an assign it renders changes.
+- Forms: `to_form/2` in the LiveView and `@form[:field]` in the template (never
+  `@changeset` or `let={f}` there), `phx-change` for validation, `phx-submit`
+  for the write, `phx-disable-with` on the submit control; optimistic UI is the
+  exception, not the default round-trip. A form that mirrors saved settings sets
   `phx-auto-recover="ignore"`: after a reconnect LiveView re-sends each form's
   values through its `phx-change` event, which replays a confirmation or saves a
   half-filled picker.
@@ -60,8 +71,10 @@ Verify: `Phoenix.LiveViewTest` (`live/2`, `render_click/2`, `render_submit/2`,
 `assert_patch/2`, `assert_redirect/2`, `assert_push_event/3`), `render_async/2`
 to await every pending `assign_async` and `start_async` task (and `stream_async`
 in LiveView 1.1) and render the result, with an explicit timeout when the work
-exceeds ExUnit's `assert_receive_timeout` (100 ms); assert on the rendered HTML
-or the assigns the task set, since there is no dedicated async assertion. Also a
+exceeds ExUnit's `assert_receive_timeout` (100 ms). Assert with `has_element?/2,3`
+and `element/2,3` against the DOM ids the template sets, not on raw HTML strings
+(the rule Phoenix's own usage rules give); there is no dedicated async
+assertion, so check the element the task renders. Also a
 reconnect (stop the view process and mount it again), `render_hook/3` with an
 event name the view does not handle (the page renders instead of crashing), a
 telemetry handler counting the page's data reads per render, and a real browser

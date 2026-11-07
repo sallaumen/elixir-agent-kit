@@ -41,7 +41,7 @@ frontmatter, a clear mode, task-specific inputs and decisions, quality criteria,
 validation evidence, pitfalls, workflow and completion test. Do not expand text
 just for length or import universal style preferences from a reference skill.
 Update the primary area in `priv/library/catalog.tsv`, `CATALOG.md`,
-[the 35-workflow review](docs/source-review.md), provenance and relevant tests.
+[the 36-workflow review](docs/source-review.md), provenance and relevant tests.
 Keep routing cases in `evals/`; never ship evaluator answers as workflow context.
 Do not add a skill merely for a synonym of an existing workflow.
 

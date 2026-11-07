@@ -3,7 +3,7 @@
 **Práticas de código compartilhadas para agentes de IA, versionadas junto com o seu projeto Elixir.**
 
 Fixe o kit como qualquer dependência Mix. Todo agente que trabalhar no projeto, seja
-Codex, Claude Code ou o seu próprio harness, lê os mesmos 35 workflows revisados
+Codex, Claude Code ou o seu próprio harness, lê os mesmos 36 workflows revisados
 direto de `deps/`: o que inspecionar, quais decisões importam, o que é "pronto" e
 como provar. Sem biblioteca copiada que envelhece, sem serviço, sem chamada a
 modelo, nada vai para produção.
@@ -118,7 +118,7 @@ abrir qualquer arquivo-fonte:
    de autoridade, o modo e as condições de parada do workflow continuam valendo.
 
 Os casos de seleção em [`evals/`](https://github.com/sallaumen/elixir-agent-kit/blob/main/evals/README.md)
-guardam 56 pedidos como esse, com o workflow esperado e os sinais de uma resposta
+guardam 62 pedidos como esse, com o workflow esperado e os sinais de uma resposta
 boa ou ruim. Ficam fora do payload instalado para que um agente nunca veja o
 gabarito.
 
@@ -135,7 +135,7 @@ deixar esses IDs fora da sua seleção `skills:`.
 | [layout-density](../priv/library/skills/layout-density/SKILL.md) | [migration-compatibility](../priv/library/skills/migration-compatibility/SKILL.md) | [abstraction-layers](../priv/library/skills/abstraction-layers/SKILL.md) | [notifications](../priv/library/skills/notifications/SKILL.md) | [pipeline-design](../priv/library/skills/pipeline-design/SKILL.md) |
 | [navigation-ux](../priv/library/skills/navigation-ux/SKILL.md) | [security-boundaries](../priv/library/skills/security-boundaries/SKILL.md) | [module-design](../priv/library/skills/module-design/SKILL.md) | [operational-alerts](../priv/library/skills/operational-alerts/SKILL.md) | [build-dependencies](../priv/library/skills/build-dependencies/SKILL.md) |
 | [responsive-layout](../priv/library/skills/responsive-layout/SKILL.md) | [provider-calls](../priv/library/skills/provider-calls/SKILL.md) | [code-consolidation](../priv/library/skills/code-consolidation/SKILL.md) | [integration-setup](../priv/library/skills/integration-setup/SKILL.md) | [delivery-validation](../priv/library/skills/delivery-validation/SKILL.md) |
-| [direct-interactions](../priv/library/skills/direct-interactions/SKILL.md) |  | [test-strategy](../priv/library/skills/test-strategy/SKILL.md) | [metrics-costs](../priv/library/skills/metrics-costs/SKILL.md) |  |
+| [direct-interactions](../priv/library/skills/direct-interactions/SKILL.md) | [data-pipelines](../priv/library/skills/data-pipelines/SKILL.md) | [test-strategy](../priv/library/skills/test-strategy/SKILL.md) | [metrics-costs](../priv/library/skills/metrics-costs/SKILL.md) |  |
 | [accessibility](../priv/library/skills/accessibility/SKILL.md) |  | [code-review](../priv/library/skills/code-review/SKILL.md) | [simulation-isolation](../priv/library/skills/simulation-isolation/SKILL.md) |  |
 | [design-system](../priv/library/skills/design-system/SKILL.md) |  | [debugging](../priv/library/skills/debugging/SKILL.md) | [commercial-eligibility](../priv/library/skills/commercial-eligibility/SKILL.md) |  |
 | [motion-design](../priv/library/skills/motion-design/SKILL.md) |  | [performance](../priv/library/skills/performance/SKILL.md) | [revision-lineage](../priv/library/skills/revision-lineage/SKILL.md) |  |
@@ -146,10 +146,11 @@ deixar esses IDs fora da sua seleção `skills:`.
 Três deles têm um modo padrão diferente: `code-review` revisa sem editar,
 `delivery-validation` analisa sem reparar, `delivery-coordination` coordena. O
 escopo explícito do usuário sempre vence um padrão. O
-[contexto Elixir](../priv/library/ELIXIR.md) indexa uma referência curta por tecnologia
-(forma do código, OTP, Phoenix e LiveView, Ecto, Oban, ExUnit, clientes HTTP,
-segurança, telemetria, builds) e as bibliotecas recomendadas; o agente lê só as que
-o `mix.lock` do projeto pede.
+[contexto Elixir](../priv/library/ELIXIR.md) indexa uma referência curta por assunto
+(forma do código, pipelines, arquitetura de dependências, OTP, Phoenix e LiveView,
+Ecto, Oban, ExUnit, clientes HTTP, segurança, telemetria, builds, autoria de
+bibliotecas, o ciclo de trabalho do agente) e as bibliotecas recomendadas; o agente
+lê só as que o `mix.lock` e a tarefa pedem.
 
 ## O que fica no projeto
 

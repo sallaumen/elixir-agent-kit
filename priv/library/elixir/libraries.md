@@ -1,6 +1,7 @@
 # Recommended libraries
 
-Part of the [Elixir context](../ELIXIR.md). Applies when a dependency is added, replaced or questioned.
+Part of the [Elixir context](../ELIXIR.md). Applies when a dependency is added,
+replaced or questioned.
 
 Inspect: `mix.exs` and `mix.lock` before adding anything; a library already in
 the lockfile, or one the Phoenix generator includes, beats a new dependency
@@ -19,6 +20,12 @@ that does the same job. The project's existing choice wins over this table.
 | Metrics | `telemetry_metrics`, `telemetry_poller`, `phoenix_live_dashboard` | ad hoc timing logs | Spans and summaries the dashboard renders in dev; see [Telemetry and observability](telemetry.md). |
 | Static checks | `credo` (`--strict` in the gate), `sobelow` (`--exit` on Phoenix apps) | disabling checks inline to pass | Deterministic gates an agent can run before a commit. |
 | Assets | the `esbuild` and `tailwind` Mix wrappers; `heroicons` as a sparse Git dependency with `app: false, compile: false` | a Node toolchain only to build CSS and JS | Standalone binaries keep the build reproducible from `mix`. |
+| Queue consumers | `Broadway` with the producer for the queue (SQS, RabbitMQ, Kafka) | a hand-written consumer loop | Batching, concurrency, acknowledgement and graceful shutdown; see [Pipelines and control flow](pipelines.md) for each producer's failure semantics. |
+| Property tests | `StreamData` (`ExUnitProperties`) | only example-based tests for parsers and round trips | Generated inputs find edge cases an example list misses. |
+| Option validation in a library | `NimbleOptions` | hand-written keyword checks | Schemas, defaults and generated docs for options; see [Writing a library](library-authoring.md). |
+| Compile-time boundaries | `boundary` | conventions nobody checks | Forbidden cross-boundary calls become compiler warnings; see [Dependency architecture](architecture.md). |
+| Dates and times | `Date`, `DateTime`, `NaiveDateTime`, `Calendar` from the standard library, with a time zone database such as `tzdata` only when zones beyond UTC are needed | a date library added for formatting or arithmetic the standard library has | Fewer dependencies; the standard library covers parsing, shifting and comparison. |
+| Rules that dependencies ship for agents | the files in `deps/*/usage-rules/` (Phoenix 1.8+), optionally gathered by `usage_rules` | copying those rules into project docs by hand | They follow the locked version; see [Working in an Elixir checkout](agent-loop.md). |
 | Behaviour fakes | `Mox` for a port with expectations; a fixture implementation for development | a mock of a module the project does not own | A fake implements the project's own behaviour; a fixture engine lets development run without a key. |
 
 Verify: `mix deps.unlock --check-unused` after a change, the new dependency's

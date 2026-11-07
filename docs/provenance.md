@@ -1,6 +1,6 @@
 # Workflow provenance
 
-This English community edition adapts 33 workflows developed by Lucas Tavano with coding-agent assistance, adds one workflow adapted from an external MIT skill and one distilled from a consuming application's rules, for 34 public workflows after the 0.5 merges and the addition of `process-lifecycle` (`revision-lineage` from two lineage workflows, `test-strategy` absorbing `testes-redundantes`), and 35 since `house-patterns` in 0.7. The source collection was `biblioteca-prompts-desenvolvimento v1.0.0`, later refined in an application repository. The public edition preserves task boundaries and authorization modes while rewriting instructions for a standalone package. Product-specific contexts, application source, credentials and operational records are not included.
+This English community edition adapts 33 workflows developed by Lucas Tavano with coding-agent assistance, adds one workflow adapted from an external MIT skill and one distilled from a consuming application's rules, for 34 public workflows after the 0.5 merges and the addition of `process-lifecycle` (`revision-lineage` from two lineage workflows, `test-strategy` absorbing `testes-redundantes`), and 36 since `house-patterns` and `data-pipelines` in 0.7. The source collection was `biblioteca-prompts-desenvolvimento v1.0.0`, later refined in an application repository. The public edition preserves task boundaries and authorization modes while rewriting instructions for a standalone package. Product-specific contexts, application source, credentials and operational records are not included.
 
 | Public ID | Original ID |
 |---|---|
@@ -133,4 +133,21 @@ library versions named; product rules, intervals, vendor limits and the
 application's own wording stayed in the application. `ELIXIR.md` became an index of
 per-technology references in `elixir/` so an agent reads only the ones its project
 uses.
+
+## Deeper Elixir references and data pipelines in 0.7
+
+Before 0.7 shipped, a second review compared the references with the Elixir
+anti-pattern guides, library guidelines, naming and documentation guides and the
+1.18 to 1.20 changelogs (Apache-2.0); the Phoenix 1.8 usage rules shipped in the
+`phoenix` package and its contexts and scopes guides (MIT); the Ecto, Plug, Req,
+GenStage, Flow, Broadway and Mox documentation (Apache-2.0); the `boundary`
+library (MIT); José Valim's "Mocks and explicit contracts"; Christopher Adams's
+Elixir style guide (CC BY 3.0); a public package-quality checklist by Mike
+Hostetler; and public agent rule sets for Elixir (`usage_rules`, Tidewave,
+community skill collections). Every rule is paraphrased and checked against the
+documentation or source of the version named; no passage is reproduced. The
+review added `pipelines.md`, `architecture.md`, `library-authoring.md` and
+`agent-loop.md`, expanded `code-shape.md` with the anti-pattern vocabulary, and
+added the `data-pipelines` workflow for flows of many items, whose CI namesake
+`pipeline-design` now points to it.
 

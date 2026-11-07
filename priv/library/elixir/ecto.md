@@ -1,6 +1,7 @@
 # Ecto and migrations
 
-Part of the [Elixir context](../ELIXIR.md). Applies when `mix.lock` lists `ecto_sql`.
+Part of the [Elixir context](../ELIXIR.md). Applies when `mix.lock` lists
+`ecto_sql`.
 
 Inspect: which changeset owns each invariant, which guarantees live in database
 constraints, transaction boundaries, preloads on the hot path, and how the schema
@@ -9,9 +10,15 @@ coexists with running code during deploy.
 - Put domain validation in the context's changeset; use `unique_constraint/3`,
   `foreign_key_constraint/3` and `check_constraint/3` backed by real database
   constraints for races and invariants that must survive concurrent writers.
-- Group related local writes in `Ecto.Multi` or `Repo.transaction/2`; a database
-  rollback does not undo an external effect, so send effects after commit or make
-  them idempotent.
+- Group related local writes in `Repo.transact/2` (Ecto 3.13+, which
+  soft-deprecated `Repo.transaction/2`; the two treat `{:error, _}` differently,
+  so existing calls are not swapped mechanically) or `Ecto.Multi`; a database
+  rollback does not undo an external effect, so send effects after commit or
+  make them idempotent. [Pipelines and control flow](pipelines.md) says which to
+  pick and how to compose queries.
+- Read a changeset's current value with `get_field/2` (change or data) and its
+  pending change with `get_change/2`; never read `changeset.changes` directly
+  for a rule that must also hold on update.
 - Decompose composite results at the call site and let the changeset be the second
   opinion; a tuple written into a string column fails every row silently until a
   test feeds the whole path.

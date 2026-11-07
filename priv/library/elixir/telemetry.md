@@ -1,6 +1,7 @@
 # Telemetry and observability
 
-Part of the [Elixir context](../ELIXIR.md). Applies when `mix.lock` lists `telemetry`, as every Phoenix, Ecto and Oban project does.
+Part of the [Elixir context](../ELIXIR.md). Applies when `mix.lock` lists
+`telemetry`, as every Phoenix, Ecto and Oban project does.
 
 Inspect: the project's `Telemetry` module (the `metrics/0` list), which events
 are attached, and whether a paid call or a job emits anything at all.
