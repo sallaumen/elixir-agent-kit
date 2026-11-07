@@ -4,6 +4,7 @@ defmodule ElixirAgentKit.Installer do
   @start "<!-- elixir-agent-kit:start -->\n"
   @finish "<!-- elixir-agent-kit:end -->\n"
   @agents ~w(codex claude generic)
+  @plans_ignore ".elixir-agent-kit/plans/.gitignore"
 
   def run(action, root, opts \\ []) when action in [:install, :sync, :check, :uninstall] do
     root = Path.expand(root)
@@ -36,7 +37,7 @@ defmodule ElixirAgentKit.Installer do
     enabled =
       Enum.filter(ElixirAgentKit.catalog(), &(skills == ["all"] or &1.id in skills))
 
-    ~w(CONTRACT.md ROUTING.md ELIXIR.md EVOLUTION.md HANDOFF.md)
+    ~w(CONTRACT.md ROUTING.md ELIXIR.md EVOLUTION.md HANDOFF.md templates/task-plan.md)
     |> Kernel.++(Enum.map(enabled, &"skills/#{&1.id}/SKILL.md"))
     |> Enum.reject(&File.regular?(Path.join(library, &1)))
   end
@@ -80,7 +81,11 @@ defmodule ElixirAgentKit.Installer do
       URI.encode(path, &(&1 in ?a..?z or &1 in ?A..?Z or &1 in ?0..?9 or &1 in ~c"/-._~:"))
     end
 
-    payload = %{".elixir-agent-kit/START.md" => {:file, start_document(config, target.(1))}}
+    # The plans folder ignores its own contents, so the consumer's .gitignore is never touched.
+    payload = %{
+      ".elixir-agent-kit/START.md" => {:file, start_document(config, target.(1))},
+      @plans_ignore => {:file, "*\n!.gitignore\n"}
+    }
 
     Enum.reduce(config.agents, payload, fn agent, acc ->
       instructions = if agent == "claude", do: "CLAUDE.md", else: "AGENTS.md"
@@ -111,7 +116,7 @@ defmodule ElixirAgentKit.Installer do
 
   defp start_document(config, target), do: entry(config, target)
 
-  # START.md and the pointer skills share one body: four steps that end in a named
+  # START.md and the pointer skills share one body: five steps that end in a named
   # workflow choice, then the enabled catalog with links into the dependency, so a
   # session that opens either file leaves it with one SKILL.md path in hand.
   defp entry(config, target) do
@@ -122,17 +127,23 @@ defmodule ElixirAgentKit.Installer do
 
     1. Name the task's primary risk in one line, from the request alone: a screen,
        stored data or a provider call, code quality or process state, an operational
-       domain, or delivery.
+       domain, or delivery. Then name its size (small, medium or large), revising it
+       after the first inspection when the code shows otherwise.
     2. Pick one workflow from the tables below. When two neighbors fit, the
        [routing guide](#{target}/ROUTING.md) separates them. A bounded, fully specified
        edit picks NONE.
     3. Read that workflow's SKILL.md from the dependency together with the
        [shared contract](#{target}/CONTRACT.md); copy neither into this project.
-    4. State the workflow ID or NONE in your plan or report, with the reason in one
-       line and the workflow's `Start at` input as the first thing you open; then
-       investigate the way the workflow says, producing the artifact its first step
-       asks for. The local contracts say what this project must do; the workflow says
-       how to inspect, decide and prove it.
+    4. State the workflow ID or NONE and the size in your reply or report, with the
+       reason in one line and the workflow's `Start at` input as the first thing you
+       open; then investigate the way the workflow says, producing the artifact its
+       first step asks for. The local contracts say what this project must do; the
+       workflow says how to inspect, decide and prove it.
+    5. For a large task, before the first edit, write the plan from the
+       [task-plan template](#{target}/templates/task-plan.md) in
+       `.elixir-agent-kit/plans/`, following the contract's
+       [planning rules](#{target}/CONTRACT.md#plan-in-proportion-to-size), and reread
+       it after any compaction.
 
     Project rules and the user's authorized scope govern the work. Use the
     [Elixir context](#{target}/ELIXIR.md) only for technologies present here; send
@@ -402,6 +413,7 @@ defmodule ElixirAgentKit.Installer do
             "file" ->
               String.starts_with?(path, ".elixir-agent-kit/library/") or
                 path == ".elixir-agent-kit/START.md" or
+                path == @plans_ignore or
                 path in [pointer_path("claude"), pointer_path("codex")] or
                 Regex.match?(~r/^\.(agents|claude)\/skills\/eak-[a-z0-9-]+\/SKILL\.md$/, path)
           end

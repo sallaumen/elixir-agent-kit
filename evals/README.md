@@ -1,6 +1,6 @@
 # Routing evaluation cases
 
-These 60 cases keep the original requests (all in Portuguese) and their evaluator
+These 62 cases keep the original requests (all in Portuguese) and their evaluator
 criteria, in either language, with public workflow IDs. `EVOLUTION` routes to the maintenance guide;
 `NONE` means a bounded task does not need a broader workflow. Cases stay outside
 the installed library so expected answers are not injected into agent instructions.
@@ -59,3 +59,11 @@ a written decision applied to six call sites (E61, `house-patterns`, with `NONE`
 acceptable for a mechanical change), and a GenServer whose mailbox floods under
 load, which stays `process-lifecycle` (E62) so many events alone do not pull
 routing to `data-pipelines`. Each carries an `expected_size`.
+
+Every case carries `expected_size` (`small`, `medium` or `large`), following the
+contract's "Plan in proportion to size" table, so a live evaluation also judges
+the size classification. E55 (extracting a billing flow from a LiveView, a
+context and two Oban workers while queued jobs keep working) and E56 (progress
+events out of order across a worker, PubSub and a LiveView) are large cases: the
+expected behavior is a plan file in `.elixir-agent-kit/plans/` before the first
+edit, and stopping for approval only on a stop-and-ask trigger.

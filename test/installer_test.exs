@@ -84,6 +84,7 @@ defmodule ElixirAgentKit.InstallerTest do
                ".agents/skills/elixir-agent-kit/SKILL.md",
                ".claude/skills/elixir-agent-kit/SKILL.md",
                ".elixir-agent-kit/START.md",
+               ".elixir-agent-kit/plans/.gitignore",
                ".elixir-agent-kit/state.tsv",
                "AGENTS.md",
                "CLAUDE.md"
@@ -92,8 +93,11 @@ defmodule ElixirAgentKit.InstallerTest do
     start = get(root, ".elixir-agent-kit/START.md")
     assert String.starts_with?(start, "# Elixir Agent Kit #{ElixirAgentKit.version()}\n")
     assert start =~ "../deps/elixir_agent_kit/priv/library/CONTRACT.md"
-    assert length(Regex.scan(~r/^\d\. /m, start)) == 4
+    assert length(Regex.scan(~r/^\d\. /m, start)) == 5
     assert start =~ "`Start at`"
+    assert start =~ "name its size (small, medium or large)"
+    assert start =~ "../deps/elixir_agent_kit/priv/library/templates/task-plan.md"
+    assert start =~ "../deps/elixir_agent_kit/priv/library/CONTRACT.md#plan-in-proportion-to-size"
 
     for skill <- ElixirAgentKit.catalog() do
       assert start =~ "../deps/elixir_agent_kit/priv/library/skills/#{skill.id}/SKILL.md"
@@ -501,11 +505,71 @@ defmodule ElixirAgentKit.InstallerTest do
     assert {:ok, []} = Installer.run(:check, root)
   end
 
+  test "the plans folder ignores its own contents and keeps plans on uninstall", %{root: root} do
+    Installer.run(:install, root)
+    assert get(root, ".elixir-agent-kit/plans/.gitignore") == "*\n!.gitignore\n"
+
+    assert get(root, ".elixir-agent-kit/state.tsv") =~
+             "file\t.elixir-agent-kit/plans/.gitignore\t"
+
+    put(root, ".elixir-agent-kit/plans/2026-11-07-billing.md", "# Task plan")
+    assert {:ok, []} = Installer.run(:check, root)
+    assert {:ok, _} = Installer.run(:uninstall, root)
+    refute File.exists?(Path.join(root, ".elixir-agent-kit/plans/.gitignore"))
+    refute File.exists?(Path.join(root, ".elixir-agent-kit/state.tsv"))
+    assert get(root, ".elixir-agent-kit/plans/2026-11-07-billing.md") == "# Task plan"
+  end
+
+  test "a missing or edited plans ignore file is drift", %{root: root} do
+    Installer.run(:install, root)
+    File.rm!(Path.join(root, ".elixir-agent-kit/plans/.gitignore"))
+    assert {:drift, [".elixir-agent-kit/plans/.gitignore"]} = Installer.run(:check, root)
+    assert {:ok, [".elixir-agent-kit/plans/.gitignore"]} = Installer.run(:sync, root)
+    put(root, ".elixir-agent-kit/plans/.gitignore", "*.md\n")
+    assert {:drift, [".elixir-agent-kit/plans/.gitignore"]} = Installer.run(:check, root)
+
+    assert_raise ArgumentError, ~r/locally modified managed content/, fn ->
+      Installer.run(:sync, root)
+    end
+  end
+
+  test "sync from a state without the plans folder adds only that file", %{root: root} do
+    Installer.run(:install, root, agents: [:codex])
+    state = Path.join(root, ".elixir-agent-kit/state.tsv")
+    File.rm!(Path.join(root, ".elixir-agent-kit/plans/.gitignore"))
+    File.rmdir!(Path.join(root, ".elixir-agent-kit/plans"))
+
+    File.write!(
+      state,
+      state
+      |> File.read!()
+      |> String.split("\n")
+      |> Enum.reject(&String.contains?(&1, "plans/.gitignore"))
+      |> Enum.join("\n")
+    )
+
+    before = snapshot(root)
+    assert {:ok, paths} = Installer.run(:sync, root)
+
+    assert Enum.sort(paths) == [
+             ".elixir-agent-kit/plans/.gitignore",
+             ".elixir-agent-kit/state.tsv"
+           ]
+
+    assert Map.drop(snapshot(root), [
+             ".elixir-agent-kit/plans/.gitignore",
+             ".elixir-agent-kit/state.tsv"
+           ]) ==
+             Map.drop(before, [".elixir-agent-kit/state.tsv"])
+
+    assert {:ok, []} = Installer.run(:check, root)
+  end
+
   test "missing library files are listed for the selection" do
     assert Installer.missing_library_files(ElixirAgentKit.library_path()) == []
 
     assert Installer.missing_library_files("/nonexistent", ["debugging"]) ==
-             ~w(CONTRACT.md ROUTING.md ELIXIR.md EVOLUTION.md HANDOFF.md skills/debugging/SKILL.md)
+             ~w(CONTRACT.md ROUTING.md ELIXIR.md EVOLUTION.md HANDOFF.md templates/task-plan.md skills/debugging/SKILL.md)
   end
 
   test "uninstall refuses selection flags before touching anything" do

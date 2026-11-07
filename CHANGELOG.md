@@ -28,7 +28,14 @@
   which Elixir 1.19 rejects; it uses `mix xref graph --sink`. LiveView tests assert
   on elements by DOM id, as Phoenix's usage rules ask, not on raw HTML.
 - Evaluation cases E57 to E62, each with an `expected_size`.
-
+- The shared contract plans in proportion to size: `START.md` step 1 names the task
+  size (small, medium or large) and a new step 5 asks a large task to write a plan
+  from `templates/task-plan.md` in `.elixir-agent-kit/plans/` before the first edit,
+  to reread it after compaction and to ask for approval of the plan only on a stop-and-ask trigger, while authority rules still apply.
+- The installer owns `.elixir-agent-kit/plans/.gitignore`, which ignores the
+  folder's contents without touching the project's `.gitignore`; uninstall keeps
+  existing plans. `check` reports the file as drift when missing or edited.
+- Every evaluation case carries `expected_size`; E55 and E56 add two large cases.
 - New workflow `house-patterns` (code area): bring existing code to patterns the
   project already established, with a pattern card, a deviation table, a public-seam
   test pinned before each one-rule, one-site step, defects reported apart and the

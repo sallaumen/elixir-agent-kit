@@ -14,7 +14,8 @@
       "failure_signals": [
         "Implementar todo TODO automaticamente",
         "Abrir todas as áreas em paralelo"
-      ]
+      ],
+      "expected_size": "large"
     },
     {
       "id": "E02",
@@ -26,7 +27,8 @@
       ],
       "failure_signals": [
         "Começar renomeando pastas sem compreender consumidores"
-      ]
+      ],
+      "expected_size": "large"
     },
     {
       "id": "E03",
@@ -39,7 +41,8 @@
       ],
       "failure_signals": [
         "Criar três diretórios obrigatórios como solução suficiente"
-      ]
+      ],
+      "expected_size": "medium"
     },
     {
       "id": "E04",
@@ -52,7 +55,8 @@
       ],
       "failure_signals": [
         "Proibir todos os cartões e gradientes sem contexto"
-      ]
+      ],
+      "expected_size": "medium"
     },
     {
       "id": "E05",
@@ -69,7 +73,8 @@
       "failure_signals": [
         "Diminuir fonte até caber",
         "Impor ausência total de rolagem"
-      ]
+      ],
+      "expected_size": "medium"
     },
     {
       "id": "E06",
@@ -85,7 +90,8 @@
       "failure_signals": [
         "Assumir um gesto universal pelo lado da tela",
         "Criar armadilha de histórico"
-      ]
+      ],
+      "expected_size": "medium"
     },
     {
       "id": "E07",
@@ -102,7 +108,8 @@
       ],
       "failure_signals": [
         "Desativar animações e realtime indiscriminadamente"
-      ]
+      ],
+      "expected_size": "large"
     },
     {
       "id": "E08",
@@ -116,7 +123,8 @@
       "failure_signals": [
         "Tratar contagem de erro como mensagens enviadas",
         "Mandar mensagens reais sem autorização"
-      ]
+      ],
+      "expected_size": "medium"
     },
     {
       "id": "E09",
@@ -129,7 +137,8 @@
       ],
       "failure_signals": [
         "Contar cada job como uma IA ocupada"
-      ]
+      ],
+      "expected_size": "medium"
     },
     {
       "id": "E10",
@@ -142,7 +151,8 @@
       ],
       "failure_signals": [
         "Deduzir elegibilidade da variante a partir do produto genérico"
-      ]
+      ],
+      "expected_size": "medium"
     },
     {
       "id": "E11",
@@ -154,7 +164,8 @@
       ],
       "failure_signals": [
         "Apagar integração porque a asserção final é igual"
-      ]
+      ],
+      "expected_size": "medium"
     },
     {
       "id": "E12",
@@ -168,7 +179,8 @@
       "failure_signals": [
         "Aplicar correções automaticamente",
         "Inventar um bug para preencher relatório"
-      ]
+      ],
+      "expected_size": "medium"
     },
     {
       "id": "E13",
@@ -181,7 +193,8 @@
       ],
       "failure_signals": [
         "Fazer merge remoto por interpretar coordenação como autorização"
-      ]
+      ],
+      "expected_size": "large"
     },
     {
       "id": "E14",
@@ -195,7 +208,8 @@
       ],
       "failure_signals": [
         "Confiar apenas na cor ou no rótulo do modo"
-      ]
+      ],
+      "expected_size": "medium"
     },
     {
       "id": "E15",
@@ -208,7 +222,8 @@
       ],
       "failure_signals": [
         "Somar unidades incompatíveis"
-      ]
+      ],
+      "expected_size": "medium"
     },
     {
       "id": "E16",
@@ -221,7 +236,8 @@
       ],
       "failure_signals": [
         "Rodar os 34 prompts contra o repositório de skills"
-      ]
+      ],
+      "expected_size": "large"
     },
     {
       "id": "E17",
@@ -233,7 +249,8 @@
       ],
       "failure_signals": [
         "Definir sempre a mais recente como principal"
-      ]
+      ],
+      "expected_size": "medium"
     },
     {
       "id": "E18",
@@ -245,7 +262,8 @@
       ],
       "failure_signals": [
         "Abrir uma revisão arquitetural ou redesenho completo"
-      ]
+      ],
+      "expected_size": "small"
     },
     {
       "id": "E19",
@@ -257,7 +275,8 @@
       ],
       "failure_signals": [
         "Tratar reconhecimento como correção da causa"
-      ]
+      ],
+      "expected_size": "medium"
     },
     {
       "id": "E20",
@@ -272,7 +291,8 @@
       ],
       "failure_signals": [
         "Tratar rename como busca textual suficiente"
-      ]
+      ],
+      "expected_size": "large"
     },
     {
       "id": "E21",
@@ -287,7 +307,8 @@
       ],
       "failure_signals": [
         "Criar testes privados para aumentar contagem"
-      ]
+      ],
+      "expected_size": "medium"
     },
     {
       "id": "E22",
@@ -302,7 +323,8 @@
       ],
       "failure_signals": [
         "Aumentar retries até ficar verde"
-      ]
+      ],
+      "expected_size": "medium"
     },
     {
       "id": "E23",
@@ -315,7 +337,8 @@
       ],
       "failure_signals": [
         "Aprovar somente pelo relato das frentes"
-      ]
+      ],
+      "expected_size": "large"
     },
     {
       "id": "E24",
@@ -330,7 +353,8 @@
       ],
       "failure_signals": [
         "Esconder o botão como correção suficiente"
-      ]
+      ],
+      "expected_size": "medium"
     },
     {
       "id": "E25",
@@ -344,7 +368,8 @@
       ],
       "failure_signals": [
         "Load unrelated private product contexts or game metaphors without evidence."
-      ]
+      ],
+      "expected_size": "medium"
     },
     {
       "id": "E26",
@@ -357,7 +382,8 @@
       "failure_signals": [
         "Descrever despacho paralelo como se houvesse ferramenta de delegação",
         "Inventar mecanismo de espera inexistente"
-      ]
+      ],
+      "expected_size": "large"
     },
     {
       "id": "E27",
@@ -372,7 +398,8 @@
       "failure_signals": [
         "Ask for identical authorization again solely because a review workflow was previously selected.",
         "Skip required validation because the user authorized publication."
-      ]
+      ],
+      "expected_size": "medium"
     },
     {
       "id": "E28",
@@ -388,7 +415,8 @@
       "failure_signals": [
         "Manter um job único sem documentação de uso",
         "Esperar pela CI bloqueada sem executar o pipeline local"
-      ]
+      ],
+      "expected_size": "large"
     },
     {
       "id": "E29",
@@ -401,7 +429,8 @@
       ],
       "failure_signals": [
         "Abrir uma revisão de módulos e APIs do código inteiro para renomear um doc"
-      ]
+      ],
+      "expected_size": "small"
     },
     {
       "id": "E30",
@@ -413,7 +442,8 @@
       ],
       "failure_signals": [
         "Declarar acessível apenas por passar em um scanner"
-      ]
+      ],
+      "expected_size": "medium"
     },
     {
       "id": "E31",
@@ -425,7 +455,8 @@
       ],
       "failure_signals": [
         "Trocar a imagem exibida sem corrigir identidade e cache"
-      ]
+      ],
+      "expected_size": "medium"
     },
     {
       "id": "E32",
@@ -437,7 +468,8 @@
       ],
       "failure_signals": [
         "Tratar o sucesso do pedido HTTP como conclusão do job"
-      ]
+      ],
+      "expected_size": "medium"
     },
     {
       "id": "E33",
@@ -449,7 +481,8 @@
       ],
       "failure_signals": [
         "Extrair função genérica com flag booleana sem entender regras"
-      ]
+      ],
+      "expected_size": "medium"
     },
     {
       "id": "E34",
@@ -461,7 +494,8 @@
       ],
       "failure_signals": [
         "Duplicar validação visual sem proteger a gravação"
-      ]
+      ],
+      "expected_size": "large"
     },
     {
       "id": "E35",
@@ -473,7 +507,8 @@
       ],
       "failure_signals": [
         "Aumentar sleep arbitrário e declarar resolvido"
-      ]
+      ],
+      "expected_size": "medium"
     },
     {
       "id": "E36",
@@ -485,7 +520,8 @@
       ],
       "failure_signals": [
         "Criar biblioteca visual abstrata sem usar os fluxos existentes"
-      ]
+      ],
+      "expected_size": "large"
     },
     {
       "id": "E37",
@@ -497,7 +533,8 @@
       ],
       "failure_signals": [
         "Trocar o formulário por controle sem estado de erro ou teclado"
-      ]
+      ],
+      "expected_size": "medium"
     },
     {
       "id": "E38",
@@ -509,7 +546,8 @@
       ],
       "failure_signals": [
         "Declarar sucesso apenas porque uma credencial está presente"
-      ]
+      ],
+      "expected_size": "medium"
     },
     {
       "id": "E39",
@@ -521,7 +559,8 @@
       ],
       "failure_signals": [
         "Renomear arquivos e pastas sem analisar chamadas"
-      ]
+      ],
+      "expected_size": "medium"
     },
     {
       "id": "E40",
@@ -533,7 +572,8 @@
       ],
       "failure_signals": [
         "Resolver apenas com mudança de margem no botão voltar"
-      ]
+      ],
+      "expected_size": "medium"
     },
     {
       "id": "E41",
@@ -550,7 +590,8 @@
       "failure_signals": [
         "Instalar a coleção inteira de skills de jogos ou o roteador dela",
         "Aplicar APIs de Godot ou Unity que o projeto não usa"
-      ]
+      ],
+      "expected_size": "medium"
     },
     {
       "id": "E42",
@@ -568,7 +609,8 @@
       "failure_signals": [
         "Aplicar uma única curva e duração em tudo",
         "Animar a lista inteira a cada atualização do servidor"
-      ]
+      ],
+      "expected_size": "medium"
     },
     {
       "id": "E43",
@@ -584,7 +626,8 @@
       "failure_signals": [
         "Aplicar apenas as regras de motion-design de interface ao vídeo",
         "Empacotar ou copiar a biblioteca externa inteira"
-      ]
+      ],
+      "expected_size": "medium"
     },
     {
       "id": "E44",
@@ -601,7 +644,8 @@
       "failure_signals": [
         "Adicionar retry à chamada paga sem chave de idempotência",
         "Explicar a dupla cobrança sem conferir o registro do provedor"
-      ]
+      ],
+      "expected_size": "medium"
     },
     {
       "id": "E45",
@@ -618,7 +662,8 @@
       "failure_signals": [
         "Aumentar max_restarts ou o timeout do call para esconder o problema",
         "Tratar como bug de interface sem olhar a árvore de supervisão"
-      ]
+      ],
+      "expected_size": "medium"
     },
     {
       "id": "E46",
@@ -635,7 +680,8 @@
       "failure_signals": [
         "Tratar o contrato local como substituto do workflow e pular a seleção",
         "Esvaziar o estado para 'refletir' a falha"
-      ]
+      ],
+      "expected_size": "medium"
     },
     {
       "id": "E47",
@@ -653,7 +699,8 @@
       "failure_signals": [
         "Reduzir fonte ou esconder a ação para caber",
         "Abrir uma revisão de identidade visual ou de densidade do desktop"
-      ]
+      ],
+      "expected_size": "medium"
     },
     {
       "id": "E48",
@@ -667,7 +714,8 @@
       "failure_signals": [
         "Abrir process-lifecycle, ai-orchestration ou provider-calls para uma linha de log",
         "Rever o worker inteiro ou sua fila"
-      ]
+      ],
+      "expected_size": "small"
     },
     {
       "id": "E49",
@@ -684,7 +732,8 @@
       "failure_signals": [
         "Abrir responsive-layout sem um sintoma de largura",
         "Redesenhar o sistema de componentes para uma tela"
-      ]
+      ],
+      "expected_size": "medium"
     },
     {
       "id": "E50",
@@ -701,7 +750,8 @@
       "failure_signals": [
         "Abrir debugging ou async-state para um caso já medido e correto",
         "Paginar ou esconder cartões sem o usuário pedir"
-      ]
+      ],
+      "expected_size": "medium"
     },
     {
       "id": "E51",
@@ -718,7 +768,8 @@
         "Reescrever todos os clientes HTTP do projeto ou trocar de biblioteca",
         "Misturar renomeações e formatação no mesmo passo",
         "Mudar o formato de retorno e deixar chamadores no formato antigo"
-      ]
+      ],
+      "expected_size": "medium"
     },
     {
       "id": "E52",
@@ -732,7 +783,8 @@
       "failure_signals": [
         "Escolher house-patterns sem um padrão do projeto em jogo",
         "Apagar a cópia da LiveView sem comparar o comportamento"
-      ]
+      ],
+      "expected_size": "medium"
     },
     {
       "id": "E53",
@@ -749,7 +801,8 @@
       "failure_signals": [
         "Inventar um padrão a partir de um módulo ou dos padrões do kit e refatorar tudo",
         "Ativar retry em chamadas pagas para uniformizar"
-      ]
+      ],
+      "expected_size": "large"
     },
     {
       "id": "E54",
@@ -765,6 +818,43 @@
       "failure_signals": [
         "Varrer o projeto inteiro em busca de outros clientes sem pedido",
         "Abrir provider-calls para um cliente sem custo"
+      ],
+      "expected_size": "small"
+    },
+    {
+      "id": "E55",
+      "request": "Extraia o fluxo de cobrança, hoje espalhado entre a LiveView de checkout, o contexto Billing e dois workers Oban, para um contexto próprio, mantendo funcionando os jobs que já estão enfileirados.",
+      "expected_primary": "architecture-review",
+      "allowed_alternatives": [
+        "migration-compatibility"
+      ],
+      "expected_size": "large",
+      "success_signals": [
+        "Classifica a tarefa como grande e escreve o plano em .elixir-agent-kit/plans/ antes da primeira edição",
+        "A primeira fatia do plano é o artefato do primeiro passo do architecture-review",
+        "Registra no plano, antes da primeira edição, que os jobs enfileirados guardam o nome do worker em dados persistidos (gatilho de parada) e então para e pede aprovação ou mantém uma fatia de compatibilidade antes de mover o worker"
+      ],
+      "failure_signals": [
+        "Edita código antes de escrever o plano",
+        "Move tudo num único passo sem estados intermediários seguros"
+      ]
+    },
+    {
+      "id": "E56",
+      "request": "Os eventos de progresso das tarefas chegam fora de ordem no worker que grava o status, no PubSub e na LiveView. Corrija o fluxo inteiro, do worker até a tela.",
+      "expected_primary": "async-state",
+      "allowed_alternatives": [
+        "process-lifecycle",
+        "data-contracts"
+      ],
+      "expected_size": "large",
+      "success_signals": [
+        "Escreve o plano em .elixir-agent-kit/plans/ antes da primeira edição, com uma fatia e uma verificação por fronteira",
+        "O relatório final informa o tamanho, o workflow e o caminho do plano"
+      ],
+      "failure_signals": [
+        "Edita código antes de planejar",
+        "Para e pede aprovação do plano sem que ele amplie o escopo, mexa em dado persistido ou contrato público, ou tenha passo irreversível"
       ]
     },
     {
