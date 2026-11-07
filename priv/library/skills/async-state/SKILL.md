@@ -1,6 +1,6 @@
 ---
 name: async-state
-description: "Use when progress stalls, success appears too early or stale asynchronous results overwrite current state."
+description: "Use when progress stalls, success appears too early, stale asynchronous results overwrite current state, or a failed refresh erases the last good state."
 ---
 
 # Async State

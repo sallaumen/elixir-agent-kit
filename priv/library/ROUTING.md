@@ -9,13 +9,16 @@ workflow beyond the shared contract and project gates.
 
 | Start here when the problem is… | Area | Typical distinctions |
 |---|---|---|
-| A screen's meaning, interaction, layout, navigation, accessibility, motion or assets | [Frontend and user experience](CATALOG.md#frontend-and-user-experience) | Identity versus density; layout at a width versus history and overlays (navigation-ux, on every device); design system versus one screen; motion versus state feedback |
+| A screen's meaning, interaction, layout, navigation, accessibility, motion or assets | [Frontend and user experience](CATALOG.md#frontend-and-user-experience) | Identity versus density; density within one width (layout-density) versus behavior across widths, overflow and touch targets (responsive-layout); layout at a width versus history and overlays (navigation-ux, on every device); design system versus one screen; motion versus state feedback |
 | Persisted data, a schema or payload that must survive a version change, authorization and tenant scope, or a paid or rate-limited provider call | [Backend and data](CATALOG.md#backend-and-data) | Data contracts versus migration compatibility; a boundary that leaks data versus a call that charges twice |
-| Code that is hard to understand, review, test, debug, measure, or that holds state in processes | [Code structure and quality](CATALOG.md#code-structure-and-quality) | Review versus debugging; architecture versus one module versus one function; test gaps and duplicates (one workflow); performance versus asynchronous correctness versus process ownership |
-| A product pattern with its own lifecycle: alerts, notifications, integration readiness, metrics and costs, simulations, offer eligibility, revisions and assets, model capacity | [Operational domains](CATALOG.md#operational-domains) | Alerts versus notifications; readiness versus eligibility; capacity across workers versus one provider call; a product revision versus the running build |
+| Code that is hard to understand, review, test, debug, measure, or that holds state in processes | [Code structure and quality](CATALOG.md#code-structure-and-quality) | A diff before merge is code-review (review mode); an integrated revision against acceptance criteria is delivery-validation; architecture versus one module versus one function; test gaps and duplicates (one workflow); performance (measured, correct result) versus asynchronous correctness versus process ownership; debugging only when no area workflow names the symptom |
+| A product pattern with its own lifecycle: alerts, notifications, integration readiness, metrics and costs, simulations, offer eligibility, revisions and assets, model capacity | [Operational domains](CATALOG.md#operational-domains) | Transport that fails or repeats (notifications) versus an incident's lifecycle (operational-alerts); readiness versus eligibility; capacity across workers versus one provider call; a late result attached to the wrong revision (revision-lineage) versus a stale result overwriting current state (async-state); a product revision versus the running build |
 | Packaging, sequencing, CI or acceptance of combined work | [Delivery and build](CATALOG.md#delivery-and-build) | Build failure versus pipeline design; coordination versus independent delivery validation |
 
-Read one workflow and its [shared contract](CONTRACT.md). Add a neighboring
+Debugging is the fallback, not the first stop: when an area workflow names the
+symptom (a stale asynchronous result, a process that differs after restart, a build
+that differs by environment, a measured slow path), that workflow applies and its
+steps include the reproduction. Read one workflow and its [shared contract](CONTRACT.md). Add a neighboring
 workflow only when the task has a distinct risk that the first does not cover;
 state that reason. Read [Elixir context](ELIXIR.md) only for technologies actually
 used. The default mode in the catalog yields to the user's explicit scope.
@@ -45,7 +48,7 @@ library and the same principles for frame-accurate work. Read `SKILL.md` and
 `LIBRARY.md`, add the skill per project rather than the whole repository, vendor the
 helper into the composition, and record the revision. Its text is not bundled here;
 `motion-design` is the interface adaptation, and the repository's `docs/provenance.md`
-records the source revision. A page whose motion is plain CSS does not need
+(outside the installed library) records the source revision. A page whose motion is plain CSS does not need
 the external skill.
 
 A workflow does not grant permission to send messages, spend money, publish,

@@ -1,7 +1,8 @@
 # Workflow catalog
 
 Choose the area first, then the narrowest trigger. Operational domains are product
-patterns (alerts, notifications, eligibility, simulations, revisions, model capacity); a
+patterns (model capacity, notifications, alerts, integration readiness, metrics and costs,
+simulations, offer eligibility, revisions and assets); a
 project without them can omit those IDs from its `skills:` selection. [ROUTING.md](ROUTING.md) explains
 neighboring skills and when no workflow is needed. Read the [shared contract](CONTRACT.md)
 with the selected workflow. The installed project index points here after `mix deps.get`.
@@ -42,7 +43,7 @@ copy of a workflow body.
 | [code-review](skills/code-review/SKILL.md) | review | Use when reviewing a bounded diff or pull request for actionable defects and regressions. |
 | [debugging](skills/debugging/SKILL.md) | analyze-and-fix | Use when a wrong result, exception or intermittent failure has no demonstrated root cause. |
 | [performance](skills/performance/SKILL.md) | analyze-and-fix | Use when measured latency, freezes, excessive work or rendering cost affects a real workflow. |
-| [async-state](skills/async-state/SKILL.md) | analyze-and-fix | Use when progress stalls, success appears too early or stale asynchronous results overwrite current state. |
+| [async-state](skills/async-state/SKILL.md) | analyze-and-fix | Use when progress stalls, success appears too early, stale asynchronous results overwrite current state, or a failed refresh erases the last good state. |
 | [process-lifecycle](skills/process-lifecycle/SKILL.md) | analyze-and-fix | Use when a GenServer, Task, poller or supervised process holds state, leaks, blocks callers, duplicates work or behaves differently after a restart. |
 
 ## Operational domains
