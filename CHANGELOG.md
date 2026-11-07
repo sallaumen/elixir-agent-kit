@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Tests cover the CLI option rules (`ElixirAgentKit.CLI.options!/3`), the outdated
+  query timeout and an unreachable repository, a pre-existing `CLAUDE.md` and state
+  recorded by another kit version; the install smoke exercises selection flags and a
+  dry-run uninstall.
+
 ## 0.6.0 — 2026-11-06
 
 - The routing guide separates the pairs live sessions confused: density within one

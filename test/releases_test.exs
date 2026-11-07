@@ -1,5 +1,6 @@
 defmodule ElixirAgentKit.ReleasesTest do
-  use ExUnit.Case, async: true
+  # PATH is process-global, so the stubbed git must not run beside other tests.
+  use ExUnit.Case, async: false
   alias ElixirAgentKit.Releases
 
   test "stable releases use semantic order and ignore malformed, prerelease and build tags" do
@@ -36,5 +37,48 @@ defmodule ElixirAgentKit.ReleasesTest do
     assert {:ok, version} = Releases.latest(root)
     assert to_string(version) == "0.2.0"
     assert {:error, :unavailable} = Releases.latest(Path.join(root, "missing"))
+  end
+
+  test "a stalled git query times out instead of hanging" do
+    stub = Path.join(System.tmp_dir!(), "eak-stub-git-#{System.unique_integer([:positive])}")
+    File.mkdir_p!(stub)
+    File.write!(Path.join(stub, "git"), "#!/bin/sh\nsleep 5\n")
+    File.chmod!(Path.join(stub, "git"), 0o755)
+    path = System.get_env("PATH")
+
+    on_exit(fn ->
+      System.put_env("PATH", path)
+      File.rm_rf!(stub)
+    end)
+
+    System.put_env("PATH", stub <> ":" <> path)
+    assert {:error, :timeout} = Releases.latest("ignored", 300)
+  end
+
+  test "outdated fails when the repository is unreachable and refuses stray arguments" do
+    assert_raise Mix.Error, ~r/^Expected only --check$/, fn ->
+      Mix.Tasks.AgentKit.Outdated.run(["extra"])
+    end
+
+    # A git that fails at once stands in for an unreachable repository, so the
+    # task is exercised without the network and without touching any real config.
+    stub = Path.join(System.tmp_dir!(), "eak-stub-git-#{System.unique_integer([:positive])}")
+    File.mkdir_p!(stub)
+    File.write!(Path.join(stub, "git"), "#!/bin/sh\necho 'fatal: stub' >&2\nexit 128\n")
+    File.chmod!(Path.join(stub, "git"), 0o755)
+    path = System.get_env("PATH")
+
+    on_exit(fn ->
+      System.put_env("PATH", path)
+      File.rm_rf!(stub)
+    end)
+
+    System.put_env("PATH", stub <> ":" <> path)
+
+    for args <- [[], ["--check"]] do
+      assert_raise Mix.Error, ~r/Cannot determine latest release \(unavailable\)/, fn ->
+        Mix.Tasks.AgentKit.Outdated.run(args)
+      end
+    end
   end
 end
