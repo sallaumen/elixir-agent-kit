@@ -1,6 +1,6 @@
 # Routing evaluation cases
 
-These 50 cases keep the original requests (all in Portuguese) and their evaluator
+These 54 cases keep the original requests (all in Portuguese) and their evaluator
 criteria, in either language, with public workflow IDs. `EVOLUTION` routes to the maintenance guide;
 `NONE` means a bounded task does not need a broader workflow. Cases stay outside
 the installed library so expected answers are not injected into agent instructions.
@@ -41,3 +41,10 @@ a worker), so over-routing on bounded backend edits is measurable. E05 now expec
 left `layout-density` in 0.6; E07 expects `debugging` with `performance` and
 `process-lifecycle` as alternatives, because nothing is measured yet and the
 freeze follows a deploy.
+
+E51 to E54 cover `house-patterns`: a contract rule that two clients break (E51,
+primary), two copies of one job that belong to `code-consolidation` (E52), a request
+to standardize where no pattern was chosen yet, which is `architecture-review` with
+`house-patterns` acceptable only if it stops for a recorded decision (E53), and a single fully specified
+client edit that needs no workflow (E54, `NONE` with `house-patterns` as the
+alternative) so over-routing on a one-site conformance edit is measurable.

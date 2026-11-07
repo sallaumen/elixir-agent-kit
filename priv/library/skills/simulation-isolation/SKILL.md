@@ -18,8 +18,8 @@ This workflow owns the boundary between a simulated flow and real operations: wh
 - Start at: how the mode is selected (`grep -rn "simulat\|sandbox\|demo\|training" lib/ config/`) and the one effect (a provider call, a send, a payment, a publish) the user fears the simulation could trigger.
 - Every effect boundary the simulated flow can reach: provider clients, mailers and bots, payment and marketplace calls, file storage, external webhooks; and whether each reads the mode or trusts the caller.
 - Storage scope: which tables hold simulated rows, the column or scope that marks them (world, account, environment, run id), and the queries, caches and PubSub topics that filter by it or do not.
-- Jobs: which workers both flows enqueue, whether the job args carry the mode, and what happens to a queued simulated job after a restart or a mode switch. See [Oban](../../ELIXIR.md#oban).
-- Reset, replay and cleanup operations and the exact filter each deletes by. See [Ecto and migrations](../../ELIXIR.md#ecto-and-migrations) and [Security](../../ELIXIR.md#security).
+- Jobs: which workers both flows enqueue, whether the job args carry the mode, and what happens to a queued simulated job after a restart or a mode switch. See [Oban](../../elixir/oban.md).
+- Reset, replay and cleanup operations and the exact filter each deletes by. See [Ecto and migrations](../../elixir/ecto.md) and [Security](../../elixir/security.md).
 
 ## Workflow
 

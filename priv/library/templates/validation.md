@@ -1,7 +1,8 @@
 # Result and validation
 
 - Requested result, revision and scope:
-- Checks actually run, environment and relevant viewport:
+- Checks actually run, the commit each ran on (a check on an older commit is not
+  evidence for the head), environment and relevant viewport:
 
 | Scenario | Expected | Observed | Evidence | Status/limits |
 |---|---|---|---|---|

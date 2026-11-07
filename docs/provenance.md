@@ -1,6 +1,6 @@
 # Workflow provenance
 
-This English community edition adapts 33 workflows developed by Lucas Tavano with coding-agent assistance, adds one workflow adapted from an external MIT skill and one distilled from a consuming application's rules, for 34 public workflows after the 0.5 merges and the addition of `process-lifecycle` (`revision-lineage` from two lineage workflows, `test-strategy` absorbing `testes-redundantes`). The source collection was `biblioteca-prompts-desenvolvimento v1.0.0`, later refined in an application repository. The public edition preserves task boundaries and authorization modes while rewriting instructions for a standalone package. Product-specific contexts, application source, credentials and operational records are not included.
+This English community edition adapts 33 workflows developed by Lucas Tavano with coding-agent assistance, adds one workflow adapted from an external MIT skill and one distilled from a consuming application's rules, for 34 public workflows after the 0.5 merges and the addition of `process-lifecycle` (`revision-lineage` from two lineage workflows, `test-strategy` absorbing `testes-redundantes`), and 35 since `house-patterns` in 0.7. The source collection was `biblioteca-prompts-desenvolvimento v1.0.0`, later refined in an application repository. The public edition preserves task boundaries and authorization modes while rewriting instructions for a standalone package. Product-specific contexts, application source, credentials and operational records are not included.
 
 | Public ID | Original ID |
 |---|---|
@@ -117,3 +117,20 @@ and build. "Operational domains" names the product patterns that came from the
 original collection (alerts, notifications, readiness, metrics, simulations,
 eligibility, revisions, model capacity) so a project without those domains can
 omit them from its selection instead of reading them as general engineering rules.
+
+## House patterns and the Elixir references in 0.7
+
+`house-patterns` is the kit's own addition: a workflow for bringing existing code to
+patterns a project has already established, one verifiable step at a time, without
+changing what callers observe. The Elixir context grew from the same source as
+`provider-calls`: an inventory of the practices agent-board follows in its code,
+tests and maintainer contract (clients as values with typed failure reasons,
+per-item isolation in sync jobs, claim-before-effect writes, data loading in
+`handle_params/3`, keyed async jobs, configuration knobs restored after tests,
+`precommit` versus `gate`, and the libraries it relies on). Each rule was restated
+for any Elixir project and checked against the documentation or source of the
+library versions named; product rules, intervals, vendor limits and the
+application's own wording stayed in the application. `ELIXIR.md` became an index of
+per-technology references in `elixir/` so an agent reads only the ones its project
+uses.
+

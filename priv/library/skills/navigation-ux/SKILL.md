@@ -16,7 +16,7 @@ This workflow owns history, URLs, overlays that act as navigation, back behavior
 ## Inputs to inspect
 
 - Start at: the router (`router.ex`): the `live_session` groups, the routes of the journey and the LiveView and action each maps to; then that LiveView's `handle_params/3` for what it reads from the URL.
-- How each transition is made: `push_patch` (same process, URL changes), `push_navigate` (remount), `redirect` (leaves LiveView), plain links, and JS commands that show or hide overlays without touching the URL. See [Phoenix and LiveView](../../ELIXIR.md#phoenix-and-liveview).
+- How each transition is made: `push_patch` (same process, URL changes), `push_navigate` (remount), `redirect` (leaves LiveView), plain links, and JS commands that show or hide overlays without touching the URL. See [Phoenix and LiveView](../../elixir/phoenix-liveview.md).
 - Which state lives in the URL (path and query params), which in socket assigns, which in the session or database, and therefore what survives reload, back and a shared link.
 - The overlays in the journey (dialogs, drawers, sheets, inline panels) and whether each represents a place (a detail, a step) or a transient local choice.
 - The user's primary goal, the detours they legitimately take (compare two items, go back a step), the recovery path after an error, and the permissions of the account used to test.

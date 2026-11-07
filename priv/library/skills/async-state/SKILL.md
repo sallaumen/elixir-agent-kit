@@ -20,7 +20,7 @@ The question this workflow answers is: who owns each state transition, how is a 
 - Identity: which stable identifier (entity id plus revision, job id, request id) travels through every step, and where a step uses something weaker (position, "latest", the socket).
 - Durable state versus transient state: what is in the database, what lives in a process, what lives in socket assigns, and which one the interface reads after reload.
 - Delivery semantics of each hop: PubSub broadcast, Oban retries, provider webhooks, HTTP responses. Assume at least-once and unordered unless the code proves otherwise.
-- The user-visible states and what each actor can observe during a disconnect. See [Phoenix and LiveView](../../ELIXIR.md#phoenix-and-liveview) and [Oban](../../ELIXIR.md#oban).
+- The user-visible states and what each actor can observe during a disconnect. See [Phoenix and LiveView](../../elixir/phoenix-liveview.md) and [Oban](../../elixir/oban.md).
 
 ## Workflow
 
@@ -42,6 +42,7 @@ The question this workflow answers is: who owns each state transition, how is a 
 - Push, do not poll: subscribe once in the connected mount, dedupe broadcasts by content or sequence, and let the server tell the view. Polling the database from the browser is a last resort and must be justified.
 - Match results by stable key (entity id plus revision or request id). "Most recent" is not a key.
 - Accepted is not done: an HTTP 200 for the enqueue, a job inserted, or a message sent are each one transition, not success.
+- One job of a kind at a time per owner: a second submit while the job runs is refused where the state lives (the LiveView, the context), not only by disabling the button; the running job is the receipt.
 - Idempotency per effect: a retried job must not charge, send or publish twice; uniqueness at enqueue time does not provide this.
 - On failure to read fresh state (network down, provider timeout), keep and label the last valid state; never invent a success or a zero.
 

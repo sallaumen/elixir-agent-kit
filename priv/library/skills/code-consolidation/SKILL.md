@@ -11,16 +11,16 @@ Default mode: **analyze-and-fix**. Read the [shared contract](../../CONTRACT.md)
 
 Use when two `send_invitation` implementations exist, one in a context and one inside a LiveView; when a feature flag has been on for a year and its off branch still compiles; when an Oban worker has no `Oban.insert` or `new/1` call anywhere; when a route is in the router but no link, redirect or test reaches it; when a `_v2` module lives next to the original and both have callers; or when an adapter kept for a past migration never got its removal step.
 
-The separating rule among the code workflows: a path that nothing reaches, or two paths doing the same job, is this workflow; one function mixing a decision with effects is [abstraction-layers](../abstraction-layers/SKILL.md); a module with the right content and the wrong name or location is [module-design](../module-design/SKILL.md); ownership unclear across many modules is [architecture-review](../architecture-review/SKILL.md). Duplicated tests that protect nothing distinct are [test-strategy](../test-strategy/SKILL.md); a dead path left by a finished expand and contract sequence arrives here from [migration-compatibility](../migration-compatibility/SKILL.md).
+The separating rule among the code workflows: a path that nothing reaches, or two paths doing the same job, is this workflow; one function mixing a decision with effects is [abstraction-layers](../abstraction-layers/SKILL.md); a module with the right content and the wrong name or location is [module-design](../module-design/SKILL.md); ownership unclear across many modules is [architecture-review](../architecture-review/SKILL.md); code that works but drifts from a pattern the project already chose is [house-patterns](../house-patterns/SKILL.md). Duplicated tests that protect nothing distinct are [test-strategy](../test-strategy/SKILL.md); a dead path left by a finished expand and contract sequence arrives here from [migration-compatibility](../migration-compatibility/SKILL.md).
 
 ## Inputs to inspect
 
 - Start at: the candidate named in the request, then `grep -rn "CandidateModule\|candidate_function" lib/ test/ config/ priv/` and `mix xref graph --sink lib/<path>.ex --only-nodes` for static references.
-- Routes and entry points: `mix phx.routes` for the route, templates and `push_navigate` calls for links, `live_session` membership. See [Phoenix and LiveView](../../ELIXIR.md#phoenix-and-liveview).
-- Jobs and processes: `oban_jobs` rows by worker name, cron or scheduled entries in configuration, supervisor children and PubSub subscriptions. See [Oban](../../ELIXIR.md#oban) and [OTP processes and supervision](../../ELIXIR.md#otp-processes-and-supervision).
+- Routes and entry points: `mix phx.routes` for the route, templates and `push_navigate` calls for links, `live_session` membership. See [Phoenix and LiveView](../../elixir/phoenix-liveview.md).
+- Jobs and processes: `oban_jobs` rows by worker name, cron or scheduled entries in configuration, supervisor children and PubSub subscriptions. See [Oban](../../elixir/oban.md) and [OTP processes and supervision](../../elixir/otp.md).
 - Dynamic references: `apply/3`, configuration keys, feature flags, behaviour callbacks, protocol implementations, serialized module names.
 - The reason each variant exists: `git log` on the files, the issue or commit that introduced it, and the version, tenant, latency or user experience constraint it served.
-- Tests, logs or telemetry that show the path running, and the coverage of the variant that would survive. See [Telemetry and observability](../../ELIXIR.md#telemetry-and-observability).
+- Tests, logs or telemetry that show the path running, and the coverage of the variant that would survive. See [Telemetry and observability](../../elixir/telemetry.md).
 
 ## Workflow
 
@@ -30,7 +30,7 @@ The separating rule among the code workflows: a path that nothing reaches, or tw
 
 3. For each merge, compare the variants on inputs, outputs, side effects, error behavior, authorization, ordering and telemetry, and choose the canonical path. Done when the difference list is written and every meaningful difference is either kept visible at the call site or named as a deliberate loss.
 
-4. Execute one bounded cleanup: redirect callers to the canonical path, delete the dead path with its tests, docs, routes and configuration, and keep historical records and data. Done when `mix compile --warnings-as-errors` passes and `mix xref` shows no reference to the removed path. See [Build, dependencies and releases](../../ELIXIR.md#build-dependencies-and-releases).
+4. Execute one bounded cleanup: redirect callers to the canonical path, delete the dead path with its tests, docs, routes and configuration, and keep historical records and data. Done when `mix compile --warnings-as-errors` passes and `mix xref` shows no reference to the removed path. See [Build, dependencies and releases](../../elixir/build-releases.md).
 
 5. Validate the surviving path for a normal and a failure case per former caller, including authorization and the telemetry or job it emits. Done when the tests pass and the deliberate variants retained are listed.
 

@@ -19,7 +19,7 @@ The user-visible side of asynchronous work (what the interface shows after recon
 - For each suspect process: what state it holds, who else holds a copy, what writes it to durable storage, and what rebuilds it after restart.
 - Its message sources (timers, PubSub, monitors, callers) and the work it does per message; blocking calls inside callbacks; `call` timeouts on both sides.
 - Mailbox and memory under load (`Process.info/2` with `:message_queue_len`, `:memory`), and the dedupe or sequencing applied before it broadcasts.
-- Tests that start the process and what they assert. See [OTP processes and supervision](../../ELIXIR.md#otp-processes-and-supervision).
+- Tests that start the process and what they assert. See [OTP processes and supervision](../../elixir/otp.md).
 
 ## Workflow
 
@@ -42,6 +42,7 @@ The user-visible side of asynchronous work (what the interface shows after recon
 - `call` for a reply the caller needs now, with an explicit timeout the caller handles; `cast` or a message when it does not, with backpressure defined.
 - Restart rebuilds from durable truth; a process that cannot be rebuilt is a bug waiting for a deploy.
 - Timers and monitors are matched by reference; a stale `:tick` or `:DOWN` is dropped, not acted on.
+- A periodic process reschedules inside its tick handler and survives a known flaky source (rescue that failure and keep the schedule); otherwise one bad read per tick spends the supervisor's restart budget and takes siblings down with it. Its interval is configuration, stretched in the test environment.
 
 ## Quality criteria
 
@@ -68,6 +69,6 @@ The user-visible side of asynchronous work (what the interface shows after recon
 
 ## Completion
 
-A supervision tree where every process has a reason, an owner, a rebuild path and bounded input, with tests for restart, duplicates and a burst. For the interface's view of the result use [async-state](../async-state/SKILL.md); for a measured slowness use [performance](../performance/SKILL.md); for a persisted job rather than a process use the Oban notes in the [Elixir context](../../ELIXIR.md#oban).
+A supervision tree where every process has a reason, an owner, a rebuild path and bounded input, with tests for restart, duplicates and a burst. For the interface's view of the result use [async-state](../async-state/SKILL.md); for a measured slowness use [performance](../performance/SKILL.md); for a persisted job rather than a process use the Oban notes in the [Elixir context](../../elixir/oban.md).
 
 Use the [Elixir context](../../ELIXIR.md) only for technology present in the project. Record a useful [handoff](../../HANDOFF.md) when another person or agent will continue the work.

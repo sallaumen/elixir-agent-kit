@@ -15,7 +15,7 @@ This workflow treats a build or dependency that fails or differs across environm
 
 ## Inputs to inspect
 
-- Start at: the exact failing command and its full output, then `elixir --version`, `.tool-versions` (or the equivalent) and `MIX_ENV` in both the failing and the passing environment. See [Build, dependencies and releases](../../ELIXIR.md#build-dependencies-and-releases).
+- Start at: the exact failing command and its full output, then `elixir --version`, `.tool-versions` (or the equivalent) and `MIX_ENV` in both the failing and the passing environment. See [Build, dependencies and releases](../../elixir/build-releases.md).
 - `mix.lock` and `mix.exs` on both sides: `git diff` on the lockfile between the two revisions, and `mix deps.unlock --check-unused`.
 - The `_build/<env>` and `deps/` state: age, which revision built it, and whether the failing side used a cache.
 - Native build prerequisites: compilers, headers, system libraries, and the environment variables the dependency's build reads.

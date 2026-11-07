@@ -16,10 +16,10 @@ This workflow asks which actor may reach which resource through which boundary. 
 ## Inputs to inspect
 
 - Start at: the route or event named in the report; run `mix phx.routes | grep <path>` to find its pipeline and `live_session`, then open the mount, event handler or controller action it reaches.
-- The scope mechanism: `current_scope` or the equivalent assign, the `on_mount` hooks and plugs that set it, and which pipelines skip them. See [Phoenix and LiveView](../../ELIXIR.md#phoenix-and-liveview) and [Security](../../ELIXIR.md#security).
+- The scope mechanism: `current_scope` or the equivalent assign, the `on_mount` hooks and plugs that set it, and which pipelines skip them. See [Phoenix and LiveView](../../elixir/phoenix-liveview.md) and [Security](../../elixir/security.md).
 - The context functions for the resource and whether every read and write takes the scope as an argument and filters the query by it.
 - Input handling: params turned into atoms, uploads and their accepted types and destinations, file paths, query fragments, redirect targets, tokens and webhook signatures.
-- Background and side paths: Oban job arguments carrying an id without its scope, exports, PubSub topics and caches keyed by id alone. See [Oban](../../ELIXIR.md#oban).
+- Background and side paths: Oban job arguments carrying an id without its scope, exports, PubSub topics and caches keyed by id alone. See [Oban](../../elixir/oban.md).
 - Logs, error messages and telemetry metadata for credentials, tokens or raw user payloads.
 
 ## Workflow
@@ -54,7 +54,7 @@ This workflow asks which actor may reach which resource through which boundary. 
 
 ## Validation and evidence
 
-- Minimum: a test at the public boundary (`Phoenix.ConnTest` or `Phoenix.LiveViewTest`) with one allowed actor and one denied cross-scope or lower-role actor for the operation in scope. See [ExUnit and diagnostics](../../ELIXIR.md#exunit-and-diagnostics).
+- Minimum: a test at the public boundary (`Phoenix.ConnTest` or `Phoenix.LiveViewTest`) with one allowed actor and one denied cross-scope or lower-role actor for the operation in scope. See [ExUnit and diagnostics](../../elixir/exunit.md).
 - When turns allow: a malformed input case per input type found in step 2 (atom, path, upload, token) asserting rejection without a crash.
 - When background work carries the id: an `Oban.Testing` run of the job with a foreign-scope id asserting no effect.
 - When a credential exposure was found: the log or response line, with the value redacted, and the test that proves it is gone.

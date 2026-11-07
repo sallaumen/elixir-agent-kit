@@ -11,13 +11,13 @@ Default mode: **analyze-and-fix**. Read the [shared contract](../../CONTRACT.md)
 
 Use when one context function builds an Ecto query, calls an HTTP client, decides a business rule and broadcasts in a single body; when a LiveView `handle_event/3` contains pricing or eligibility arithmetic next to socket assigns; when a "helper" needs the socket, the repo and a provider client to compute one number; when a rule can only be tested by stubbing three collaborators; or when reading one operation means chasing five one-line wrappers across files.
 
-The separating rule among the code workflows: one function, or a small cluster around one entry point, mixing a business decision with transport, persistence or effects is this workflow; which context should own that function is [architecture-review](../architecture-review/SKILL.md); a module whose name or public API is wrong while its content is sound is [module-design](../module-design/SKILL.md); two implementations of the same operation is [code-consolidation](../code-consolidation/SKILL.md). Ownership is assumed settled here.
+The separating rule among the code workflows: one function, or a small cluster around one entry point, mixing a business decision with transport, persistence or effects is this workflow; which context should own that function is [architecture-review](../architecture-review/SKILL.md); a module whose name or public API is wrong while its content is sound is [module-design](../module-design/SKILL.md); two implementations of the same operation is [code-consolidation](../code-consolidation/SKILL.md); the same mix repeated across many modules that should follow a split the project already chose is [house-patterns](../house-patterns/SKILL.md). Ownership is assumed settled here.
 
 ## Inputs to inspect
 
 - Start at: the public function named in the request or called by the failing test, then its body and each immediate callee, with `grep -n "def " lib/<path>` to list what else the module exposes.
 - The callers of that function and what each expects back: the result shape, the error tuples, the broadcast or job it waits for.
-- The effect inventory of the body: `Repo` writes, `Ecto.Multi` steps, broadcasts, HTTP calls, Oban inserts, messages to processes, with their order and the transaction they run in. See [Ecto and migrations](../../ELIXIR.md#ecto-and-migrations) and [Oban](../../ELIXIR.md#oban).
+- The effect inventory of the body: `Repo` writes, `Ecto.Multi` steps, broadcasts, HTTP calls, Oban inserts, messages to processes, with their order and the transaction they run in. See [Ecto and migrations](../../elixir/ecto.md) and [Oban](../../elixir/oban.md).
 - The business decisions in the body and the inputs each one actually needs, as opposed to the structs it receives.
 - The tests that protect the observable behavior today, and which collaborators they stub to reach the rule.
 
@@ -55,7 +55,7 @@ The separating rule among the code workflows: one function, or a small cluster a
 
 - Minimum: a unit test of the extracted calculation that needs no stub, plus the existing test of the operation's success and failure paths passing unchanged with the effects asserted in order.
 - When turns allow: a before-and-after trace of one slice listing each effect and the transaction it runs in.
-- When the entry function is a LiveView event: a `Phoenix.LiveViewTest` run of the event asserting the rendered result and the broadcast or push. See [Phoenix and LiveView](../../ELIXIR.md#phoenix-and-liveview) and [ExUnit and diagnostics](../../ELIXIR.md#exunit-and-diagnostics).
+- When the entry function is a LiveView event: a `Phoenix.LiveViewTest` run of the event asserting the rendered result and the broadcast or push. See [Phoenix and LiveView](../../elixir/phoenix-liveview.md) and [ExUnit and diagnostics](../../elixir/exunit.md).
 - When a consumer was not migrated: its name and the mixing point it still contains.
 
 ## Avoid

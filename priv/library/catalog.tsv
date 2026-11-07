@@ -14,6 +14,7 @@ architecture-review	analyze-and-fix	Use when changes cross many modules, rules r
 abstraction-layers	analyze-and-fix	Use when functions mix business decisions, low-level details and effects at incompatible levels.	code
 module-design	analyze-and-fix	Use when module names, locations or public APIs obscure responsibilities that are already understood.	code
 code-consolidation	analyze-and-fix	Use when unfinished features, abandoned paths or competing implementations make a codebase ambiguous.	code
+house-patterns	analyze-and-fix	Use when existing code drifts from patterns the project has already established and must be refactored to them without changing behavior.	code
 test-strategy	analyze-and-fix	Use when a passing suite misses important bugs, the required regression coverage is unclear, or duplicated tests protect nothing distinct.	code
 code-review	review	Use when reviewing a bounded diff or pull request for actionable defects and regressions.	code
 debugging	analyze-and-fix	Use when a wrong result, exception or intermittent failure has no demonstrated root cause.	code

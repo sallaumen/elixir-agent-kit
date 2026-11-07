@@ -17,7 +17,7 @@ This workflow owns one control's affordance, feedback and persistence. The journ
 
 - Start at: the template and event handlers for the control (`phx-click`, `phx-change`, `phx-submit`, `phx-value-*`) and the context function the handler calls to persist the change; then the changeset that validates it.
 - The decision the user makes with this control: how many values, how often, how reversible, and what a wrong value costs (nothing, a notification, money, data).
-- The round trip today: what the user sees between the click and the server's answer, how a validation error reaches them, and whether the control is held while pending (`phx-disable-with`). See [Phoenix and LiveView](../../ELIXIR.md#phoenix-and-liveview).
+- The round trip today: what the user sees between the click and the server's answer, how a validation error reaches them, and whether the control is held while pending (`phx-disable-with`). See [Phoenix and LiveView](../../elixir/phoenix-liveview.md).
 - Keyboard, touch and screen-reader behavior of the current element: whether it is a native button, input, select or link, whether it has a name, and whether it can be reached and activated without a pointer.
 - Whether another user or session can change the same value, and what happens when both save.
 

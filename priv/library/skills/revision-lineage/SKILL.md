@@ -20,7 +20,7 @@ This workflow concerns product revisions and the artifacts derived from them. Wh
 - Every artifact derived from a revision: thumbnails, previews, exports, generated images, caches; where each records its parent revision, variant and orientation, and where it relies on a filename, a position or "latest".
 - The jobs that produce artifacts: inputs, duration, retries, and what happens when a result lands after the user moved on.
 - The surfaces that display or let a user browse revisions, and which actions on them write a pointer.
-- Storage keys and cache rules for artifacts, and access control on stored files. See [Oban](../../ELIXIR.md#oban) for late job results.
+- Storage keys and cache rules for artifacts, and access control on stored files. See [Oban](../../elixir/oban.md) for late job results.
 
 ## Workflow
 

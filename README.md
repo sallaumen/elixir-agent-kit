@@ -8,7 +8,7 @@
 **Shared coding practices for AI agents, versioned with your Elixir project.**
 
 Pin the kit like any Mix dependency. Every agent that touches the project, whether
-Codex, Claude Code or your own harness, reads the same 34 reviewed workflows from
+Codex, Claude Code or your own harness, reads the same 35 reviewed workflows from
 `deps/`: what to inspect, which decisions matter, what "done" looks like and how
 to prove it. No copied skill library to drift, no service, no model calls, nothing
 shipped to production.
@@ -134,12 +134,15 @@ its `skills:` selection.
 | [motion-design](priv/library/skills/motion-design/SKILL.md) |  | [performance](priv/library/skills/performance/SKILL.md) | [revision-lineage](priv/library/skills/revision-lineage/SKILL.md) |  |
 |  |  | [async-state](priv/library/skills/async-state/SKILL.md) |  |  |
 |  |  | [process-lifecycle](priv/library/skills/process-lifecycle/SKILL.md) |  |  |
+|  |  | [house-patterns](priv/library/skills/house-patterns/SKILL.md) |  |  |
 
 Three of them keep a different default mode: `code-review` reviews without
 editing, `delivery-validation` analyzes without repairing, `delivery-coordination`
 coordinates. The user's explicit scope always wins over a default. The
-[Elixir context](priv/library/ELIXIR.md) adds OTP, Phoenix, Ecto and Oban notes
-for the technologies a project actually uses.
+[Elixir context](priv/library/ELIXIR.md) indexes one short reference per technology
+(code shape, OTP, Phoenix and LiveView, Ecto, Oban, ExUnit, HTTP clients, security,
+telemetry, builds) and the recommended libraries; an agent reads only the ones the
+project's `mix.lock` calls for.
 
 ## What lands in your project
 

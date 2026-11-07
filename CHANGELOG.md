@@ -2,6 +2,33 @@
 
 ## Unreleased
 
+- New workflow `house-patterns` (code area): bring existing code to patterns the
+  project already established, with a pattern card, a deviation table, a public-seam
+  test pinned before each one-rule, one-site step, defects reported apart and the
+  gate green on the head commit. The routing guide separates it from
+  `code-consolidation` (two implementations of one job) and `architecture-review`
+  (no pattern chosen yet); `code-consolidation`, `module-design`,
+  `abstraction-layers` and `architecture-review` point to it.
+- `ELIXIR.md` is now an index of per-technology references in `elixir/`, so an agent
+  reads only what its `mix.lock` calls for. New guidance, generalized from the
+  practices of a consuming application and checked against the library sources:
+  module and function shape (pure decisions beside effects, `@spec` with closed
+  reasons, unknown as a value); periodic processes and short-TTL ETS caches;
+  LiveView data loading in `handle_params/3`, one keyed async job with a timeout,
+  resubscription, `phx-auto-recover="ignore"` and a catch-all `handle_event/3`;
+  claim-before-effect writes, idempotent creation keys and upserts that leave other
+  writers' fields alone; rate limits that snooze and per-item isolation in Oban
+  batches; configuration knobs restored after tests, fixtures for external state and
+  `$callers` reach; Req clients as values, status checks, failure style per caller,
+  named retry policies and revision-checked writes; `precommit` versus `gate`; and a
+  Recommended libraries table with what to leave out.
+- `provider-calls` adds the call registry, provider fallback only on refusals
+  unrelated to the request, the cheapest passing tier by default, a schema-checked
+  paid-answer cache and a fixture engine behind a behaviour. `test-strategy`,
+  `process-lifecycle`, `async-state` and `performance` gain the matching steps; the
+  validation template asks for the commit each check ran on.
+- Evaluation cases E51 to E54 cover `house-patterns`, its two neighbors and a
+  one-site edit that needs no workflow.
 - Tests cover the CLI option rules (`ElixirAgentKit.CLI.options!/3`), the outdated
   query timeout and an unreachable repository, a pre-existing `CLAUDE.md` and state
   recorded by another kit version; the install smoke exercises selection flags and a

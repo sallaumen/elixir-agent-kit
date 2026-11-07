@@ -11,14 +11,14 @@ Default mode: **analyze-and-fix**. Read the [shared contract](../../CONTRACT.md)
 
 Use when `Accounts.Helpers` holds the invoice arithmetic that belongs under `Billing`; when a `MyApp.Utils` module exports forty functions and three of them have callers; when a context is named after a page (`DashboardContext`) instead of the concept it owns; when a function is `def` instead of `defp` only so a test can call it; or when the LiveView is the only caller of a context function that lives in the wrong context, and everyone already agrees where it belongs.
 
-The separating rule among the code workflows: one module whose name, location or public API misleads while its responsibility is already understood is this workflow; when the responsibility itself is contested, or the change spans many modules with cycles, go to [architecture-review](../architecture-review/SKILL.md) first and come back with its ownership map; one function mixing a decision with effects is [abstraction-layers](../abstraction-layers/SKILL.md); two modules doing the same thing is [code-consolidation](../code-consolidation/SKILL.md). A rename that touches a persisted worker name, serialized module or external payload is [migration-compatibility](../migration-compatibility/SKILL.md) work before it is a rename.
+The separating rule among the code workflows: one module whose name, location or public API misleads while its responsibility is already understood is this workflow; when the responsibility itself is contested, or the change spans many modules with cycles, go to [architecture-review](../architecture-review/SKILL.md) first and come back with its ownership map; one function mixing a decision with effects is [abstraction-layers](../abstraction-layers/SKILL.md); two modules doing the same thing is [code-consolidation](../code-consolidation/SKILL.md); several modules that drift from a convention the project already chose is [house-patterns](../house-patterns/SKILL.md). A rename that touches a persisted worker name, serialized module or external payload is [migration-compatibility](../migration-compatibility/SKILL.md) work before it is a rename.
 
 ## Inputs to inspect
 
 - Start at: the module named in the request, then `mix xref graph --sink lib/<path>.ex --only-nodes` for its static callers and `grep -rn "ModuleName" lib/ test/ config/ priv/` for aliases, strings and configuration.
 - Its public functions with `grep -n "  def " lib/<path>.ex`, and for each one the number of callers outside the module and outside tests.
 - The project naming conventions: how contexts, schemas, workers and web modules are named and placed, and the vocabulary the domain uses.
-- Dynamic and persisted references: `apply/3`, `String.to_existing_atom/1`, behaviour callbacks, protocol implementations, supervisor children, `config :app, module: ...`, and `oban_jobs.worker` values. See [OTP processes and supervision](../../ELIXIR.md#otp-processes-and-supervision) and [Oban](../../ELIXIR.md#oban).
+- Dynamic and persisted references: `apply/3`, `String.to_existing_atom/1`, behaviour callbacks, protocol implementations, supervisor children, `config :app, module: ...`, and `oban_jobs.worker` values. See [OTP processes and supervision](../../elixir/otp.md) and [Oban](../../elixir/oban.md).
 - The ownership decision this rename rests on (a doc, an ADR or an [architecture-review](../architecture-review/SKILL.md) map) and the tests that exercise the module's public operations.
 
 ## Workflow
@@ -29,7 +29,7 @@ The separating rule among the code workflows: one module whose name, location or
 
 3. For every rename or move, search the persisted and dynamic kinds: `oban_jobs` worker names, serialized terms, configuration, children specs, `apply/3`, callback modules, protocol implementations. Done when each hit is either cleared or handed to [migration-compatibility](../migration-compatibility/SKILL.md) with the row noted.
 
-4. Make the smallest coherent move and update all consumers in one change, adding a delegating alias with `@deprecated` only when a persisted or external reference requires it. Done when `mix compile --warnings-as-errors` passes with no undefined or deprecated call from inside the project. See [Build, dependencies and releases](../../ELIXIR.md#build-dependencies-and-releases).
+4. Make the smallest coherent move and update all consumers in one change, adding a delegating alias with `@deprecated` only when a persisted or external reference requires it. Done when `mix compile --warnings-as-errors` passes with no undefined or deprecated call from inside the project. See [Build, dependencies and releases](../../elixir/build-releases.md).
 
 5. Exercise one public operation of the moved module through its new API, including one failure path, and update module docs and configuration names. Done when the existing tests pass against the new names with no private function made public.
 

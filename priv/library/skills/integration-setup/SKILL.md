@@ -17,9 +17,9 @@ This workflow owns readiness: the ordered prerequisites of an integration and th
 
 - Start at: the settings or connection module for the integration (`grep -rn "connected\|configured\|ready" lib/`) and the operation that failed or is in doubt.
 - Every boolean or status field that claims readiness, in the schema, the context module and the templates, and the condition behind each one.
-- The provider's documented prerequisites for the exact operation and account type: credential kind, scopes or permissions, webhook registration, verification steps, sandbox versus live; note the date read. See [HTTP clients and provider APIs](../../ELIXIR.md#http-clients-and-provider-apis).
+- The provider's documented prerequisites for the exact operation and account type: credential kind, scopes or permissions, webhook registration, verification steps, sandbox versus live; note the date read. See [HTTP clients and provider APIs](../../elixir/http-clients.md).
 - Where credentials live (environment, encrypted column, secrets manager) and how the code reads them, without printing their values.
-- The inbound path: webhook route, signature verification, and the record or log that proves a provider event has arrived. See [Phoenix and LiveView](../../ELIXIR.md#phoenix-and-liveview) and [Security](../../ELIXIR.md#security).
+- The inbound path: webhook route, signature verification, and the record or log that proves a provider event has arrived. See [Phoenix and LiveView](../../elixir/phoenix-liveview.md) and [Security](../../elixir/security.md).
 
 ## Workflow
 

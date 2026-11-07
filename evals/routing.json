@@ -702,6 +702,70 @@
         "Abrir debugging ou async-state para um caso já medido e correto",
         "Paginar ou esconder cartões sem o usuário pedir"
       ]
+    },
+    {
+      "id": "E51",
+      "request": "O contrato do projeto diz que todo cliente de rede é construído uma vez e recebido como argumento; os clientes de CEP e de clima ainda montam o Req dentro de cada função. Traga os dois para o padrão sem mudar o que os chamadores recebem.",
+      "expected_primary": "house-patterns",
+      "allowed_alternatives": [],
+      "success_signals": [
+        "Escrever o padrão a partir do contrato e a busca que acha candidatos antes de editar, confirmando cada desvio pela leitura",
+        "Fixar com teste o comportamento atual de cada cliente na fronteira pública antes de mudar",
+        "Converter um cliente por passo, sem renomear nem reformatar, com o teste fixado passando antes e depois",
+        "Tratar como defeito, com teste de regressão próprio, qualquer desvio cuja correção mude o que o usuário vê"
+      ],
+      "failure_signals": [
+        "Reescrever todos os clientes HTTP do projeto ou trocar de biblioteca",
+        "Misturar renomeações e formatação no mesmo passo",
+        "Mudar o formato de retorno e deixar chamadores no formato antigo"
+      ]
+    },
+    {
+      "id": "E52",
+      "request": "Há duas funções que enviam o convite: uma no contexto e outra copiada dentro da LiveView, e elas já divergiram. Fique com uma só.",
+      "expected_primary": "code-consolidation",
+      "allowed_alternatives": [],
+      "success_signals": [
+        "Tratar como duas implementações do mesmo trabalho e comparar efeitos, erros e autorização antes de escolher",
+        "Manter as diferenças significativas visíveis ou nomeá-las como perda deliberada"
+      ],
+      "failure_signals": [
+        "Escolher house-patterns sem um padrão do projeto em jogo",
+        "Apagar a cópia da LiveView sem comparar o comportamento"
+      ]
+    },
+    {
+      "id": "E53",
+      "request": "Cada cliente HTTP daqui faz de um jeito: uns levantam exceção, outros devolvem tupla, um usa retry. Quero padronizar todos.",
+      "expected_primary": "architecture-review",
+      "allowed_alternatives": [
+        "house-patterns"
+      ],
+      "success_signals": [
+        "Constatar que o projeto ainda não escolheu um padrão (sem contrato, decisão ou exemplares confirmados)",
+        "Registrar as opções e a escolha com o modelo de decisão e pedir a decisão do dono antes de mudar código",
+        "Deixar a refatoração dos clientes para depois da decisão, com house-patterns"
+      ],
+      "failure_signals": [
+        "Inventar um padrão a partir de um módulo ou dos padrões do kit e refatorar tudo",
+        "Ativar retry em chamadas pagas para uniformizar"
+      ]
+    },
+    {
+      "id": "E54",
+      "request": "Neste cliente, troque o Req.get! por Req.get e devolva {:error, :unreachable} em erro de transporte, como os outros clientes já fazem; o teste dele já existe.",
+      "expected_primary": "NONE",
+      "allowed_alternatives": [
+        "house-patterns"
+      ],
+      "success_signals": [
+        "Executar a edição delimitada e especificada e rodar o teste existente e o gate",
+        "Conferir que os chamadores tratam o novo retorno"
+      ],
+      "failure_signals": [
+        "Varrer o projeto inteiro em busca de outros clientes sem pedido",
+        "Abrir provider-calls para um cliente sem custo"
+      ]
     }
   ]
 }

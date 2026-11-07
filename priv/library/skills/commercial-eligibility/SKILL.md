@@ -17,9 +17,9 @@ This workflow owns the evidence that an exact variant and destination are suppor
 
 - Start at: the function that decides whether an offer can be shown or sold (`grep -rn "eligib\|available?\|can_sell\|supported" lib/`) and the one offer whose support is in doubt.
 - The identity of the offer: product, exact variant (size, color, material, artwork), supplier identifier for that variant, fulfillment route, and destination (country, channel, account).
-- The supplier's authoritative data for that combination: endpoint or export, the fields that say supported, the field that says when, and how the project stores and refreshes it. See [HTTP clients and provider APIs](../../ELIXIR.md#http-clients-and-provider-apis).
+- The supplier's authoritative data for that combination: endpoint or export, the fields that say supported, the field that says when, and how the project stores and refreshes it. See [HTTP clients and provider APIs](../../elixir/http-clients.md).
 - Every consumer of the decision: catalog, variant selection, pricing, publication job, checkout and fulfillment, and which query each uses today.
-- Stored offers and their evidence columns: source, checked-at date, and what happens when the supplier data changes. See [Ecto and migrations](../../ELIXIR.md#ecto-and-migrations) and [Oban](../../ELIXIR.md#oban) for refresh jobs.
+- Stored offers and their evidence columns: source, checked-at date, and what happens when the supplier data changes. See [Ecto and migrations](../../elixir/ecto.md) and [Oban](../../elixir/oban.md) for refresh jobs.
 
 ## Workflow
 

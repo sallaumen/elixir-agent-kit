@@ -3,7 +3,7 @@
 **Práticas de código compartilhadas para agentes de IA, versionadas junto com o seu projeto Elixir.**
 
 Fixe o kit como qualquer dependência Mix. Todo agente que trabalhar no projeto, seja
-Codex, Claude Code ou o seu próprio harness, lê os mesmos 34 workflows revisados
+Codex, Claude Code ou o seu próprio harness, lê os mesmos 35 workflows revisados
 direto de `deps/`: o que inspecionar, quais decisões importam, o que é "pronto" e
 como provar. Sem biblioteca copiada que envelhece, sem serviço, sem chamada a
 modelo, nada vai para produção.
@@ -132,12 +132,15 @@ deixar esses IDs fora da sua seleção `skills:`.
 | [motion-design](../priv/library/skills/motion-design/SKILL.md) |  | [performance](../priv/library/skills/performance/SKILL.md) | [revision-lineage](../priv/library/skills/revision-lineage/SKILL.md) |  |
 |  |  | [async-state](../priv/library/skills/async-state/SKILL.md) |  |  |
 |  |  | [process-lifecycle](../priv/library/skills/process-lifecycle/SKILL.md) |  |  |
+|  |  | [house-patterns](../priv/library/skills/house-patterns/SKILL.md) |  |  |
 
 Três deles têm um modo padrão diferente: `code-review` revisa sem editar,
 `delivery-validation` analisa sem reparar, `delivery-coordination` coordena. O
 escopo explícito do usuário sempre vence um padrão. O
-[contexto Elixir](../priv/library/ELIXIR.md) acrescenta notas de OTP, Phoenix,
-Ecto e Oban para as tecnologias que o projeto de fato usa.
+[contexto Elixir](../priv/library/ELIXIR.md) indexa uma referência curta por tecnologia
+(forma do código, OTP, Phoenix e LiveView, Ecto, Oban, ExUnit, clientes HTTP,
+segurança, telemetria, builds) e as bibliotecas recomendadas; o agente lê só as que
+o `mix.lock` do projeto pede.
 
 ## O que fica no projeto
 

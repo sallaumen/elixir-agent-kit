@@ -18,7 +18,7 @@ This workflow owns tokens, shared components, the rules that hold across screens
 - Start at: the project's design guidance and the component module (`core_components.ex` or the project's equivalent), then a grep across `lib/*_web` for the component names and for the raw utility classes they are meant to replace.
 - The token sources: the CSS configuration (theme, scale, color roles), any CSS variables, and the templates that use raw values instead of them.
 - Three representative pages (a list, a form, a detail or dashboard) rendered in the running application, to see which inconsistencies actually repeat and which differences are intentional.
-- The shared components' APIs: attributes and slots (`attr/3`, `slot/2`), variants, states (default, hover, focus, disabled, error, selected, loading), themes and the consumers of each. See [Phoenix and LiveView](../../ELIXIR.md#phoenix-and-liveview).
+- The shared components' APIs: attributes and slots (`attr/3`, `slot/2`), variants, states (default, hover, focus, disabled, error, selected, loading), themes and the consumers of each. See [Phoenix and LiveView](../../elixir/phoenix-liveview.md).
 - The accessibility constraints the components must keep (names, focus, contrast) and the project's test setup for components.
 
 ## Workflow

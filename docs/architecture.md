@@ -9,7 +9,8 @@ third-party dependency is installed. `:crypto` supplies ownership checksums.
 Consumers pin an immutable tag and commit the lockfile. Mix downloads the source;
 agents read it directly from the dependency. `catalog.tsv` owns workflow metadata
 (ID, mode, trigger and primary area), `ROUTING.md` explains area choice,
-`CATALOG.md` is the grouped human index and `skills/` contains the workflow bodies. Shared
+`CATALOG.md` is the grouped human index, `skills/` contains the workflow bodies, and
+`ELIXIR.md` indexes the per-technology references in `elixir/`. Shared
 improvements go upstream through [the evolution policy](../priv/library/EVOLUTION.md).
 Product-specific contracts stay with their applications.
 

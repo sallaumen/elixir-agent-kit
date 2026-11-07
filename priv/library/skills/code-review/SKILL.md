@@ -19,7 +19,7 @@ This workflow reads a bounded diff and reports findings; it does not edit, comme
 - The diff itself, read in dependency order: schemas and migrations, then contexts, then controllers, LiveViews and workers, then tests.
 - Callers of every changed public function, found by grep on the function name and on behaviour callbacks; a changed contract with an unchanged caller is a finding candidate.
 - The tests in the diff and the existing tests for the changed modules: which changed behavior each one exercises, and whether the assertion would fail if the change were reverted.
-- Repository review rules and any contract the diff touches: authorization checks, tenant scoping, migration compatibility, PubSub topics, job uniqueness. See [Ecto and migrations](../../ELIXIR.md#ecto-and-migrations) and [ExUnit and diagnostics](../../ELIXIR.md#exunit-and-diagnostics).
+- Repository review rules and any contract the diff touches: authorization checks, tenant scoping, migration compatibility, PubSub topics, job uniqueness. See [Ecto and migrations](../../elixir/ecto.md) and [ExUnit and diagnostics](../../elixir/exunit.md).
 
 ## Workflow
 
