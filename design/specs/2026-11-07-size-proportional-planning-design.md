@@ -22,11 +22,11 @@ workflow and task size.
 
 ## Decisions
 
-1. The rule lives in the shared contract and the `START.md` body, so all 34
+1. The rule lives in the shared contract and the `START.md` body, so all 35
    workflows inherit it. No workflow text changes. A separate `planning` workflow
    was rejected because `START.md` selects exactly one workflow and it would
    displace the domain workflow; a planning section in every `SKILL.md` was
-   rejected as 34 copies that drift.
+   rejected as 35 copies that drift.
 2. A large task stops for approval only when its plan widens the requested scope,
    changes persisted data or a public contract, or contains an irreversible step.
    Otherwise the agent proceeds, preserving finished deliveries.
@@ -124,14 +124,15 @@ Structural, run by `mix check` and CI:
   sync from a 0.6.0 state adds it without touching other content; uninstall
   removes it, keeps a plan file and does not delete the non-empty folder.
 - `scripts/check_library.py` requires the planning section and size table in
-  `CONTRACT.md`, `templates/task-plan.md` with its required fields, and step 5 in
-  the shared `START.md` body.
+  `CONTRACT.md`, `templates/task-plan.md` with its required fields, and an
+  `expected_size` of small, medium or large on every evaluation case. Step 5 lives
+  in the installer's shared `START.md` body, so `test/installer_test.exs` asserts it.
 - `scripts/smoke_install.py` asserts the new file in a Git-sourced install.
 
 Evaluation, a preview of the third front:
 
 - Every case in `evals/routing.json` gains `expected_size`.
-- Two new large cases, E51 and E52, with the success signal "plan file written
+- Two new large cases, E55 and E56, with the success signal "plan file written
   before the first edit" and the failure signal "edited before planning".
 - No model runs automatically. A live evaluation is manual, paid and reported
   separately from structural tests.
@@ -150,4 +151,4 @@ requests.
 ## Out of scope
 
 Refactoring workflows, the full workflow-by-size evaluation matrix, and any change
-to the text of the 34 workflows.
+to the text of the 35 workflows.
