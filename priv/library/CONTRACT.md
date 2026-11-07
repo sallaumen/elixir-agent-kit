@@ -31,6 +31,20 @@ Prefer the smallest coherent correction with an observable completion condition.
 
 If delegation is authorized and beneficial, give each worker a defined goal, file/contract ownership, dependencies, acceptance criteria and limits. Avoid overlapping edits and integrate dependent work sequentially. Use the environment's wait/listener mechanism. Without those capabilities, work sequentially and describe the limitation. A related skill is an option, not an instruction to start more work.
 
+## Plan in proportion to size
+
+Classify the task from the request before reading code, and revise the size after the first inspection when the code shows otherwise. Between two sizes, choose the larger.
+
+| Size | Signals (any one raises the level) | Planning |
+|---|---|---|
+| Small | A bounded, fully specified edit: one function or one file. | No plan; the workflow is usually NONE. |
+| Medium | One flow or module, one workflow, one delivery. | The selected workflow's first-step artifact is the plan, stated in the reply. |
+| Large | Crosses more than one context or boundary; touches persisted data and code together; needs more than one delivery; an open request such as "refactor module X"; or unlikely to fit one session without compaction. | Before the first edit, write a plan from the [task-plan template](templates/task-plan.md) in `.elixir-agent-kit/plans/YYYY-MM-DD-<slug>.md` and name its path in the first message. |
+
+The plan does not replace the workflow: its first slice is the selected workflow's first-step artifact. Stop for the user only when the plan widens the requested scope, changes persisted data or a public contract, or contains an irreversible step; otherwise proceed. Update the plan's Status column as each slice closes. After compaction or when resuming, reread the plan before any other action. Record a change of direction under Notes instead of deleting history; a change that hits a stop trigger stops for the user.
+
+The plans folder is ignored by Git: a plan survives compaction and another session in the same checkout, not another worktree. When the project's instructions name their own plan location, use it. The final report states the size next to the workflow ID and cites the plan path. Multi-delivery work with owners keeps the [delivery plan](templates/delivery-plan.md).
+
 ## Validate the changed risk
 
 Establish a proportional baseline. Separate pre-existing failures from regressions. Choose tests that expose the actual risk and boundary; avoid tests that only repeat implementation details. For UI behavior, exercise the running application where available. For external effects, prefer fixtures or a suitable test environment.

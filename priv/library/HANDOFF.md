@@ -2,7 +2,7 @@
 
 - **Outcome and status:** proposed / implemented / locally validated / integrated / published.
 - **Scope and authority:** requested result, boundaries and actions authorized.
-- **Revision and practices:** code revision, Elixir Agent Kit version, selected workflow IDs.
+- **Revision and practices:** code revision, Elixir Agent Kit version, selected workflow IDs, task size and plan path for a large task.
 - **Changes:** affected files and observable behavior.
 - **Decisions:** reasons and canonical project documentation.
 - **Verification:** exact checks, relevant results and baseline failures.
