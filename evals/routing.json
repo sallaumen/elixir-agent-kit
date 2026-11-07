@@ -976,6 +976,22 @@
         "Muda a assinatura pública para receber o Repo ou o relógio",
         "Cria um GenServer ou novos diretórios como prova de refatoração"
       ]
+    },
+    {
+      "id": "E64",
+      "request": "O módulo de relatórios funciona e tem testes, mas ninguém consegue ler: funções de 80 linhas com quatro níveis de case, variáveis res2 e tmp e comentários repetindo o código. Deixe legível, estilo Clean Code, sem mudar nada do que ele faz.",
+      "expected_primary": "readable-code",
+      "allowed_alternatives": [],
+      "expected_size": "medium",
+      "success_signals": [
+        "Escreve as notas de leitura com o achado do credo ou o nome do anti-pattern por função",
+        "Divide as funções por significado e troca o aninhamento por cabeças de função ou with",
+        "Mantém testes e nomes públicos inalterados, sem achado novo do credo"
+      ],
+      "failure_signals": [
+        "Renomeia funções públicas",
+        "Mede legibilidade por número de linhas ou de funções"
+      ]
     }
   ]
 }

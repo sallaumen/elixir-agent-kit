@@ -159,3 +159,9 @@ inputs and outputs; stratified design; functions passed as arguments) to Elixir
 modules, alongside the stratified-design reference above. The book is a
 concept-only reference: no passage was consulted for wording or reproduced, and
 the workflow is written in the kit's own words.
+
+`readable-code` is also the kit's own addition. It applies the ideas of
+*Clean Code* by Robert C. Martin (names that reveal intent, functions at one level of
+detail, comments that carry information, visible error flow) through the Elixir
+anti-pattern vocabulary in `elixir/code-shape.md`. The book is a concept-only
+reference in the same way: no passage was consulted for wording or reproduced.
