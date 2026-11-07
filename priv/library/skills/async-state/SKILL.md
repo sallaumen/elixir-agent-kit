@@ -15,6 +15,7 @@ The question this workflow answers is: who owns each state transition, how is a 
 
 ## Inputs to inspect
 
+- Start at: the LiveView or process whose assign or state is overwritten, and its `handle_async`, `handle_info` and `handle_event` clauses that write it.
 - The command path: the user action or trigger, the request it sends, the job or process that runs, the persisted result, and the message that tells the interface.
 - Identity: which stable identifier (entity id plus revision, job id, request id) travels through every step, and where a step uses something weaker (position, "latest", the socket).
 - Durable state versus transient state: what is in the database, what lives in a process, what lives in socket assigns, and which one the interface reads after reload.
@@ -54,10 +55,10 @@ The question this workflow answers is: who owns each state transition, how is a 
 
 ## Validation and evidence
 
-- A written lifecycle table (transition, owner, durable record) for the flow, and the identifiers traced through one real request.
-- Tests that deliver results out of order, twice, and after a reconnect, asserting both the durable state and what the view renders. In LiveView, `Phoenix.LiveViewTest` with messages sent to the view process; for jobs, `Oban.Testing` with a retried `perform_job/3`.
-- A manual pass on the running application for the reported symptom and for a reload mid-progress, with what was observed at each step.
-- Any external effect that could not be exercised, named.
+- Minimum: one test that delivers the result out of order, twice or after a reconnect and asserts both the durable state and what the view renders. In LiveView, `Phoenix.LiveViewTest` with messages sent to the view process; for jobs, `Oban.Testing` with a retried `perform_job/3`.
+- When turns allow: a written lifecycle table (transition, owner, durable record) for the flow, and the identifiers traced through one real request.
+- When turns allow: a manual pass on the running application for the reported symptom and for a reload mid-progress, with what was observed at each step.
+- When turns allow: any external effect that could not be exercised, named.
 
 ## Avoid
 
@@ -69,6 +70,6 @@ The question this workflow answers is: who owns each state transition, how is a 
 
 ## Completion
 
-A lifecycle with one durable owner per transition, results matched by stable keys, explicit cancellation and timeout races, and tests that deliver duplicate, delayed and out-of-order messages across a reconnect. For a slow but correct flow use [performance](../performance/SKILL.md); for a paid or rate-limited provider call use [provider-calls](../provider-calls/SKILL.md); for the operational alert that a stuck job should raise use [operational-alerts](../operational-alerts/SKILL.md).
+A lifecycle with one durable owner per transition, results matched by stable keys, explicit cancellation and timeout races, and tests that deliver duplicate, delayed and out-of-order messages across a reconnect. For a slow but correct flow use [performance](../performance/SKILL.md); for a paid or rate-limited provider call use [provider-calls](../provider-calls/SKILL.md); for state lost or doubled after restart use [process-lifecycle](../process-lifecycle/SKILL.md); for the operational alert that a stuck job should raise use [operational-alerts](../operational-alerts/SKILL.md).
 
 Use the [Elixir context](../../ELIXIR.md) only for technology present in the project. Record a useful [handoff](../../HANDOFF.md) when another person or agent will continue the work.

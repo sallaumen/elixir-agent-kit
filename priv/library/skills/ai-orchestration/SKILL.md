@@ -9,47 +9,68 @@ Default mode: **analyze-and-fix**. Read the [shared contract](../../CONTRACT.md)
 
 ## When to use
 
-Use when agent jobs, queues, workers and model capacity are conflated or incorrectly accounted for.
+Use when the operations screen shows "8 agents running" while the provider console shows two requests in flight; when an Oban queue with `concurrency: 10` is treated as the model's rate limit, or the other way around; when a job that only sometimes calls a model is counted as a model slot from the moment it is enqueued; when a job that delegates to a second job is billed or counted twice; when a provider returns 429 and nobody can say which queue should slow down; or when a crashed worker leaves a capacity counter that never comes back down.
+
+This workflow owns capacity and accounting across many jobs, queues, workers and providers. The single outbound call, its budget gate and its audit row belong to [provider-calls](../provider-calls/SKILL.md); the state of one worker process (init, timeout, crash, restart) belongs to [process-lifecycle](../process-lifecycle/SKILL.md); whether a stuck queue should page someone belongs to [operational-alerts](../operational-alerts/SKILL.md).
 
 ## Inputs to inspect
 
-- Queues, workers, calls to models, agents, provider limits, cost/budget rules and current capacity telemetry.
-- Job metadata indicating no AI, conditional AI or mandatory AI use, including how a running call is identified.
+- Start at: the Oban configuration (`config :app, Oban, queues: ...`) and `grep -rn "queue:" lib/` for every worker, then the one screen or log line where the capacity number looked wrong.
+- Every path that reaches a model: workers that always call, workers that call only on a condition, and workers that enqueue another worker which calls. Draw the delegation chain.
+- The provider limits as documented today (requests per minute, tokens per minute, concurrent requests per key) and where the project stores them; note the date read.
+- The counter or semaphore that claims to track active calls: who increments, who decrements, and what happens on timeout, cancellation and a crashed process.
+- The telemetry and audit rows already emitted per job and per call, and whether a job id links them. See [Oban](../../ELIXIR.md#oban), [OTP processes and supervision](../../ELIXIR.md#otp-processes-and-supervision) and [Telemetry and observability](../../ELIXIR.md#telemetry-and-observability).
 
 ## Workflow
 
-1. Map requests, jobs, workers, agents and provider calls as distinct entities. Trace which execution paths actually invoke a model, including conditional calls and delegation.
+1. Write the capacity table: one row per queue and per provider key with columns for queue concurrency, provider limit, what reserves a slot, what releases it, and which workers may call a model (always, conditional, by delegation). Done when every worker that can reach a provider appears in exactly one row and the delegation chains are drawn.
 
-2. Identify the owner of admission control, concurrency, cancellation, retries and budget checks. Queue concurrency and provider capacity are different constraints.
+2. Trace one job from enqueue to the provider and back, with its job id, through the counter, the client and the audit row. Done when you can state at which line the job became a model call and at which line the slot was released, or that one of those lines does not exist.
 
-3. Record calls and outcomes with sufficient provenance to reconcile usage without exposing prompts or secrets unnecessarily. Avoid counting a delegated call twice.
+3. Put the model reservation at the point where the call actually happens, inside the worker, after the condition that decides whether a model is needed, and release it in an `after` block or from a monitoring process so timeout, cancellation and crash all release it. Done when a non-AI job can run to completion without touching the counter.
 
-4. Test saturation, cancellation and failure using controlled responses. Do not add retries to paid or effectful calls without an explicit policy and duplicate-effect analysis.
+4. Separate the two constraints in code: Oban queue concurrency bounds workers; a per-provider limiter (rate limit or semaphore keyed by provider and key) bounds model calls, and a job that cannot acquire a provider slot snoozes or backs off instead of failing. Done when a 429 maps to one named limiter and one retry policy.
+
+5. Attribute each call once: the audit row carries the job id and the delegating job id when there is one, and cost rollups count the leaf call only. Done when a delegated chain produces one row with cost and the parent rows carry a reference, not a copy.
+
+6. Make the display tell the truth: available, reserved, active, unknown and stale are distinct values derived from the counter and the audit rows, never from the number of queued jobs. Done when an unknown provider limit renders as unknown rather than as a percentage.
+
+7. Test saturation at the limiter with concurrent jobs, one conditional no-call path, a cancellation mid-call and a worker crash, asserting the counter returns to zero. Done when the tests pass with controlled provider responses and the project gate is green.
 
 ## Decision points
 
-- Separate queued work, reserved capacity and a model call actually running; a job is not automatically a model slot.
-- When provider capacity or price is unknown, represent uncertainty instead of inventing a utilization number.
+- A queued or running job is not a model slot; only an in-flight provider request is. Count at the call, not at the enqueue.
+- Queue concurrency and provider capacity are two limits with two owners; never set one to express the other.
+- Reserve as late as possible and release on every exit path, including crash; a counter without crash recovery is a counter that drifts.
+- A delegated call is counted and billed once, at the leaf; parents reference it.
+- Unknown limit or price is represented as unknown; a utilization number requires a known denominator.
+- Retries of paid calls follow the idempotency rule in [provider-calls](../provider-calls/SKILL.md); orchestration never adds a retry on top of the client's.
 
 ## Quality criteria
 
-- Acquisition, release, timeout, cancellation and crash recovery keep capacity counters consistent.
-- Conditional workers reserve capacity only at the point they may actually call a model; non-AI jobs do not consume it.
-- Retries and duplicate jobs cannot spend twice without an explicit idempotency/budget rule; paid-call effects stay recorded at the authoritative boundary.
-- Operational displays distinguish available, reserved, active, unknown and stale capacity so they support a real scheduling decision.
+- Acquire, release, timeout, cancellation and crash leave the capacity counter consistent, and a test proves it with a killed worker.
+- Conditional workers reserve capacity only on the branch that calls a model; non-AI jobs never touch the limiter.
+- A 429 or quota error slows exactly the limiter for that provider and key, with a named backoff, without blocking unrelated queues.
+- Every audit row has a job id and every job that called a model has exactly one leaf row; rollups match the provider console on a small sample.
+- Operational displays distinguish available, reserved, active, unknown and stale, and a reader can make a scheduling decision from them.
 
 ## Validation and evidence
 
-- Exercise the limit with concurrent jobs, one conditional no-call path, cancellation and a failed call using fixtures or authorized test environments.
-- Compare displayed capacity with observed call records and report what could not be measured.
+- Minimum: a test that enqueues more jobs than the provider limiter allows with controlled responses, asserts the number of concurrent provider calls never exceeds the limit, and asserts the counter is zero afterwards, including one job that crashes mid-call (`Oban.Testing` with `perform_job/3` and a fake client).
+- When turns allow: the conditional no-call path and a delegated chain, asserting one leaf audit row and no reservation on the no-call branch.
+- When turns allow: a cancellation during an in-flight call, asserting release and a typed outcome on the job.
+- When the session has console access: compare the displayed active count and a sample of audit rows against the provider's console, and report what could not be compared.
 
 ## Avoid
 
-- Do not count every worker or queued job as an AI session.
-- Do not infer that a model name determines which agent harness or skills were loaded.
+- Do not count every worker, queued job or open socket as an AI session.
+- Do not express a provider rate limit as Oban queue concurrency, or the reverse.
+- Do not add retries to paid calls at the orchestration layer; the client owns retry semantics.
+- Do not infer the agent harness, prompt or skills loaded from the model name in a row.
+- Do not reserve capacity in `init` or at enqueue time for a job that may never call a model.
 
 ## Completion
 
-An explicit execution/capacity contract and accounting aligned with observed behavior. The single call's budget gate, audit row, retry rule and failure reasons belong to [provider-calls](../provider-calls/SKILL.md); visual style belongs to the project design context.
+An explicit capacity contract: one table of queues, limiters and provider limits, reservation at the call with release on every exit path, one audit row per leaf call linked by job id, displays that distinguish unknown from zero, and tests for saturation, cancellation and crash. For the single call's budget gate and audit row use [provider-calls](../provider-calls/SKILL.md); for the cost rollup those rows feed use [metrics-costs](../metrics-costs/SKILL.md); for a worker that hangs or restarts use [process-lifecycle](../process-lifecycle/SKILL.md).
 
 Use the [Elixir context](../../ELIXIR.md) only for technology present in the project. Record a useful [handoff](../../HANDOFF.md) when another person or agent will continue the work.

@@ -15,7 +15,7 @@ This workflow governs the single outbound call and its record. Capacity and queu
 
 ## Inputs to inspect
 
-- Every call site to the provider, the client module they share, and the place where the request is built: which inputs reach the provider, whether user content is included, and how the prompt or payload is chosen.
+- Start at: the shared client module for the provider and `grep -rn "Req\.\|Finch\.\|HTTPoison\.\|Tesla\." lib/` for every call site, then the place where the request is built: which inputs reach the provider, whether user content is included, and how the prompt or payload is chosen.
 - The provider's documented semantics for the exact operation: idempotency keys, billing moment (on request, on success, on tokens), rate limits, timeouts, error codes, and what a partial or empty response means.
 - The project's budget, retry, audit and privacy rules, and where they are enforced today.
 - The record written per call: provider, operation, model or product, cost or units, latency, outcome, parse state, request identifier.
@@ -57,10 +57,11 @@ This workflow governs the single outbound call and its record. Capacity and queu
 
 ## Validation and evidence
 
-- The call map (call sites, shared client, record) and the provider's documented billing and idempotency semantics with the date checked.
-- Controlled-response tests for each failure reason, malformed output, timeout and retry-once, with the audit rows asserted.
-- A reconciliation of a small sample of audit rows against the provider's console or invoice when the session has access; otherwise the statement that this was not done.
-- The budget gate exercised at the limit, with the denial recorded.
+- Minimum: a controlled-response test for the reported failure (a failure reason, malformed output, timeout or retry-once) with the audit row asserted and a retry shown to charge once.
+- When turns allow: the call map (call sites, shared client, record) and the provider's documented billing and idempotency semantics with the date checked.
+- When turns allow: controlled-response tests for each remaining failure reason, malformed output, timeout and retry-once, with the audit rows asserted.
+- When the session has console or invoice access: a reconciliation of a small sample of audit rows against the provider's console or invoice; otherwise the statement that this was not done.
+- When turns allow: the budget gate exercised at the limit, with the denial recorded.
 
 ## Avoid
 
