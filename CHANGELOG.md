@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.7.0 — 2026-11-07
 
 - New workflow `house-patterns` (code area): bring existing code to patterns the
   project already established, with a pattern card, a deviation table, a public-seam
