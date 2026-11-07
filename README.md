@@ -152,17 +152,21 @@ produces absolute links and needs a resync after moving.
 | Command | Effect |
 |---|---|
 | `mix agent_kit.list` | Prints workflow IDs, modes and triggers grouped by area. |
-| `mix agent_kit.install` | Creates or synchronizes references after a conflict preflight. |
-| `mix agent_kit.sync` | Same reconciliation, plus removal of unmodified legacy generated files. |
-| `mix agent_kit.check` | Offline, read-only comparison against the loaded package and configuration; fails on drift. |
+| `mix agent_kit.install` | Creates or synchronizes references after a conflict preflight; an alias of `sync`. |
+| `mix agent_kit.sync` | The same reconciliation: regenerates owned files and blocks, removes unmodified legacy generated files, refuses locally modified managed content. |
+| `mix agent_kit.check` | Offline, read-only comparison against the loaded package and configuration, plus a check that every library file the links point at exists; fails on drift. |
 | `mix agent_kit.outdated` | Queries public stable Git tags and reports loaded versus latest; `--check` fails when a newer tag exists. |
 | `mix agent_kit.uninstall` | Removes owned, unmodified references and state; prunes only directories it emptied. |
 
-Reconciliation tasks accept `--agents codex,claude,generic` and `--skills ID,ID`;
-mutation tasks accept `--dry-run`. Narrow discovery with
-`skills: ["debugging", "code-review"]` in `project/0`; selection shapes the index
-and the pointer skills, it is not an access boundary. No task starts your
-application or calls a model.
+`install`, `sync` and `check` accept `--agents codex,claude,generic` and
+`--skills ID,ID` for one run; `install`, `sync` and `uninstall` accept `--dry-run`.
+When `project/0` declares `:elixir_agent_kit`, that entry is the source of truth
+and a key you remove falls back to its default; without the entry, the selection
+recorded in `.elixir-agent-kit/state.tsv` is kept. Narrow discovery with
+`skills: ["debugging", "code-review"]`; selection shapes the index and the pointer
+skills, it is not an access boundary. A project with a `CLAUDE.md` and no `:claude`
+selection gets a note, because Claude Code would not see the kit. No task starts
+your application or calls a model.
 
 ## Upgrades and one shared source
 

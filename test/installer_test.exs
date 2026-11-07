@@ -90,10 +90,21 @@ defmodule ElixirAgentKit.InstallerTest do
              ]
 
     start = get(root, ".elixir-agent-kit/START.md")
+    assert String.starts_with?(start, "# Elixir Agent Kit #{ElixirAgentKit.version()}\n")
     assert start =~ "../deps/elixir_agent_kit/priv/library/CONTRACT.md"
-    assert start =~ "4. State the workflow ID or NONE in your plan or report"
-    assert start =~ "Before opening any source file for a change or a review:"
-    assert start =~ "../deps/elixir_agent_kit/priv/library/skills/debugging/SKILL.md"
+    assert length(Regex.scan(~r/^\d\. /m, start)) == 4
+    assert start =~ "`Start at`"
+
+    for skill <- ElixirAgentKit.catalog() do
+      assert start =~ "../deps/elixir_agent_kit/priv/library/skills/#{skill.id}/SKILL.md"
+    end
+
+    assert get(root, "AGENTS.md") ==
+             original <>
+               "\n<!-- elixir-agent-kit:start -->\n" <>
+               (get(root, "AGENTS.md")
+                |> String.split("<!-- elixir-agent-kit:start -->\n", parts: 2)
+                |> List.last())
 
     pointer = get(root, ".claude/skills/elixir-agent-kit/SKILL.md")
     assert pointer =~ "name: elixir-agent-kit\n"
@@ -198,7 +209,8 @@ defmodule ElixirAgentKit.InstallerTest do
   test "managed block edits are preserved and reported", %{root: root} do
     Installer.run(:install, root)
     path = Path.join(root, "AGENTS.md")
-    File.write!(path, String.replace(File.read!(path), "Before opening any source file", "LOCAL"))
+    marker = "<!-- elixir-agent-kit:start -->\n"
+    File.write!(path, String.replace(File.read!(path), marker, marker <> "LOCAL\n"))
     before = snapshot(root)
     assert_raise ArgumentError, ~r/locally modified/, fn -> Installer.run(:sync, root) end
     assert snapshot(root) == before
@@ -208,7 +220,8 @@ defmodule ElixirAgentKit.InstallerTest do
     for contents <- [
           "<!-- elixir-agent-kit:start -->",
           "<!-- elixir-agent-kit:end -->",
-          "\n\n<!-- elixir-agent-kit:start -->\n<!-- elixir-agent-kit:end -->\n<!-- elixir-agent-kit:end -->\n"
+          "\n\n<!-- elixir-agent-kit:start -->\n<!-- elixir-agent-kit:end -->\n<!-- elixir-agent-kit:end -->\n",
+          "<!-- elixir-agent-kit:end -->\n<!-- elixir-agent-kit:start -->\n"
         ] do
       put(root, "AGENTS.md", contents)
       assert_raise ArgumentError, ~r/malformed/, fn -> Installer.run(:install, root) end
@@ -352,6 +365,122 @@ defmodule ElixirAgentKit.InstallerTest do
       resolved = Path.expand(target, Path.dirname(Path.join(root, path)))
       assert String.starts_with?(resolved, root <> "/"), "escape: #{path} -> #{target}"
       assert File.regular?(resolved), "broken link: #{path} -> #{target}"
+    end
+  end
+
+  test "generated instruction files start at the first line and append after one blank line",
+       %{root: root} do
+    Installer.run(:install, root, agents: [:codex, :claude])
+    assert String.starts_with?(get(root, "AGENTS.md"), "<!-- elixir-agent-kit:start -->\n")
+    assert String.starts_with?(get(root, "CLAUDE.md"), "<!-- elixir-agent-kit:start -->\n")
+    Installer.run(:uninstall, root)
+
+    # Uninstall leaves one final newline where the block was; the text itself is exact.
+    for {before, expected, restored} <- [
+          {"text", "text\n\n<!-- elixir-agent-kit:start -->\n", "text\n"},
+          {"text\n", "text\n\n<!-- elixir-agent-kit:start -->\n", "text\n"},
+          {"text\n\n", "text\n\n<!-- elixir-agent-kit:start -->\n", "text\n"},
+          {"", "<!-- elixir-agent-kit:start -->\n", ""}
+        ] do
+      put(root, "AGENTS.md", before)
+      Installer.run(:install, root, agents: [:codex])
+      assert String.starts_with?(get(root, "AGENTS.md"), expected)
+      assert {:ok, []} = Installer.run(:check, root)
+      Installer.run(:uninstall, root)
+      assert get(root, "AGENTS.md") == restored
+    end
+  end
+
+  test "a block survives a linter removing the blank lines around it", %{root: root} do
+    put(root, "AGENTS.md", "# Mine\n")
+    Installer.run(:install, root, agents: [:codex])
+    contents = get(root, "AGENTS.md")
+    [before, block] = String.split(contents, "<!-- elixir-agent-kit:start -->\n", parts: 2)
+    block = "<!-- elixir-agent-kit:start -->\n" <> block
+
+    for variant <- [
+          String.trim_trailing(before, "\n") <> "\n" <> block,
+          block,
+          String.trim_trailing(before <> block, "\n")
+        ] do
+      put(root, "AGENTS.md", variant)
+      assert {:ok, []} = Installer.run(:check, root)
+      assert {:ok, []} = Installer.run(:sync, root)
+      assert get(root, "AGENTS.md") == variant
+    end
+  end
+
+  test "CRLF instruction and state files are recognized and kept CRLF", %{root: root} do
+    put(root, "AGENTS.md", "# Mine\r\n")
+    Installer.run(:install, root, agents: [:codex])
+    assert {:ok, []} = Installer.run(:check, root)
+    state = Path.join(root, ".elixir-agent-kit/state.tsv")
+    File.write!(state, String.replace(File.read!(state), "\n", "\r\n"))
+    assert {:ok, []} = Installer.run(:check, root)
+    assert {:ok, []} = Installer.run(:sync, root)
+    assert get(root, "AGENTS.md") =~ "\r\n<!-- elixir-agent-kit:end -->\r\n"
+    refute get(root, "AGENTS.md") =~ ~r/[^\r]\n/
+    Installer.run(:uninstall, root)
+    assert get(root, "AGENTS.md") == "# Mine\r\n"
+  end
+
+  test "an owned file converted to CRLF by a checkout is not drift", %{root: root} do
+    Installer.run(:install, root)
+    path = Path.join(root, ".elixir-agent-kit/START.md")
+    File.write!(path, String.replace(File.read!(path), "\n", "\r\n"))
+    assert {:ok, []} = Installer.run(:check, root)
+  end
+
+  test "a block recorded by a pre-0.6 install is still recognized", %{root: root} do
+    put(root, "AGENTS.md", "# Mine\n")
+    Installer.run(:install, root, agents: [:codex])
+    state = get(root, ".elixir-agent-kit/state.tsv")
+
+    [block] =
+      Regex.run(
+        ~r/<!-- elixir-agent-kit:start -->\n.*?<!-- elixir-agent-kit:end -->\n/s,
+        get(root, "AGENTS.md")
+      )
+
+    legacy = :crypto.hash(:sha256, "\n\n" <> block) |> Base.encode16(case: :lower)
+    [_, current] = Regex.run(~r/^block\tAGENTS\.md\t([a-f0-9]{64})/m, state)
+    put(root, ".elixir-agent-kit/state.tsv", String.replace(state, current, legacy))
+    assert {:drift, [".elixir-agent-kit/state.tsv"]} = Installer.run(:check, root)
+    assert {:ok, [".elixir-agent-kit/state.tsv"]} = Installer.run(:sync, root)
+    assert {:ok, []} = Installer.run(:check, root)
+  end
+
+  test "a CLAUDE.md that already imports AGENTS.md is not given a second import",
+       %{root: root} do
+    put(root, "CLAUDE.md", "# Mine\n\n@AGENTS.md\n")
+    Installer.run(:install, root, agents: [:codex, :claude])
+    claude = get(root, "CLAUDE.md")
+    assert length(Regex.scan(~r/^@AGENTS\.md$/m, claude)) == 1
+    assert claude =~ "already imports AGENTS.md"
+    assert {:ok, []} = Installer.run(:check, root)
+    Installer.run(:uninstall, root)
+    assert get(root, "CLAUDE.md") == "# Mine\n\n@AGENTS.md\n"
+
+    put(root, "CLAUDE.md", "@AGENTS.md\n")
+    put(root, "AGENTS.md", "# Theirs\n")
+    Installer.run(:install, root, agents: [:claude])
+    claude = get(root, "CLAUDE.md")
+    assert length(Regex.scan(~r/^@AGENTS\.md$/m, claude)) == 1
+    assert claude =~ "START.md"
+  end
+
+  test "missing library files are listed for the selection" do
+    assert Installer.missing_library_files(ElixirAgentKit.library_path()) == []
+
+    assert Installer.missing_library_files("/nonexistent", ["debugging"]) ==
+             ~w(CONTRACT.md ROUTING.md ELIXIR.md EVOLUTION.md HANDOFF.md skills/debugging/SKILL.md)
+  end
+
+  test "uninstall refuses selection flags before touching anything" do
+    for args <- [["--agents", "claude"], ["--skills", "debugging"]] do
+      assert_raise Mix.Error, ~r/no selection flags/, fn ->
+        ElixirAgentKit.CLI.run(:uninstall, args)
+      end
     end
   end
 end

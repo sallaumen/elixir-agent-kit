@@ -6,10 +6,12 @@ defmodule Mix.Tasks.AgentKit.Install do
 
       mix agent_kit.install
 
-  Configuration is read from `:elixir_agent_kit` in `Mix.Project.config/0`.
-  `--agents codex,claude,generic` and `--skills ID,ID` override configuration.
-  Mutation tasks accept `--dry-run`. No task starts your application or calls a model.
-  See the package README for conflict recovery and client compatibility limits.
+  Same reconciliation as `mix agent_kit.sync`. Configuration is read from
+  `:elixir_agent_kit` in `Mix.Project.config/0`; when that entry exists it is the
+  source of truth, otherwise the recorded selection in `.elixir-agent-kit/state.tsv`
+  is kept. `--agents codex,claude,generic` and `--skills ID,ID` override it for one
+  run; `--dry-run` lists the paths without writing. Fails when the dependency's
+  library is incomplete. No task starts your application or calls a model.
   """
   @impl true
   def run(args), do: ElixirAgentKit.CLI.run(:install, args)

@@ -6,10 +6,10 @@ defmodule Mix.Tasks.AgentKit.Uninstall do
 
       mix agent_kit.uninstall
 
-  Configuration is read from `:elixir_agent_kit` in `Mix.Project.config/0`.
-  `--agents codex,claude,generic` and `--skills ID,ID` override configuration.
-  Mutation tasks accept `--dry-run`. No task starts your application or calls a model.
-  See the package README for conflict recovery and client compatibility limits.
+  Removes every file and block recorded in `.elixir-agent-kit/state.tsv` when it is
+  unmodified, restores pre-existing instruction files, and prunes only directories
+  it emptied. Takes `--dry-run`; selection flags are refused because uninstall is
+  not partial. No task starts your application or calls a model.
   """
   @impl true
   def run(args), do: ElixirAgentKit.CLI.run(:uninstall, args)

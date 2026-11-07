@@ -6,10 +6,11 @@ defmodule Mix.Tasks.AgentKit.Check do
 
       mix agent_kit.check
 
-  Configuration is read from `:elixir_agent_kit` in `Mix.Project.config/0`.
-  `--agents codex,claude,generic` and `--skills ID,ID` override configuration.
-  Mutation tasks accept `--dry-run`. No task starts your application or calls a model.
-  See the package README for conflict recovery and client compatibility limits.
+  Compares every owned file and block with what the loaded package and the
+  configuration would generate, and verifies that the library files the links
+  point at exist. Exits nonzero on drift or a missing library. `--agents` and
+  `--skills` check against a different selection; it is already read-only, so
+  `--dry-run` is refused. No task starts your application or calls a model.
   """
   @impl true
   def run(args), do: ElixirAgentKit.CLI.run(:check, args)

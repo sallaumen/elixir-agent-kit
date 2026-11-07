@@ -1,7 +1,7 @@
 defmodule ElixirAgentKit.Installer do
   @moduledoc false
   @state ".elixir-agent-kit/state.tsv"
-  @start "\n\n<!-- elixir-agent-kit:start -->\n"
+  @start "<!-- elixir-agent-kit:start -->\n"
   @finish "<!-- elixir-agent-kit:end -->\n"
   @agents ~w(codex claude generic)
 
@@ -14,7 +14,7 @@ defmodule ElixirAgentKit.Installer do
     entries = if previous, do: previous.entries, else: %{}
     changes = plan(root, desired, entries, action)
     state = if action == :uninstall, do: nil, else: encode_state(config, desired, root, entries)
-    changes = put_change(changes, @state, read(root, @state), state)
+    changes = put_change(changes, @state, read_text(root, @state), state)
 
     cond do
       action == :check ->
@@ -27,6 +27,18 @@ defmodule ElixirAgentKit.Installer do
         Enum.each(changes, fn {path, contents} -> write(root, path, contents) end)
         {:ok, Enum.map(changes, &elem(&1, 0))}
     end
+  end
+
+  @doc false
+  # Library files every generated link points at. The CLI refuses to report a
+  # consumer as in sync while one is missing, because the links would be broken.
+  def missing_library_files(library, skills \\ ["all"]) do
+    enabled =
+      Enum.filter(ElixirAgentKit.catalog(), &(skills == ["all"] or &1.id in skills))
+
+    ~w(CONTRACT.md ROUTING.md ELIXIR.md EVOLUTION.md HANDOFF.md)
+    |> Kernel.++(Enum.map(enabled, &"skills/#{&1.id}/SKILL.md"))
+    |> Enum.reject(&File.regular?(Path.join(library, &1)))
   end
 
   defp configuration(opts, previous) do
@@ -117,9 +129,10 @@ defmodule ElixirAgentKit.Installer do
     3. Read that workflow's SKILL.md from the dependency together with the
        [shared contract](#{target}/CONTRACT.md); copy neither into this project.
     4. State the workflow ID or NONE in your plan or report, with the reason in one
-       line, then open the code and investigate the way the workflow says. The local
-       contracts say what this project must do; the workflow says how to inspect,
-       decide and prove it.
+       line and the workflow's `Start at` input as the first thing you open; then
+       investigate the way the workflow says, producing the artifact its first step
+       asks for. The local contracts say what this project must do; the workflow says
+       how to inspect, decide and prove it.
 
     Project rules and the user's authorized scope govern the work. Use the
     [Elixir context](#{target}/ELIXIR.md) only for technologies present here; send
@@ -154,14 +167,36 @@ defmodule ElixirAgentKit.Installer do
   # imports AGENTS.md whenever the kit manages it or the project already has one.
   # Otherwise creating CLAUDE.md would silently hide the project's instructions.
   defp block("claude", config, root) do
+    others = Enum.any?(config.agents, &(&1 != "claude"))
+    agents_md = read_text(root, "AGENTS.md") != nil
+
     cond do
-      Enum.any?(config.agents, &(&1 != "claude")) -> wrap(import_agents())
-      read(root, "AGENTS.md") != nil -> wrap(import_agents() <> "\n" <> reference())
+      imports_agents?(root) and others -> wrap(imported_note())
+      imports_agents?(root) -> wrap(reference())
+      others -> wrap(import_agents())
+      agents_md -> wrap(import_agents() <> "\n" <> reference())
       true -> wrap(reference())
     end
   end
 
   defp block(_agent, _config, _root), do: wrap(reference())
+
+  # A CLAUDE.md that already imports AGENTS.md outside the managed block must not
+  # receive a second import.
+  defp imports_agents?(root) do
+    case read_text(root, "CLAUDE.md") do
+      nil ->
+        false
+
+      contents ->
+        outside = remove_block(contents, extract_block(contents, "CLAUDE.md")) || ""
+        Regex.match?(~r/^@AGENTS\.md[ \t]*$/m, outside)
+    end
+  end
+
+  defp imported_note do
+    "This file already imports AGENTS.md, which carries the kit entry and governs the work.\n"
+  end
 
   defp wrap(body), do: @start <> "## Elixir Agent Kit\n\n" <> body <> @finish
 
@@ -184,7 +219,8 @@ defmodule ElixirAgentKit.Installer do
 
     Enum.reduce(paths, [], fn path, changes ->
       safe_path!(root, path)
-      current = read(root, path)
+      raw = read(root, path)
+      current = normalize_text(raw)
       old = previous[path]
       new = desired[path]
       kind = if new, do: elem(new, 0), else: elem(old, 0)
@@ -195,7 +231,7 @@ defmodule ElixirAgentKit.Installer do
           old == nil and owned != nil ->
             fail!("unmanaged content at #{path}; nothing was written")
 
-          old != nil and owned != nil and digest(owned) != elem(old, 1) ->
+          old != nil and owned != nil and not recorded?(owned, elem(old, 1)) ->
             fail!(
               "locally modified managed content at #{path}; preserve it before syncing; nothing was written"
             )
@@ -220,12 +256,57 @@ defmodule ElixirAgentKit.Installer do
           {:block, {:block, value}} ->
             if owned,
               do: String.replace(current, owned, value, global: false),
-              else: (current || "") <> value
+              else: (current || "") <> separator(current) <> value
         end
 
-      put_change(changes, path, current, contents)
+      # A block keeps the line endings of the file it lives in; owned files are
+      # compared after normalization, so a checkout that converted them is not drift.
+      if kind == :block and crlf?(raw),
+        do: put_change(changes, path, raw, to_crlf(contents)),
+        else: put_change(changes, path, current, contents)
     end)
   end
+
+  # Installs before 0.6 hashed the block together with the two newlines that
+  # preceded it, so an upgrade from such a state must still recognize the block.
+  defp recorded?(owned, hash), do: digest(owned) == hash or digest("\n\n" <> owned) == hash
+
+  # The blank line between the user's text and the block belongs to the user's
+  # text, so the block is found and hashed from marker to marker whatever
+  # surrounds it, and the file gains no leading or repeated blank lines.
+  defp separator(nil), do: ""
+  defp separator(""), do: ""
+
+  defp separator(contents) do
+    cond do
+      String.ends_with?(contents, "\n\n") -> ""
+      String.ends_with?(contents, "\n") -> "\n"
+      true -> "\n\n"
+    end
+  end
+
+  defp crlf?(nil), do: false
+  defp crlf?(contents), do: String.contains?(contents, "\r\n")
+
+  defp to_crlf(nil), do: nil
+
+  defp to_crlf(contents),
+    do: contents |> String.replace("\r\n", "\n") |> String.replace("\n", "\r\n")
+
+  # Managed text is compared with LF endings and a final newline before the end
+  # marker, so an editor that converts endings or strips the last newline leaves
+  # the block recognizable instead of "malformed".
+  defp normalize_text(nil), do: nil
+
+  defp normalize_text(contents) do
+    contents = String.replace(contents, "\r\n", "\n")
+
+    if String.ends_with?(contents, "<!-- elixir-agent-kit:end -->"),
+      do: contents <> "\n",
+      else: contents
+  end
+
+  defp read_text(root, path), do: normalize_text(read(root, path))
 
   defp extract_block(nil, _path), do: nil
 
@@ -252,7 +333,11 @@ defmodule ElixirAgentKit.Installer do
   defp remove_block(contents, nil), do: contents
 
   defp remove_block(contents, block) do
-    case String.replace(contents, block, "", global: false) do
+    [before, rest] = String.split(contents, block, parts: 2)
+    # Drop the blank line the installer added before the block, never the user's own newline.
+    before = String.replace(before, ~r/\n{2,}\z/, "\n")
+
+    case before <> rest do
       "" -> nil
       remaining -> remaining
     end
@@ -279,7 +364,7 @@ defmodule ElixirAgentKit.Installer do
   end
 
   defp read_state(root) do
-    case read(root, @state) do
+    case read_text(root, @state) do
       nil -> nil
       contents -> parse_state(contents)
     end
