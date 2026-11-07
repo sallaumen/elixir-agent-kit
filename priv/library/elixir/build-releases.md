@@ -22,14 +22,17 @@ Inspect: `mix.lock`, `mix deps.unlock --check-unused`, `_build/<env>` per
   (`core_components.ex`, the `*_web.ex` module, generated test cases) in
   `.credo.exs` instead of restyling them, and add no inline disables to pass it.
 - Each Elixir release since 1.17 type-checks more (see [Module and function
-  shape](code-shape.md)) and adds deprecations, so `--warnings-as-errors` can fail
-  a build that passed before: fix the code, do not drop the flag. Common ones: a
-  struct update `%URI{uri | path: p}` now wants `uri` matched as that struct
-  first (1.19); `unless` is soft-deprecated (1.18, `mix format --migrate`
-  rewrites it); comma-separated `mix do a, b` warns since 1.19, so write `mix do
-  a + b`; in 1.20 a size in a bit pattern needs the pin (`<<x::size(^n)>>`),
-  `Logger.enable/1` and `disable/1` give way to `Logger.put_process_level/2` and `delete_process_level/1`, and
-  `xref: [exclude: ...]` gives way to `elixirc_options: [no_warn_undefined: ...]`.
+  shape](code-shape.md)) and adds deprecations, so `--warnings-as-errors` can
+  fail a build that passed before: fix the code, do not drop the flag. Common
+  ones: a struct update `%URI{uri | path: p}` now wants `uri` matched as that
+  struct first (1.19); comma-separated `mix do a, b` warns since 1.19, so write
+  `mix do a + b`; in 1.20 a size taken from a variable bound before the pattern
+  needs the pin (`<<x::size(^n)>>`), `File.stream!/3` takes the line or byte
+  count before the modes, `Logger.enable/1` and `disable/1` give way to
+  `Logger.put_process_level/2` and `delete_process_level/1`, and `xref:
+  [exclude: ...]` gives way to `elixirc_options: [no_warn_undefined: ...]`. Soft
+  deprecations such as `unless` (1.18) emit no warning; `mix format --migrate`
+  rewrites them when the project chooses to.
 - Once the project has no compile-time cycle, keep it that way in the gate with
   `mix xref graph --format cycles --label compile-connected --fail-above 0` (see
   [Dependency architecture](architecture.md)); `mix hex.audit` lists
@@ -46,5 +49,5 @@ Inspect: `mix.lock`, `mix deps.unlock --check-unused`, `_build/<env>` per
   checkout in a temporary directory is the reproducibility check.
 - Run database reset, seeds or `mix release` only when the task asks for them.
 
-Verify: the repaired command in a clean checkout, the resolved versions recorded in
-the handoff.
+Verify: the repaired command in a clean checkout, the resolved versions recorded
+in the handoff.

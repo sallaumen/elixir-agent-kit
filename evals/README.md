@@ -1,6 +1,6 @@
 # Routing evaluation cases
 
-These 59 cases keep the original requests (all in Portuguese) and their evaluator
+These 60 cases keep the original requests (all in Portuguese) and their evaluator
 criteria, in either language, with public workflow IDs. `EVOLUTION` routes to the maintenance guide;
 `NONE` means a bounded task does not need a broader workflow. Cases stay outside
 the installed library so expected answers are not injected into agent instructions.
@@ -49,11 +49,13 @@ to standardize where no pattern was chosen yet, which is `architecture-review` w
 client edit that needs no workflow (E54, `NONE` with `house-patterns` as the
 alternative) so over-routing on a one-site conformance edit is measurable.
 
-E57 to E61 come from the deeper Elixir review: a Broadway consumer stuck on a
+E57 to E62 come from the deeper Elixir review: a Broadway consumer stuck on a
 poisoned message with duplicate writes (E57, `data-pipelines`), compile-time
 coupling and a cycle between contexts (E58, `architecture-review`, with
 `build-dependencies` acceptable), a large import that exhausts memory and
 duplicates rows after a restart (E59, `data-pipelines`, with `performance`
 acceptable), a one-function `for` rewrite that needs no workflow (E60, `NONE`),
-and a written decision applied to six call sites (E61, `house-patterns`, with
-`NONE` acceptable for a mechanical change). Each carries an `expected_size`.
+a written decision applied to six call sites (E61, `house-patterns`, with `NONE`
+acceptable for a mechanical change), and a GenServer whose mailbox floods under
+load, which stays `process-lifecycle` (E62) so many events alone do not pull
+routing to `data-pipelines`. Each carries an `expected_size`.

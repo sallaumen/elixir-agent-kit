@@ -853,6 +853,21 @@
         "Trocar por busca e substituição sem olhar o formato de retorno",
         "Aproveitar para renomear funções ou mudar efeitos externos"
       ]
+    },
+    {
+      "id": "E62",
+      "request": "O GenServer que recebe eventos de telemetria acumula mensagens na caixa de entrada sob carga e as chamadas para ele começam a dar timeout.",
+      "expected_primary": "process-lifecycle",
+      "allowed_alternatives": [],
+      "expected_size": "medium",
+      "success_signals": [
+        "Medir a fila de mensagens com Process.info e achar o trabalho bloqueante no callback",
+        "Mover o trabalho lento para fora do processo dono ou aplicar backpressure"
+      ],
+      "failure_signals": [
+        "Escolher data-pipelines porque chegam muitos eventos",
+        "Trocar o GenServer por Broadway sem uma fila externa"
+      ]
     }
   ]
 }

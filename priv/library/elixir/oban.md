@@ -24,7 +24,7 @@ provider.
   Oban retries the whole job. Every branch returns a value or records an error,
   none swallows one, and the run's summary counts the item errors.
 
-Verify: `Oban.Testing` (`assert_enqueued/2`, `perform_job/3`) with `testing: :manual`
-in the test config; a retry scenario asserting the effect happened once; a batch
-where one item fails and the rest are stored, and one where the source fails and
-`perform_job/3` answers `{:error, _}` or `{:snooze, _}`.
+Verify: `Oban.Testing` (`assert_enqueued/2`, `perform_job/3`) with `testing:
+:manual` in the test config; a retry scenario asserting the effect happened
+once; a batch where one item fails and the rest are stored, and one where the
+source fails and `perform_job/3` answers `{:error, _}` or `{:snooze, _}`.

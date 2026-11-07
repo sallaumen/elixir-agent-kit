@@ -11,7 +11,7 @@ Default mode: **analyze-and-fix**. Read the [shared contract](../../CONTRACT.md)
 
 Use when adding or changing a call to a model API, a speech or image service, a payment or marketplace API, or any endpoint that charges per request or enforces quotas; when a charge appears without a matching record; when a timeout or empty answer leaves nobody sure whether the provider did the work; or when a retry policy is being added to such a call.
 
-This workflow governs the single outbound call and its record. Capacity and queue accounting across many calls belong to [ai-orchestration](../ai-orchestration/SKILL.md); setup and readiness of the integration belong to [integration-setup](../integration-setup/SKILL.md); message transport belongs to [notifications](../notifications/SKILL.md).
+This workflow governs the single outbound call and its record. Capacity and queue accounting across many calls belong to [ai-orchestration](../ai-orchestration/SKILL.md); setup and readiness of the integration belong to [integration-setup](../integration-setup/SKILL.md); message transport belongs to [notifications](../notifications/SKILL.md); a flow that fans out many such calls (a batch, a queue consumer) is [data-pipelines](../data-pipelines/SKILL.md) for its bounds and delivery, with this workflow for each call.
 
 ## Inputs to inspect
 

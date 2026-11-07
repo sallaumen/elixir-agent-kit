@@ -64,7 +64,8 @@ contracts win over this reference.
 - Expected failure is a value: `{:ok, value}` or `{:error, reason}`, matched by
   the caller. A function ending in `!` raises instead, for callers who treat the
   failure as a bug. Raising and rescuing to steer normal flow is the "exceptions
-  for control-flow" anti-pattern.
+  for control-flow" anti-pattern; rescuing at a process or job boundary to turn
+  a library's exception into a reason, a snooze or a recorded error is not.
 - A public boundary function declares `@spec` with its closed set of results,
   such as `{:ok, value} | {:error, :not_configured | :unreachable | :timeout |
   {:http, status}}`, and callers match each reason they can act on instead of
@@ -79,7 +80,8 @@ contracts win over this reference.
 - `size` names an O(1) count, `length` an O(n) one.
 - `get` returns a value or a default, `fetch` returns `{:ok, value}` or `:error`,
   `fetch!` raises; `compare/2` returns `:lt`, `:eq` or `:gt`.
-- Name a helper for what it does, not `do_` plus the public function's name, and
+- Prefer naming a helper for what it does over `do_` plus the public function's
+  name (a community style-guide rule; the standard library uses `do_` too), and
   never give a private and a public function the same name.
 
 ## Documentation and types
@@ -89,8 +91,8 @@ contracts win over this reference.
   marks an internal module; `@doc false` hides a function but keeps it public.
 - A comment says why a non-obvious line exists (the failure it prevents), not
   what the next line does ("comments overuse").
-- The compiler does not read typespecs; Dialyzer does. Elixir's own type checker
-  infers types from code and warns on its own: 1.18 checks calls and flags
+- Elixir's type checker ignores `@spec`; Dialyzer reads it. The checker infers
+  types from code and warns on its own: 1.18 checks calls and flags
   clauses that can never match, 1.19 adds protocols and anonymous functions, and
   1.20 infers types from guards and whole function bodies and flags redundant
   clauses, dead code and maps missing a required key. Fix the code a warning

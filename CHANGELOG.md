@@ -27,7 +27,7 @@
 - Fix: `house-patterns` no longer suggests `mix xref callers` with a function,
   which Elixir 1.19 rejects; it uses `mix xref graph --sink`. LiveView tests assert
   on elements by DOM id, as Phoenix's usage rules ask, not on raw HTML.
-- Evaluation cases E57 to E61, each with an `expected_size`.
+- Evaluation cases E57 to E62, each with an `expected_size`.
 
 - New workflow `house-patterns` (code area): bring existing code to patterns the
   project already established, with a pattern card, a deviation table, a public-seam

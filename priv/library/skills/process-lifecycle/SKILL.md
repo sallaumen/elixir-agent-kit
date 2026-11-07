@@ -11,7 +11,7 @@ Default mode: **analyze-and-fix**. Read the [shared contract](../../CONTRACT.md)
 
 Use when a process is the suspect: a poller that broadcasts the same thing twice, a mailbox that grows, a `GenServer.call` that times out under load, state that vanishes or doubles after a crash or deploy, a `Task` nobody awaits, or a new feature that someone wants to "make a GenServer". Use it before writing the process as well as when one misbehaves.
 
-The user-visible side of asynchronous work (what the interface shows after reconnect, stale results) belongs to [async-state](../async-state/SKILL.md); this workflow is about the BEAM runtime: ownership, supervision, backpressure and restart.
+The user-visible side of asynchronous work (what the interface shows after reconnect, stale results) belongs to [async-state](../async-state/SKILL.md); this workflow is about the BEAM runtime: ownership, supervision, backpressure and restart. A flow of many items (an import, a stream, a queue consumer) and its delivery guarantees is [data-pipelines](../data-pipelines/SKILL.md).
 
 ## Inputs to inspect
 

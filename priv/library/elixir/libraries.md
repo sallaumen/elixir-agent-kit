@@ -1,6 +1,7 @@
 # Recommended libraries
 
-Part of the [Elixir context](../ELIXIR.md). Applies when a dependency is added, replaced or questioned.
+Part of the [Elixir context](../ELIXIR.md). Applies when a dependency is added,
+replaced or questioned.
 
 Inspect: `mix.exs` and `mix.lock` before adding anything; a library already in
 the lockfile, or one the Phoenix generator includes, beats a new dependency

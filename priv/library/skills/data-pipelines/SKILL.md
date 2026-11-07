@@ -32,7 +32,7 @@ The separating rule: the flow of many items and its delivery guarantees is this 
 
 4. Decide the failure path per item: acknowledge-and-record, retry a bounded number of times, or send to a dead-letter destination an operator can replay. For Broadway, configure the producer's failure option instead of relying on defaults that redeliver forever or commit failures away. Done when the poisoned-item test shows the item leaving the flow with a record and the rest proceeding.
 
-5. Bound the flow: stream instead of loading (`Stream`, `Repo.stream/2` in short transactions or keyset pages), fan out with explicit `max_concurrency` and `timeout`, size batches to the downstream capacity, and keep the caller alive when one item times out. Done when the large-input test stays within the stated memory bound and the downstream sees no more than the stated concurrency.
+5. Bound the flow: stream instead of loading (`Stream`, `Repo.stream/2` with an explicit `timeout:`, or keyset pages in short transactions), fan out with explicit `max_concurrency` and `timeout`, size batches to the downstream capacity, and keep the caller alive when one item times out. Done when the large-input test stays within the stated memory bound and the downstream sees no more than the stated concurrency.
 
 6. Make the flow observable: count processed, failed, retried and dead-lettered items with telemetry or logs that carry the item identity, then run the focused tests and the project gate. Done when the handoff states the card, the tests and the remaining unbounded parts.
 
@@ -47,14 +47,13 @@ The separating rule: the flow of many items and its delivery guarantees is this 
 ## Quality criteria
 
 - Every stage has a stated concurrency, batch and timeout, and the memory per item is bounded.
-- A duplicate delivery produces one effect, proven by a test.
-- A poisoned item leaves the flow with a record and does not block the others.
+- Where the source can redeliver, a duplicate produces one effect and a poisoned item leaves the flow with a record without blocking the others, each proven by a test.
 - The acknowledgement semantics of the source are written with their documentation source and version.
 - Processed, failed and dead-lettered counts are observable with item identity.
 
 ## Validation and evidence
 
-- Minimum: the flow card plus a test that delivers a poisoned item and a duplicate, asserting one effect for the duplicate, a recorded failure for the poisoned item, and the remaining items processed.
+- Minimum: the flow card plus the test that matches the source. For a source that can redeliver (a queue, a retried job, a restarted import), deliver a poisoned item and a duplicate and assert one effect for the duplicate, a recorded failure for the poisoned item and the remaining items processed. For an in-memory flow (a stream, a fan-out), assert the bound instead: laziness with an instrumented `Stream.resource/3`, concurrency with a counter (`:atomics`) that never exceeds `max_concurrency`, and the caller surviving one item's timeout.
 - When turns allow: a large-input run at test scale with memory or row counts recorded before and after.
 - When Broadway is used: `Broadway.test_message/3` or `test_batch/3` with `Broadway.DummyProducer`, asserting the `{:ack, ref, successful, failed}` message.
 - When a fan-out was bounded: a test or local run showing `max_concurrency` and the timeout path keeping the caller alive.
@@ -69,6 +68,6 @@ The separating rule: the flow of many items and its delivery guarantees is this 
 
 ## Completion
 
-A flow card with every stage bounded and the source's semantics written, idempotent effects proven against a duplicate, a poisoned item that leaves the flow with a record, a large input within its memory bound, and observable counts, with the project gate green. For a GenServer inside the flow use [process-lifecycle](../process-lifecycle/SKILL.md); for a paid call inside it use [provider-calls](../provider-calls/SKILL.md); for CI pipelines use [pipeline-design](../pipeline-design/SKILL.md); for a measured slow but correct flow use [performance](../performance/SKILL.md).
+A flow card with every stage bounded and the source's semantics written; for a redelivering source, idempotent effects proven against a duplicate and a poisoned item that leaves the flow with a record; for an in-memory flow, its laziness and concurrency bound proven; observable counts; and the project gate green. For a GenServer inside the flow use [process-lifecycle](../process-lifecycle/SKILL.md); for a paid call inside it use [provider-calls](../provider-calls/SKILL.md); for CI pipelines use [pipeline-design](../pipeline-design/SKILL.md); for a measured slow but correct flow use [performance](../performance/SKILL.md).
 
 Use the [Elixir context](../../ELIXIR.md) only for technology present in the project. Record a useful [handoff](../../HANDOFF.md) when another person or agent will continue the work.

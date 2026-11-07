@@ -1,6 +1,7 @@
 # Security
 
-Part of the [Elixir context](../ELIXIR.md). Applies when the project serves HTTP, takes user input or reads secrets.
+Part of the [Elixir context](../ELIXIR.md). Applies when the project serves
+HTTP, takes user input or reads secrets.
 
 Inspect: the browser pipeline (`protect_from_forgery`,
 `put_secure_browser_headers`), every place a token is verified, every call

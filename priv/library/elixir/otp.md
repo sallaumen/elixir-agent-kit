@@ -1,6 +1,7 @@
 # OTP processes and supervision
 
-Part of the [Elixir context](../ELIXIR.md). Applies when the project starts its own processes (`GenServer`, `Task`, `Agent`, a supervision tree).
+Part of the [Elixir context](../ELIXIR.md). Applies when the project starts its
+own processes (`GenServer`, `Task`, `Agent`, a supervision tree).
 
 Inspect: the supervision tree (`Application.start/2`, child specs), which process
 owns each piece of state, every `GenServer.call/3` timeout, and what happens on
@@ -11,9 +12,11 @@ restart.
 - Pick the restart strategy for the failure you expect; a crash that loses state
   the user depends on needs persistence or a recovery read, not a tighter restart.
 - Give long `call`s an explicit timeout and a caller that survives `:timeout`.
-  Move blocking work out of callbacks with `Task.Supervisor` or `handle_continue/2`.
+  Move blocking work out of callbacks with `Task.Supervisor` or
+  `handle_continue/2`.
 - Watch mailbox growth on pollers and broadcasters: dedupe by content hash or
-  sequence before broadcasting; `Process.info(pid, :message_queue_len)` measures it.
+  sequence before broadcasting; `Process.info(pid, :message_queue_len)` measures
+  it.
 - A periodic process schedules its next tick inside `handle_info/2` (scheduling
   only in `init/1` runs once), reads the interval from application config so the
   test environment can stretch it, and rescues a known flaky source inside the

@@ -31,11 +31,15 @@ umbrella.
 
 ## Contracts and substitution
 
-- An external service sits behind a behaviour the project owns (its callbacks are
-  the contract), with one production implementation, a fixture implementation
-  for development when useful, and a test double. Mock only behaviours you own;
-  wrapping a library you do not own in a thin behaviour first is the cost of a
-  mockable seam.
+- Pick the seam by what varies. For an HTTP API reached with Req, the client
+  value is the seam: build it once, pass it in, and replace only its transport
+  with `Req.Test` (see [HTTP clients and provider APIs](http-clients.md)); no
+  behaviour is needed. A service with several real implementations (two model
+  providers, a fake engine for development) or reached through a non-HTTP
+  library sits behind a behaviour the project owns, whose callbacks are the
+  contract; tests use a scripted implementation or Mox. Mock only behaviours you
+  own; wrapping a library you do not own in a thin behaviour first is the cost
+  of a mockable seam.
 - Choose how the implementation is selected by how many call sites need it:
   - a function or module argument with a default
     (`def sync(client \\ Client.build())`) when few call sites need it; tests pass
@@ -43,11 +47,13 @@ umbrella.
   - a single module that reads `Application.get_env/3` at runtime when many
     layers would otherwise have to pass the argument through; tests then change
     a global and run `async: false`, or use Mox expectations, which are per
-    process and reach `Task`s through `$callers`.
+    process, reach `Task`s through `$callers` and need `Mox.allow/3` for any
+    other process. `Mox.stub_with/2` backs a mock with a real implementation, and
+    `setup :verify_on_exit!` fails a test whose expectations were not met.
 - A library takes its options as keyword arguments or child-spec options, not
   from application env ("using application configuration for libraries"). The
-  exceptions are compile-time code generation (`use Ecto.Repo, otp_app: ...`),
-  swapping implementations that behave identically, and Mix task configuration.
+  Elixir guide's exceptions are compile-time code generation (`use Ecto.Repo,
+  otp_app: ...`) and swapping implementations that behave identically.
 
 ## Enforcing boundaries
 
@@ -58,9 +64,10 @@ umbrella.
 - The `boundary` library (`compilers: [:boundary] ++ Mix.compilers()`, then
   `use Boundary, deps: [...], exports: [...]` in each top-level module) turns
   forbidden calls between declared boundaries into compiler warnings. Adopt it
-  with its allowance for existing violations and tighten later; it cannot see
-  `apply/3` or modules chosen through configuration, and it is not tested with
-  umbrellas.
+  with its allowance for existing violations (`dirty_xrefs`) and tighten later.
+  Its README says it is not tested with umbrellas; since it reads compiler
+  references, expect it to miss calls made through `apply/3` or a module taken
+  from configuration.
 - An umbrella shares configuration, the lockfile and the build across its apps;
   it groups code, it does not decouple it. Apps that need different
   dependencies, versions or configuration belong in separate Mix projects
@@ -70,9 +77,14 @@ umbrella.
 ## Compile-time coupling
 
 - A compile-time dependency recompiles the dependent file whenever the
-  dependency changes. They come from macros and `use`, module attributes or
-  module bodies that call another module, struct literals and imports (export
-  dependencies, lighter), and `@external_resource`.
+  dependency changes. They come from macros and `use`, and from module bodies or
+  attributes that call another module; struct literals and imports create the
+  lighter export dependencies. A file listed in `@external_resource` also
+  triggers recompilation, though it is not a module dependency.
+- Compile-time dependencies are transitive through runtime ones: if `A` uses
+  `B` at compile time and `B` calls `C` at runtime, changing `C` recompiles `A`.
+  So a module that others `use` or call from their module bodies must not call
+  into the rest of the application; keep it small and dependency-free.
 - To cut one: move calls out of module bodies and attributes into functions;
   prefer `alias` and `import` over `use` when nothing needs injecting; inside a
   macro, expand a module argument used only at runtime with

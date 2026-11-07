@@ -12,9 +12,10 @@ and `_build/` exist for the environment you are about to use.
 
 - `mix help Module` and `mix help Module.function` print the documentation of
   the version in `mix.lock` (for example `mix help Ecto.Changeset.cast`);
-  callbacks such as `Repo.transact/2` are documented on their behaviour, so read
-  those in `deps/`. `mix help --search term` finds tasks. This is cheaper and
-  more exact than recalling an API, and it needs no network.
+  callbacks such as `Repo.transact/2` are documented on their behaviour (1.20's
+  `mix help` prints them; on older versions read them in `deps/`). `mix help
+  --search term` finds tasks. This is cheaper and more exact than recalling an
+  API, and it needs no network.
 - The source of a dependency is in `deps/<package>/lib`; read the function you
   call before guessing an option name. Never edit `deps/`.
 - Dependencies may ship rules for agents. Phoenix 1.8 ships
@@ -46,10 +47,10 @@ a grep of it.
 ## Find code and its callers
 
 - `grep -rn` for the function name and for dynamic references (strings, config,
-  `apply/3`) together with `mix xref graph --sink lib/path.ex --only-nodes` (who
-  depends on a file) and `mix xref trace lib/path.ex` (why a file depends on
-  others). A language server such as Expert, when the client has one, answers
-  "who calls this function" more precisely.
+  `apply/3`) together with `mix xref graph --sink lib/path.ex --only-nodes`
+  (every file that depends on it, directly or indirectly) and `mix xref trace
+  lib/path.ex` (why a file depends on others). A language server such as Expert,
+  when the client has one, answers "who calls this function" more precisely.
 
 ## Questions about the running system
 

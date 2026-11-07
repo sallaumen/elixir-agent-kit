@@ -1,6 +1,7 @@
 # Phoenix and LiveView
 
-Part of the [Elixir context](../ELIXIR.md). Applies when `mix.lock` lists `phoenix` or `phoenix_live_view`.
+Part of the [Elixir context](../ELIXIR.md). Applies when `mix.lock` lists
+`phoenix` or `phoenix_live_view`.
 
 Inspect: `mount/3` versus `handle_params/3`, whether a subscription runs only when
 `connected?(socket)`, how navigation is done (`push_patch` keeps the process,
@@ -28,11 +29,12 @@ track the version in `mix.lock` and are not repeated here.
   `Process.send_after(self(), {:job_timeout, ref}, ms)`, whose handler calls
   `cancel_async/3` and names the failure. A second submit while the job runs is
   refused in `handle_event/3`; `phx-disable-with` is feedback, not a guard.
-- Push state from the server (PubSub subscribe in connected mount, `handle_info`),
-  never poll the database from the browser. With scopes, subscribe through a
-  scoped context function, not a topic built from a raw id. When the shown resource changes,
-  unsubscribe from the old topic before subscribing to the new one; subscribing
-  again on every reload delivers each broadcast twice.
+- Push state from the server (PubSub subscribe in connected mount,
+  `handle_info`), never poll the database from the browser. With scopes,
+  subscribe through a scoped context function, not a topic built from a raw id.
+  When the shown resource changes, unsubscribe from the old topic before
+  subscribing to the new one; subscribing again on every reload delivers each
+  broadcast twice.
 - Read the page's data in `handle_params/3`, not in both `mount/3` and
   `handle_params/3`: both run on the dead render and again on the connected one,
   so a read in each doubles the work. Skip the read for a `push_patch` that keeps
@@ -50,9 +52,9 @@ track the version in `mix.lock` and are not repeated here.
   true)`, keep counts and empty-state flags in separate assigns, and re-insert an
   item when an assign it renders changes.
 - Forms: `to_form/2` in the LiveView and `@form[:field]` in the template (never
-  `@changeset` or `let={f}` there), `phx-change` for validation, `phx-submit` for
-  the write, `phx-disable-with` on the submit control; optimistic UI is the exception, not
-  the default round-trip. A form that mirrors saved settings sets
+  `@changeset` or `let={f}` there), `phx-change` for validation, `phx-submit`
+  for the write, `phx-disable-with` on the submit control; optimistic UI is the
+  exception, not the default round-trip. A form that mirrors saved settings sets
   `phx-auto-recover="ignore"`: after a reconnect LiveView re-sends each form's
   values through its `phx-change` event, which replays a confirmation or saves a
   half-filled picker.

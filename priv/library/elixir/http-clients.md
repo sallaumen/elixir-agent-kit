@@ -1,6 +1,7 @@
 # HTTP clients and provider APIs
 
-Part of the [Elixir context](../ELIXIR.md). Applies when `mix.lock` lists `req`, `finch` or another HTTP client.
+Part of the [Elixir context](../ELIXIR.md). Applies when `mix.lock` lists `req`,
+`finch` or another HTTP client.
 
 Inspect: which client the project uses (`Req` over `Finch` and `Mint`, or `Finch`
 directly), the retry and timeout options on each paid or non-idempotent call,
@@ -36,10 +37,10 @@ how pools are sized per provider host, and how tests replace the transport.
   response or exception and returns `{:delay, ms}` or `false`, with
   `max_retries:` as the bound and no `retry_delay:` (Req rejects that option
   when the function returns `{:delay, ms}`). Retry only failures with nothing to
-  pay for (a transport error before a response, a 429 honoring a capped `retry-after`, a
-  500, 502, 503 or 504), never a 4xx about the input or the key, never a stream
-  after its first chunk reached the caller, and record each retry where
-  operators see it.
+  pay for (a transport error before a response, a 429 honoring a capped
+  `retry-after`, a 500, 502, 503 or 504), never a 4xx about the input or the
+  key, never a stream after its first chunk reached the caller, and record each
+  retry where operators see it.
 - Timeouts: `receive_timeout` (default 15 s) bounds the wait for a response;
   `connect_options: [timeout: ...]` (default 30 s) bounds the connection. In Req
   0.7+ pool options move under `finch: [name: ..., pool_timeout: ...]`; earlier
