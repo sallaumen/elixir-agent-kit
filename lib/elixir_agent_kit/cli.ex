@@ -2,43 +2,9 @@ defmodule ElixirAgentKit.CLI do
   @moduledoc false
 
   def run(action, args) do
-    {flags, rest, invalid} =
-      OptionParser.parse(args, strict: [agents: :string, skills: :string, dry_run: :boolean])
-
-    if rest != [] or invalid != [],
-      do: Mix.raise("Expected --agents codex,claude,generic, --skills ID,ID and/or --dry-run")
-
-    if action == :check and flags[:dry_run], do: Mix.raise("check is already read-only")
-
-    if action == :uninstall and (flags[:agents] || flags[:skills]),
-      do: Mix.raise("uninstall removes everything the kit owns; it takes no selection flags")
-
-    configured = Mix.Project.config()[:elixir_agent_kit]
-    config = configured || []
-
-    unless Keyword.keyword?(config),
-      do: Mix.raise(":elixir_agent_kit configuration must be a keyword list")
-
-    unknown = Keyword.keys(config) -- [:agents, :skills]
-
-    unless unknown == [],
-      do: Mix.raise("Unknown Elixir Agent Kit configuration keys: #{inspect(unknown)}")
-
-    # A declared :elixir_agent_kit entry is the source of truth, so a key removed
-    # from mix.exs falls back to the default rather than to the recorded state.
-    config =
-      if configured,
-        do: config |> Keyword.put_new(:agents, [:generic]) |> Keyword.put_new(:skills, :all),
-        else: config
-
+    opts = options!(action, args, Mix.Project.config()[:elixir_agent_kit])
     library = library_path()
-
-    opts =
-      config
-      |> override(:agents, flags[:agents])
-      |> override(:skills, flags[:skills])
-      |> Keyword.put(:dry_run, flags[:dry_run] || false)
-      |> Keyword.put(:library_path, library)
+    opts = Keyword.put(opts, :library_path, library)
 
     if action != :uninstall do
       skills = if is_list(opts[:skills]), do: Enum.map(opts[:skills], &to_string/1), else: ["all"]
@@ -82,6 +48,45 @@ defmodule ElixirAgentKit.CLI do
     end
   rescue
     error in ArgumentError -> Mix.raise(Exception.message(error))
+  end
+
+  @doc false
+  # Everything run/2 decides before the installer: flag parsing, the refusals
+  # that need no project, and the mix.exs configuration rules. Pure, so the
+  # rules are testable without a Mix project or a library on disk.
+  def options!(action, args, project_config) do
+    {flags, rest, invalid} =
+      OptionParser.parse(args, strict: [agents: :string, skills: :string, dry_run: :boolean])
+
+    if rest != [] or invalid != [],
+      do: Mix.raise("Expected --agents codex,claude,generic, --skills ID,ID and/or --dry-run")
+
+    if action == :check and flags[:dry_run], do: Mix.raise("check is already read-only")
+
+    if action == :uninstall and (flags[:agents] || flags[:skills]),
+      do: Mix.raise("uninstall removes everything the kit owns; it takes no selection flags")
+
+    config = project_config || []
+
+    unless Keyword.keyword?(config),
+      do: Mix.raise(":elixir_agent_kit configuration must be a keyword list")
+
+    unknown = Keyword.keys(config) -- [:agents, :skills]
+
+    unless unknown == [],
+      do: Mix.raise("Unknown Elixir Agent Kit configuration keys: #{inspect(unknown)}")
+
+    # A declared :elixir_agent_kit entry is the source of truth, so a key removed
+    # from mix.exs falls back to the default rather than to the recorded state.
+    config =
+      if project_config,
+        do: config |> Keyword.put_new(:agents, [:generic]) |> Keyword.put_new(:skills, :all),
+        else: config
+
+    config
+    |> override(:agents, flags[:agents])
+    |> override(:skills, flags[:skills])
+    |> Keyword.put(:dry_run, flags[:dry_run] || false)
   end
 
   # Claude Code ignores AGENTS.md once a CLAUDE.md applies, so a project with a

@@ -83,6 +83,19 @@ end
     output = run(root, "mix", "agent_kit.install")
     assert "no changes needed" in output
     assert snapshot(root) == installed
+    if not args.git_url:
+        # Selection flags override the mix.exs entry; a dry run reports and writes nothing.
+        output = run(root, "mix", "agent_kit.sync", "--skills", "debugging,code-review", "--dry-run")
+        assert "Would change" in output and ".elixir-agent-kit/START.md" in output, output
+        assert snapshot(root) == installed, "selection dry run wrote project files"
+        output = run(root, "mix", "agent_kit.check", "--agents", "codex", expected=1)
+        assert "Out of sync: CLAUDE.md" in output, output
+        assert snapshot(root) == installed, "check with a selection flag wrote project files"
+        output = run(root, "mix", "agent_kit.uninstall", "--dry-run")
+        assert "Would change" in output and "CLAUDE.md" in output, output
+        assert snapshot(root) == installed, "uninstall dry run wrote project files"
+        run(root, "mix", "agent_kit.uninstall", "--agents", "codex", expected=1)
+        assert snapshot(root) == installed
     if args.git_url:
         for index in generated:
             assert all(not Path(unquote(target)).is_absolute()
@@ -110,4 +123,5 @@ end
     assert snapshot(root) == before, "uninstall did not restore consumer files"
     if args.git_url:
         print(f"OK: relative Git references survive relocation and dependency refetch ({args.deps_path}).")
-    print("OK: real Mix consumer fetch, all adapters, dry run, drift exit, repeated install, test/prod isolation and uninstall.")
+    print("OK: real Mix consumer fetch, all adapters, dry run, drift exit, repeated install, selection flags, "
+          "dry-run uninstall, test/prod isolation and uninstall.")

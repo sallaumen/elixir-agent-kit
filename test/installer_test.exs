@@ -469,6 +469,38 @@ defmodule ElixirAgentKit.InstallerTest do
     assert claude =~ "START.md"
   end
 
+  test "a pre-existing CLAUDE.md keeps its text, gets the block appended and is restored",
+       %{root: root} do
+    original = "# Mine\nKeep this exact text.\n"
+    put(root, "CLAUDE.md", original)
+    assert {:ok, paths} = Installer.run(:install, root, agents: [:claude])
+    assert "CLAUDE.md" in paths
+    claude = get(root, "CLAUDE.md")
+    assert String.starts_with?(claude, original <> "\n<!-- elixir-agent-kit:start -->\n")
+    assert String.ends_with?(claude, "<!-- elixir-agent-kit:end -->\n")
+
+    assert get(root, ".elixir-agent-kit/state.tsv") =~
+             ~r/^block\tCLAUDE\.md\t[a-f0-9]{64}\texisting$/m
+
+    assert {:ok, []} = Installer.run(:check, root)
+    assert {:ok, _} = Installer.run(:uninstall, root)
+    assert get(root, "CLAUDE.md") == original
+    assert snapshot(root) == %{"CLAUDE.md" => original}
+  end
+
+  test "state recorded by another kit version is drift and is rewritten by sync", %{root: root} do
+    Installer.run(:install, root, agents: [:codex])
+    assert {:ok, []} = Installer.run(:check, root)
+    state = Path.join(root, ".elixir-agent-kit/state.tsv")
+    current = "version\t#{ElixirAgentKit.version()}\n"
+    assert File.read!(state) =~ current
+    File.write!(state, String.replace(File.read!(state), current, "version\t0.0.1\n"))
+    assert {:drift, [".elixir-agent-kit/state.tsv"]} = Installer.run(:check, root)
+    assert {:ok, [".elixir-agent-kit/state.tsv"]} = Installer.run(:sync, root)
+    assert File.read!(state) =~ current
+    assert {:ok, []} = Installer.run(:check, root)
+  end
+
   test "missing library files are listed for the selection" do
     assert Installer.missing_library_files(ElixirAgentKit.library_path()) == []
 
