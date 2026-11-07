@@ -16,10 +16,10 @@ This workflow moves a persisted representation from one shape to another with bo
 ## Inputs to inspect
 
 - Start at: the newest files in `priv/repo/migrations/` and the diff of schemas and workers, then `grep -rn "use Oban.Worker\|Ecto.Enum\|embedded_schema\|term_to_binary\|Jason.Encoder" lib/` to list every persisted name and shape.
-- Each changed schema with its current column names, types, defaults and constraints, and the rows that already exist with the old shape. See [Ecto and migrations](../../ELIXIR.md#ecto-and-migrations).
-- Oban workers: which module names and argument keys are persisted in `oban_jobs`, including scheduled and retrying jobs that will run after the deploy. See [Oban](../../ELIXIR.md#oban).
+- Each changed schema with its current column names, types, defaults and constraints, and the rows that already exist with the old shape. See [Ecto and migrations](../../elixir/ecto.md).
+- Oban workers: which module names and argument keys are persisted in `oban_jobs`, including scheduled and retrying jobs that will run after the deploy. See [Oban](../../elixir/oban.md).
 - Public payloads: PubSub messages, webhooks, API responses and exports, with the consumers that read them and their deploy timing.
-- The deploy procedure: rolling or all-at-once, whether migrations run before or after the new release starts, and the backup and restore policy. See [Build, dependencies and releases](../../ELIXIR.md#build-dependencies-and-releases).
+- The deploy procedure: rolling or all-at-once, whether migrations run before or after the new release starts, and the backup and restore policy. See [Build, dependencies and releases](../../elixir/build-releases.md).
 - Existing tests that insert legacy-shaped data, and whether any test runs `mix ecto.rollback`.
 
 ## Workflow

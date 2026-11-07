@@ -18,7 +18,7 @@ This workflow owns spacing, alignment, grouping and information density within o
 - Start at: the route the user named, rendered in the running application at the one width they reported, with real data volumes; then the spacing, grid and type scale the project defines (its CSS configuration or design guidance).
 - The template and components for that route: which spacing comes from the scale, which from arbitrary values, and which containers exist only to carry a border or a shadow.
 - The user's most frequent task on the screen and the labels, values and actions that must be read together to complete it.
-- Real content: the longest label, the largest list, the empty state and the one-item state, as they render. See [Phoenix and LiveView](../../ELIXIR.md#phoenix-and-liveview) for the streams and forms that decide what renders.
+- Real content: the longest label, the largest list, the empty state and the one-item state, as they render. See [Phoenix and LiveView](../../elixir/phoenix-liveview.md) for the streams and forms that decide what renders.
 - The shared components the screen uses and the other screens that consume them.
 
 ## Workflow

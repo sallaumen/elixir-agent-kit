@@ -19,7 +19,7 @@ This workflow owns the incident lifecycle: detection, acknowledgement, escalatio
 - The detectors: which jobs, telemetry handlers or health checks emit the source events, what each event carries (condition key, scope, severity, timestamp), and whether two detectors can describe one condition.
 - The persisted alert schema: identity key, state field, opened and last-seen timestamps, acknowledged-by, resolved-at, and which transitions write which fields.
 - The recovery signal: what observation proves the condition is gone, and whether anything in the system produces it.
-- The routes from an alert state change to a person: which transitions notify, the dedup window, and what happens on restart or event replay. See [Oban](../../ELIXIR.md#oban), [Ecto and migrations](../../ELIXIR.md#ecto-and-migrations) and [Telemetry and observability](../../ELIXIR.md#telemetry-and-observability).
+- The routes from an alert state change to a person: which transitions notify, the dedup window, and what happens on restart or event replay. See [Oban](../../elixir/oban.md), [Ecto and migrations](../../elixir/ecto.md) and [Telemetry and observability](../../elixir/telemetry.md).
 
 ## Workflow
 

@@ -16,10 +16,10 @@ This workflow answers "who owns this field and does every layer agree with the o
 ## Inputs to inspect
 
 - Start at: the field named in the report or in the failing test, then `grep -rn "field_name" lib/ test/` to list every module that reads or writes it.
-- The Ecto schema and every changeset that casts or validates the field, and the migration that created the column with its constraints and default. See [Ecto and migrations](../../ELIXIR.md#ecto-and-migrations).
+- The Ecto schema and every changeset that casts or validates the field, and the migration that created the column with its constraints and default. See [Ecto and migrations](../../elixir/ecto.md).
 - The context functions that write it and the `Ecto.Multi` or `Repo.transaction/2` around them, including what runs after commit.
-- The LiveView assigns, form and `handle_event` clauses that pass the value in and out, and what the view shows when the value is missing. See [Phoenix and LiveView](../../ELIXIR.md#phoenix-and-liveview).
-- Derived copies: denormalized columns, ETS or assign caches, PubSub payloads, Oban job args and outward API responses that carry the same value. See [Oban](../../ELIXIR.md#oban).
+- The LiveView assigns, form and `handle_event` clauses that pass the value in and out, and what the view shows when the value is missing. See [Phoenix and LiveView](../../elixir/phoenix-liveview.md).
+- Derived copies: denormalized columns, ETS or assign caches, PubSub payloads, Oban job args and outward API responses that carry the same value. See [Oban](../../elixir/oban.md).
 - Tests that touch the field, and which layer each one exercises; note whether any test feeds form params through to the row.
 
 ## Workflow
@@ -55,7 +55,7 @@ This workflow answers "who owns this field and does every layer agree with the o
 ## Validation and evidence
 
 - Minimum: one test through the owning boundary that feeds form params to the row, asserting the persisted value and the rendered value for one valid and one invalid input.
-- When turns allow: a partial failure inside the `Ecto.Multi` asserting no orphan record, and a concurrent write against the database constraint under `Ecto.Adapters.SQL.Sandbox`. See [ExUnit and diagnostics](../../ELIXIR.md#exunit-and-diagnostics).
+- When turns allow: a partial failure inside the `Ecto.Multi` asserting no orphan record, and a concurrent write against the database constraint under `Ecto.Adapters.SQL.Sandbox`. See [ExUnit and diagnostics](../../elixir/exunit.md).
 - When a PubSub payload or Oban job argument changed: a consumer test with the new shape and one with an old-shaped message still in flight.
 - When the field reaches a browser: a reload after the write showing the stored value, not the last assign.
 

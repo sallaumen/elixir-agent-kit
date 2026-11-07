@@ -19,7 +19,7 @@ The output is a short list of risks, each with the cheapest test that can observ
 - The changed behavior and its public contract: the function, endpoint, LiveView event, job or message that a caller depends on.
 - Likely failure modes, ranked by consequence: wrong result, unauthorized access, lost or duplicated write, race, silent failure, broken compatibility with stored data.
 - Existing tests around the boundary: what they assert, what fixtures they build, whether any of them would fail if the behavior broke.
-- The test environment: sandbox, `async` settings, fakes for external services, time control, and the cost of a full run. See [ExUnit and diagnostics](../../ELIXIR.md#exunit-and-diagnostics).
+- The test environment: sandbox, `async` settings, fakes for external services, time control, and the cost of a full run. See [ExUnit and diagnostics](../../elixir/exunit.md).
 
 ## Workflow
 
@@ -29,7 +29,7 @@ The output is a short list of risks, each with the cheapest test that can observ
 
 3. Write each test from an independent oracle: a known-good literal, a worked example, the spec, a stored fixture. If the expected value is computed the way the code computes it, the test cannot disagree with the code; rewrite it.
 
-4. Control what makes failures intermittent: time (inject the clock), concurrency (send the messages yourself, assert with `assert_receive` and a bounded timeout), persistence (sandbox per test), external responses (a behaviour with `Mox`, plus one real contract check where authorized).
+4. Control what makes failures intermittent: time (inject the clock), concurrency (send the messages yourself, assert with `assert_receive` and a bounded timeout), persistence (sandbox per test), external responses (a behaviour with `Mox`, plus one real contract check where authorized), global configuration (save and restore application env in `on_exit/1`; `async: false` only for the module that changes it) and background processes (stretch their interval in the test config and call the tick yourself). See [ExUnit and diagnostics](../../elixir/exunit.md).
 
 5. Prove that a regression test reaches the behavior: run it against the unfixed code, or against a one-line mutation of the contract, and watch it fail. Record that run. If it cannot be made to fail, it protects nothing; replace it.
 

@@ -15,7 +15,7 @@ This workflow owns the shape of validation: which command checks what, where it 
 
 ## Inputs to inspect
 
-- Start at: the CI configuration and the aliases in `mix.exs`, then run the alias CI uses locally and compare its output with the last CI log. See [Build, dependencies and releases](../../ELIXIR.md#build-dependencies-and-releases).
+- Start at: the CI configuration and the aliases in `mix.exs`, then run the alias CI uses locally and compare its output with the last CI log. See [Build, dependencies and releases](../../elixir/build-releases.md).
 - Every command a contributor is told to run (README, contributing guide, hooks) and what each actually executes: format, compile with warnings as errors, static analysis if present, tests, assets.
 - Services and secrets each check needs (database, a headless browser for integration tests, provider keys) and which jobs receive them.
 - Side effects per command: database reset, seeds, generated files, published packages, release builds.

@@ -19,7 +19,7 @@ This workflow owns transport: the path from an emitted event to a delivered mess
 - The inbound side: webhook route or poller, how many processes run it (one per node, one per cluster, a GenServer under each supervisor), and what identifies an inbound update.
 - The outbound chain: event emitted, Oban job or process, provider client, provider response, persisted delivery record; which identifier travels the whole chain.
 - Retry and uniqueness settings on the delivery worker (`unique`, `max_attempts`, backoff) and what the provider does with a repeated send.
-- The provider's current documented limits and error codes for the operations used, read today, and the exact library version in `mix.lock`. See [Oban](../../ELIXIR.md#oban), [OTP processes and supervision](../../ELIXIR.md#otp-processes-and-supervision) and [HTTP clients and provider APIs](../../ELIXIR.md#http-clients-and-provider-apis).
+- The provider's current documented limits and error codes for the operations used, read today, and the exact library version in `mix.lock`. See [Oban](../../elixir/oban.md), [OTP processes and supervision](../../elixir/otp.md) and [HTTP clients and provider APIs](../../elixir/http-clients.md).
 
 ## Workflow
 

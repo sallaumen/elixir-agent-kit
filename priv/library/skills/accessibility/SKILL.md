@@ -19,7 +19,7 @@ Target WCAG 2.2 level AA unless the project names another level. A scanner resul
 - The task the user must complete, its interactive states (idle, loading, invalid, error, success, disabled) and the rendered DOM in each state, not the template source alone.
 - Keyboard path: tab order, activation keys, `Escape`, arrow keys inside composite widgets, what happens to focus after each change.
 - Contrast on the real background, text zoom to 200%, reflow at 320 CSS pixels, target size of controls that matter on touch.
-- For LiveView: how a patch changes the DOM (`phx-update`, streams), whether live regions survive it, and where focus lands after `push_patch`, a flash or a form error. See [Phoenix and LiveView](../../ELIXIR.md#phoenix-and-liveview).
+- For LiveView: how a patch changes the DOM (`phx-update`, streams), whether live regions survive it, and where focus lands after `push_patch`, a flash or a form error. See [Phoenix and LiveView](../../elixir/phoenix-liveview.md).
 
 ## Workflow
 

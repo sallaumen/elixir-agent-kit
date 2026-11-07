@@ -19,7 +19,7 @@ This workflow owns capacity and accounting across many jobs, queues, workers and
 - Every path that reaches a model: workers that always call, workers that call only on a condition, and workers that enqueue another worker which calls. Draw the delegation chain.
 - The provider limits as documented today (requests per minute, tokens per minute, concurrent requests per key) and where the project stores them; note the date read.
 - The counter or semaphore that claims to track active calls: who increments, who decrements, and what happens on timeout, cancellation and a crashed process.
-- The telemetry and audit rows already emitted per job and per call, and whether a job id links them. See [Oban](../../ELIXIR.md#oban), [OTP processes and supervision](../../ELIXIR.md#otp-processes-and-supervision) and [Telemetry and observability](../../ELIXIR.md#telemetry-and-observability).
+- The telemetry and audit rows already emitted per job and per call, and whether a job id links them. See [Oban](../../elixir/oban.md), [OTP processes and supervision](../../elixir/otp.md) and [Telemetry and observability](../../elixir/telemetry.md).
 
 ## Workflow
 

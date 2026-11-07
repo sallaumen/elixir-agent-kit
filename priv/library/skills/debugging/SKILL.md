@@ -15,7 +15,7 @@ This workflow applies only when no area workflow names the symptom. A stale or d
 
 ## Inputs to inspect
 
-- Start at: the failing test, log line or reproduction, then `mix test path:line` (add `--seed N` from the failing run, `--trace` if it hangs). See [ExUnit and diagnostics](../../ELIXIR.md#exunit-and-diagnostics).
+- Start at: the failing test, log line or reproduction, then `mix test path:line` (add `--seed N` from the failing run, `--trace` if it hangs). See [ExUnit and diagnostics](../../elixir/exunit.md).
 - The exact error and stack trace: the innermost frame in project code and the value it received, not only the frame that raised.
 - The path from entry point to effect: router or job, context function, query, persisted result; and which boundary owns the wrong value.
 - Recent changes to the files on that path (`git log -p` on them) and whether the failure predates them.

@@ -39,6 +39,7 @@ copy of a workflow body.
 | [abstraction-layers](skills/abstraction-layers/SKILL.md) | analyze-and-fix | Use when functions mix business decisions, low-level details and effects at incompatible levels. |
 | [module-design](skills/module-design/SKILL.md) | analyze-and-fix | Use when module names, locations or public APIs obscure responsibilities that are already understood. |
 | [code-consolidation](skills/code-consolidation/SKILL.md) | analyze-and-fix | Use when unfinished features, abandoned paths or competing implementations make a codebase ambiguous. |
+| [house-patterns](skills/house-patterns/SKILL.md) | analyze-and-fix | Use when existing code drifts from patterns the project has already established and must be refactored to them without changing behavior. |
 | [test-strategy](skills/test-strategy/SKILL.md) | analyze-and-fix | Use when a passing suite misses important bugs, the required regression coverage is unclear, or duplicated tests protect nothing distinct. |
 | [code-review](skills/code-review/SKILL.md) | review | Use when reviewing a bounded diff or pull request for actionable defects and regressions. |
 | [debugging](skills/debugging/SKILL.md) | analyze-and-fix | Use when a wrong result, exception or intermittent failure has no demonstrated root cause. |

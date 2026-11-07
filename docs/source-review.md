@@ -1,4 +1,4 @@
-# Review of all 34 workflows
+# Review of all 35 workflows
 
 This matrix is an editorial audit, not an evaluation of model compliance. The
 earlier public edition preserved each trigger and a short four-step workflow but
@@ -30,6 +30,7 @@ are not packaged. “Original workflow” means the historical authored material
 | Frontend | [`motion-design`](../priv/library/skills/motion-design/SKILL.md) | — (external adaptation) | motion-kit (MIT, pinned commit); Material 3; IBM Carbon | Every animated change names the state it explains, the curve and duration derived for it, and a reduced-motion alternative that keeps the state legible. |
 | Code | [`performance`](../priv/library/skills/performance/SKILL.md) | `performance` | original workflow; shared contract | Before/after measurements use comparable inputs, warmup, configuration and statistical summary. |
 | Code | [`process-lifecycle`](../priv/library/skills/process-lifecycle/SKILL.md) | none (new in 0.5) | shared contract; Elixir context | Every process has a stated reason, an owner of its state and a rebuild path after restart; duplicates and bursts are bounded. |
+| Code | [`house-patterns`](../priv/library/skills/house-patterns/SKILL.md) | none (new in 0.7) | shared contract; Elixir context; a consuming application's conventions, generalized | Every conformed site has a public-seam test that passed before and after its own step, and every remaining deviation has a written reason. |
 | Code | [`async-state`](../priv/library/skills/async-state/SKILL.md) | `estados-assincronos` | original workflow; shared contract | The UI and API can reconcile after reconnect or reload using persisted identifiers and a current-state read. |
 | Domains | [`ai-orchestration`](../priv/library/skills/ai-orchestration/SKILL.md) | `orquestracao-ias` | original workflow; shared contract | Acquisition, release, timeout, cancellation and crash recovery keep capacity counters consistent. |
 | Backend | [`provider-calls`](../priv/library/skills/provider-calls/SKILL.md) | none (new in 0.5) | a consuming application's paid-call rules, generalized; shared contract | Every call has one audit row at the provider's billing moment, failures are typed reasons, and a failed round trip never charges twice. |

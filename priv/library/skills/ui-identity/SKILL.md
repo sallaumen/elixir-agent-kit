@@ -17,7 +17,7 @@ This workflow owns one screen's hierarchy and product identity. Spacing, alignme
 
 - Start at: the project's design guidance (DESIGN.md or the file the project instructions name) and the one route the user named, rendered in the running application with real data.
 - The LiveView or controller template for that route, the core components it calls (`core_components.ex` or the project's component module) and which of them it bypasses with ad hoc markup or utility classes.
-- The user's primary decision on this screen, the data that must be seen together, and the empty, loading, error and success states as they actually render, including long names and one-item collections. See [Phoenix and LiveView](../../ELIXIR.md#phoenix-and-liveview).
+- The user's primary decision on this screen, the data that must be seen together, and the empty, loading, error and success states as they actually render, including long names and one-item collections. See [Phoenix and LiveView](../../elixir/phoenix-liveview.md).
 - Two or three neighboring screens of the same product, to read the incumbent identity: type scale, accent use, container style, copy tone.
 - Any visual reference the user supplied, and the width at which they reported the problem.
 

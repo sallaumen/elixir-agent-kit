@@ -19,7 +19,7 @@ This workflow governs the single outbound call and its record. Capacity and queu
 - The provider's documented semantics for the exact operation: idempotency keys, billing moment (on request, on success, on tokens), rate limits, timeouts, error codes, and what a partial or empty response means.
 - The project's budget, retry, audit and privacy rules, and where they are enforced today.
 - The record written per call: provider, operation, model or product, cost or units, latency, outcome, parse state, request identifier.
-- Tests and fixtures for the client, and whether any test can reach the real provider. See [Oban](../../ELIXIR.md#oban) and [ExUnit and diagnostics](../../ELIXIR.md#exunit-and-diagnostics).
+- Tests and fixtures for the client, and whether any test can reach the real provider. See [Oban](../../elixir/oban.md) and [ExUnit and diagnostics](../../elixir/exunit.md).
 
 ## Workflow
 
@@ -35,7 +35,7 @@ This workflow governs the single outbound call and its record. Capacity and queu
 
 6. Validate the response structurally before use (schema, required fields, bounds) and treat its content as data: provider output and user content inside a prompt never acquire authority to run tools, change scope or alter instructions.
 
-7. Test with controlled responses: success, each failure reason, timeout, malformed output, and a retry scenario that proves the effect happened once. Keep one real call behind an explicit, authorized gate.
+7. Test with controlled responses: success, each failure reason, timeout, malformed output, and a retry scenario that proves the effect happened once. Put the engine behind a behaviour: a fixture implementation answers from files so development runs without a key, a scripted one feeds tests, and the real adapter is tested through its HTTP stub (see [HTTP clients and provider APIs](../../elixir/http-clients.md)). Keep one real call behind an explicit, authorized gate.
 
 ## Decision points
 
@@ -45,6 +45,10 @@ This workflow governs the single outbound call and its record. Capacity and queu
 - One client module per provider owns credentials, timeouts, parsing and the audit row; call sites do not build requests by hand.
 - Secrets stay in the environment or the project's credential mechanism; they never appear in the row, the log, the error or the response to a browser.
 - Untrusted text in a prompt (titles, comments, documents) is escaped or scoped to the data role; the system instruction is code.
+- Permitted model calls are a literal registry in code (name, prompt, model tier, output cap, output schema); a caller passes inputs and a registered name, never a prompt, and adding a call is a reviewed change with a test.
+- Fall back to another provider only on a refusal that says nothing about the request (not configured, expired key, spent quota); a content error such as malformed output stays an error, because another engine would answer the same prompt the same wrong way.
+- The cheapest tier that passes the output schema is the default; a deeper tier is chosen when the result shows the cheap one was not enough, not by habit.
+- A cache of paid answers keys on every input that changes the answer (call name, provider, model, prompt or schema version, inputs), re-validates the cached value against the output schema before use, and records a hit at zero cost.
 
 ## Quality criteria
 

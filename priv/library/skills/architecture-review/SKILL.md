@@ -11,14 +11,14 @@ Default mode: **analyze-and-fix**. Read the [shared contract](../../CONTRACT.md)
 
 Use when one feature change touches two contexts that call each other in both directions (`Accounts` calls `Billing`, which calls `Accounts`); when the same rule ("a draft cannot be published") is written in a LiveView, a context and an Oban worker; when a module under the web namespace builds Ecto queries or calls `Repo` directly; when nobody can say which context owns a table that three contexts write; or when `mix xref graph --format cycles` reports cycles among the modules in the change.
 
-The separating rule among the code workflows: many modules, cycles or unclear ownership is this workflow; one module whose name, location or public API is wrong while its responsibility is already understood is [module-design](../module-design/SKILL.md); one function that mixes a business decision with transport, persistence or effects is [abstraction-layers](../abstraction-layers/SKILL.md); two implementations of the same thing, or a path nothing reaches, is [code-consolidation](../code-consolidation/SKILL.md). This workflow produces the ownership decision those three assume.
+The separating rule among the code workflows: many modules, cycles or unclear ownership is this workflow; one module whose name, location or public API is wrong while its responsibility is already understood is [module-design](../module-design/SKILL.md); one function that mixes a business decision with transport, persistence or effects is [abstraction-layers](../abstraction-layers/SKILL.md); two implementations of the same thing, or a path nothing reaches, is [code-consolidation](../code-consolidation/SKILL.md). This workflow produces the ownership decision those three assume, and the convention [house-patterns](../house-patterns/SKILL.md) later brings older code to.
 
 ## Inputs to inspect
 
 - Start at: the requested change (diff, issue or failing test), then `mix xref graph --format cycles` and `mix xref graph --sink <file> --only-nodes` for each touched module to see who depends on it.
 - The `lib/` layout: contexts, web modules, workers and their namespaces, compared with the boundaries the README or docs claim.
-- Each schema in the change, the table it maps, and every module outside its context that inserts or updates it. See [Ecto and migrations](../../ELIXIR.md#ecto-and-migrations).
-- The entry points of one representative operation: router or `live_session`, controller or LiveView, context, job, PubSub broadcast, and the processes it starts. See [Phoenix and LiveView](../../ELIXIR.md#phoenix-and-liveview) and [OTP processes and supervision](../../ELIXIR.md#otp-processes-and-supervision).
+- Each schema in the change, the table it maps, and every module outside its context that inserts or updates it. See [Ecto and migrations](../../elixir/ecto.md).
+- The entry points of one representative operation: router or `live_session`, controller or LiveView, context, job, PubSub broadcast, and the processes it starts. See [Phoenix and LiveView](../../elixir/phoenix-liveview.md) and [OTP processes and supervision](../../elixir/otp.md).
 - Existing decisions: ADRs, module docs, and the tests that encode a boundary (a context test that goes through the public API versus one that reaches into another context).
 
 ## Workflow

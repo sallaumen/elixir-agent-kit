@@ -19,7 +19,7 @@ This workflow checks and reports; it does not fix, merge, publish or deploy. A d
 - The repository's required gates and their last run on that revision, with the real check state from the hosting service when one exists.
 - The user-facing flows the change claims, and how to exercise each on the integrated build: a test, a request, a headless browser run, a job enqueued and observed.
 - Artifacts beyond code: documentation, generated catalogs or indexes, migrations and their rollback, version pins in consumers, release packages.
-- Downstream consumers and the reference they install from. See [ExUnit and diagnostics](../../ELIXIR.md#exunit-and-diagnostics) and [Build, dependencies and releases](../../ELIXIR.md#build-dependencies-and-releases).
+- Downstream consumers and the reference they install from. See [ExUnit and diagnostics](../../elixir/exunit.md) and [Build, dependencies and releases](../../elixir/build-releases.md).
 
 ## Workflow
 

@@ -15,10 +15,10 @@ This workflow treats only measured cost on a path that returns the right result.
 
 ## Inputs to inspect
 
-- Start at: the measurement that triggered the request (a telemetry event, a dashboard timing, a log line with a duration, a user-reported path), then reproduce it with `:timer.tc/1` or a Benchee run around the suspected function. See [Telemetry and observability](../../ELIXIR.md#telemetry-and-observability).
+- Start at: the measurement that triggered the request (a telemetry event, a dashboard timing, a log line with a duration, a user-reported path), then reproduce it with `:timer.tc/1` or a Benchee run around the suspected function. See [Telemetry and observability](../../elixir/telemetry.md).
 - The path under measurement: router or job, context function, the queries it issues (log them with their params), and the templates and assigns it renders.
 - Data shape at the measured scale: row counts, association depth, payload sizes; a path that is fast on seeds and slow in production differs in data, not in code.
-- For LiveView: the diff size per event, assigns that change on every render, streams versus lists, and the number of processes per connected user. See [Phoenix and LiveView](../../ELIXIR.md#phoenix-and-liveview).
+- For LiveView: the diff size per event, assigns that change on every render, streams versus lists, and the number of processes per connected user. See [Phoenix and LiveView](../../elixir/phoenix-liveview.md).
 - Existing instrumentation and its labels, so the before and after numbers come from the same probe.
 
 ## Workflow
@@ -27,9 +27,9 @@ This workflow treats only measured cost on a path that returns the right result.
 
 2. Split the baseline by stage: queue wait, database, application code, serialization, render, network. Use the query log and telemetry spans; do not guess. Done when one stage holds the dominant share and is named.
 
-3. Name the mechanism in that stage: N+1 queries, an unindexed filter, a preload wider than the view uses, a list re-sent instead of a stream, a computation inside the render path, a synchronous call into a slow process. Confirm it with one observation (the query count, the plan, the diff bytes). Done when the mechanism is confirmed, not inferred.
+3. Name the mechanism in that stage: N+1 queries, an unindexed filter, a preload wider than the view uses, a list re-sent instead of a stream, a computation inside the render path, the same read issued in both `mount/3` and `handle_params/3`, an external read (a shell command, a file scan) repeated per render for every subscriber, a synchronous call into a slow process. Confirm it with one observation (the query count, the plan, the diff bytes). Done when the mechanism is confirmed, not inferred.
 
-4. Change one thing at the mechanism: a preload or join, an index with its migration, a stream, a precomputed assign, a `Task` for the slow part. Preserve ordering, authorization and cancellation. Done when the change compiles and the focused tests pass.
+4. Change one thing at the mechanism: a preload or join, an index with its migration, a stream, a precomputed assign, a read moved to `handle_params/3` alone, an observation shared for a short TTL (see [OTP processes and supervision](../../elixir/otp.md)), a `Task` for the slow part. Preserve ordering, authorization and cancellation. Done when the change compiles and the focused tests pass.
 
 5. Re-measure with the same probe, the same data and the same repeat count, and write the after number next to the before number. Done when the improvement exceeds the spread of the baseline; otherwise revert and return to step 3.
 

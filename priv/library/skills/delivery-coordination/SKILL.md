@@ -19,7 +19,7 @@ This workflow divides and sequences; it does not validate the result or design t
 - The repository's collaboration rules: branch naming, PR policy, required checks, who merges, and whether a shared checkout or worktrees are in use.
 - The change mapped to files and contracts: migrations, schemas, contexts, LiveViews, workers, configuration, and which of them more than one piece would touch.
 - Active branches and open PRs that touch the same files, and the handoffs already written for them.
-- Evidence for a consolidation: usage of each flow, its owner, and whether removing it breaks a persisted record or a queued job. See [Ecto and migrations](../../ELIXIR.md#ecto-and-migrations) and [Oban](../../ELIXIR.md#oban).
+- Evidence for a consolidation: usage of each flow, its owner, and whether removing it breaks a persisted record or a queued job. See [Ecto and migrations](../../elixir/ecto.md) and [Oban](../../elixir/oban.md).
 
 ## Workflow
 

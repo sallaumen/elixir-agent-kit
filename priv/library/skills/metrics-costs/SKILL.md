@@ -19,7 +19,7 @@ This workflow owns metric definitions and the aggregation from source rows to a 
 - The source rows: the audit or event table each metric reads, its unit and currency columns, timestamps and timezone, and the markers for retries, duplicates, cache hits and estimates.
 - The decision each metric supports and who reads it (operator, finance, a scheduling rule), since that fixes window, unit and tolerance.
 - Provider prices used for cost: where they are stored, their effective dates, and whether a row stores the price at call time or only units.
-- Telemetry events and any existing reconciliation against an invoice or console export. See [Telemetry and observability](../../ELIXIR.md#telemetry-and-observability) and [Ecto and migrations](../../ELIXIR.md#ecto-and-migrations).
+- Telemetry events and any existing reconciliation against an invoice or console export. See [Telemetry and observability](../../elixir/telemetry.md) and [Ecto and migrations](../../elixir/ecto.md).
 
 ## Workflow
 
