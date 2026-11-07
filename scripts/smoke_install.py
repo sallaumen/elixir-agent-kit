@@ -68,11 +68,13 @@ end
     installed = snapshot(root)
     managed = set(installed) - set(before)
     pointers = {".agents/skills/elixir-agent-kit/SKILL.md", ".claude/skills/elixir-agent-kit/SKILL.md"}
-    assert managed == {".elixir-agent-kit/START.md", ".elixir-agent-kit/state.tsv", "CLAUDE.md"} | pointers, managed
+    owned = {".elixir-agent-kit/START.md", ".elixir-agent-kit/plans/.gitignore", ".elixir-agent-kit/state.tsv", "CLAUDE.md"}
+    assert managed == owned | pointers, managed
+    assert (root / ".elixir-agent-kit/plans/.gitignore").read_text() == "*\n!.gitignore\n"
     generated = [root / ".elixir-agent-kit/START.md"] + [root / p for p in sorted(pointers)]
     for index in generated:
         for target in re.findall(r'\]\(([^)]+)\)', index.read_text()):
-            assert (index.parent / unquote(target)).is_file(), (index.name, target)
+            assert (index.parent / unquote(target.split('#', 1)[0])).is_file(), (index.name, target)
     assert "\n@AGENTS.md\n" in (root / "CLAUDE.md").read_text(), "Claude block must import the managed AGENTS.md"
     assert "START.md" in (root / "AGENTS.md").read_text() and original in (root / "AGENTS.md").read_text()
     for p in pointers:
@@ -106,7 +108,7 @@ end
         generated = [root / ".elixir-agent-kit/START.md"] + [root / p for p in sorted(pointers)]
         for index in generated:
             for target in re.findall(r'\]\(([^)]+)\)', index.read_text()):
-                assert (index.parent / unquote(target)).is_file(), (index.name, target)
+                assert (index.parent / unquote(target.split('#', 1)[0])).is_file(), (index.name, target)
         # A fresh dependency download must restore access without regenerating guidance.
         shutil.rmtree(root / args.deps_path)
         run(root, "mix", "deps.get")
