@@ -15,6 +15,7 @@ Browser history, back-button behavior and overlays that act as navigation belong
 
 ## Inputs to inspect
 
+- Start at: the rendered route at the reported width (the phone width when none was reported), with real data.
 - The widths the project supports and the ones users actually use; the existing breakpoints, spacing scale and container rules.
 - The task's primary controls and the content that must stay visible together at each width; real content lengths, empty states and long names.
 - Touch targets, hover-only affordances, sticky headers and footers, and what the virtual keyboard covers on a phone.
@@ -53,9 +54,9 @@ Browser history, back-button behavior and overlays that act as navigation belong
 
 ## Validation and evidence
 
-- The viewport matrix with a screenshot or snapshot per width for the changed states, labeled emulated or physical device.
-- A keyboard and touch-equivalent pass of the primary action at the phone width.
-- The overflow, zoom and long-content checks, and the shared components changed with their consumers.
+- Minimum: a screenshot or snapshot of the changed state at the reported width before and after the fix, labeled emulated or physical device; the full viewport matrix when turns allow.
+- When turns allow: a keyboard and touch-equivalent pass of the primary action at the phone width.
+- When turns allow: the overflow, zoom and long-content checks, and the shared components changed with their consumers.
 
 ## Avoid
 

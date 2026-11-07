@@ -9,47 +9,65 @@ Default mode: **analyze-and-fix**. Read the [shared contract](../../CONTRACT.md)
 
 ## When to use
 
-Use when a simple selection or adjustment requires excessive forms and disconnected controls.
+Use when a LiveView makes the user open a form, pick a value and submit to change one field that could be set in place: a status that needs a modal to move from "draft" to "ready", a priority or rating behind a select and a save button, a list order that requires editing a number and saving, a toggle that reloads the page; when a control looks interactive but is a decorated `<div>` with a click handler and no keyboard path; when an optimistic change shows "saved" before the server answered and does not come back on failure; or when the user asks for "inline editing" or "fewer clicks" on a repeated task.
+
+This workflow owns one control's affordance, feedback and persistence. The journey across screens and what back does belongs to [navigation-ux](../navigation-ux/SKILL.md); results that arrive late or for the wrong record belong to [async-state](../async-state/SKILL.md); keyboard and screen-reader barriers across a whole task belong to [accessibility](../accessibility/SKILL.md); the control's size or placement at a width belongs to [responsive-layout](../responsive-layout/SKILL.md); the transition that shows a state change belongs to [motion-design](../motion-design/SKILL.md).
 
 ## Inputs to inspect
 
-- The repeated task, current form or control, possible values, reversibility, validation rules and how the server saves state.
-- Keyboard, touch and screen-reader behavior of current components, plus consequences of a wrong selection.
+- Start at: the template and event handlers for the control (`phx-click`, `phx-change`, `phx-submit`, `phx-value-*`) and the context function the handler calls to persist the change; then the changeset that validates it.
+- The decision the user makes with this control: how many values, how often, how reversible, and what a wrong value costs (nothing, a notification, money, data).
+- The round trip today: what the user sees between the click and the server's answer, how a validation error reaches them, and whether the control is held while pending (`phx-disable-with`). See [Phoenix and LiveView](../../ELIXIR.md#phoenix-and-liveview).
+- Keyboard, touch and screen-reader behavior of the current element: whether it is a native button, input, select or link, whether it has a name, and whether it can be reached and activated without a pointer.
+- Whether another user or session can change the same value, and what happens when both save.
 
 ## Workflow
 
-1. Identify the user's decision and the business rules behind it. Consider whether a direct representation such as selection, rating, ordering or inline editing improves comprehension.
+1. Write a control card: the decision, the possible values, reversibility, the cost of a wrong value, the business rule in the changeset, and the current step count from intent to persisted change. Done when a reviewer could decide from the card alone whether a direct control is warranted.
 
-2. Keep labels, keyboard operation, focus, screen-reader semantics and non-pointer alternatives available. Do not hide validation or destructive consequences behind a gesture.
+2. Choose the representation from the card: a segmented control, toggle, rating, drag order or inline edit when the values are few and the effect is clear; keep the form when the user needs comparison, explanation or several fields reviewed together. Done when the choice is written with its reason and the native element it will be built on.
 
-3. Define pending, success, failure and undo behavior where applicable. Optimistic UI must reconcile with persistence and recover accurately on failure.
+3. Build it on a native element with the project's component: a real `<button>` per value, an `<input>` or `<select>` with a `<label>`, a form with `phx-change` and `phx-submit`; each value has a visible or accessible name and the selected state is expressed in the markup (`aria-pressed`, `aria-checked`, `checked`), not only in color. Done when the control is reachable and operable with the keyboard alone in the running application.
 
-4. Test a real completion path and a rejected or failed update. Prefer existing controls when a novel interaction has no demonstrated benefit.
+4. Define the states and their feedback: pending (control held, no fake success), saved (the server's value re-rendered), failed (previous value restored, error visible and tied to the control), and undo where the cost of a wrong value justifies it. Done when each state has a handler path and a rendered form, and the visible state after a failure equals the persisted value.
+
+5. Keep confirmation where it is earned: a destructive, paid or hard-to-reverse value still asks, inline, before the write; reversible values do not. Done when every value on the card has a stated confirmation decision.
+
+6. Test the accepted and rejected paths with `Phoenix.LiveViewTest`: `render_click/2` or `render_change/2` with a valid value asserts the persisted record and the rendered state; an invalid value or a stubbed failure asserts the restored value and the error; a second rapid change asserts the final state is the last accepted write. Done when the tests pass and the running application shows the same behavior.
 
 ## Decision points
 
-- Use direct selection when choices are few and the effect is clear; retain a full form when the user needs comparison, explanation or multi-field review.
-- Choose optimistic updates only if the previous state can be restored and the user can understand a failed save.
+- Direct control when values are few and the effect is visible on the spot; a form when the decision needs comparison, explanation or multi-field review.
+- The server round trip is the default; an optimistic update only when the previous value can be restored locally and the user will understand a failed save, and never for a paid or destructive value.
+- A native element first; a custom widget only when no native element expresses the control, and then with its full keyboard contract (focus, arrows where expected, `Escape`, activation).
+- Reducing clicks never removes a confirmation whose consequence is destructive, paid or hard to reverse; move it inline instead.
+- Two simple domain-specific controls beat one universal control with modes.
 
 ## Quality criteria
 
-- Use a representation that communicates the actual choice, such as a segmented control or thumbnail, without turning decoration into a hidden input.
-- Give selected, pending, saved and failed states distinct feedback, and keep server truth synchronized with the visible state.
-- Preserve accessible names, focus order, keyboard activation and sufficient targets for touch.
-- Keep destructive, paid or hard-to-reverse actions explicit; reducing clicks is not a reason to suppress meaningful confirmation.
+- The control communicates the actual choice (what is selected, what the alternatives are) through its element and name, not through decoration or a hidden input.
+- Selected, pending, saved and failed states are visibly and programmatically distinct, and the visible state equals the persisted value once the server has answered.
+- The control works with keyboard, touch and a screen reader: a name, a focus indicator, activation by `Enter` or `Space`, a target large enough on touch.
+- Validation and business rules apply exactly as in the former form; a value the changeset rejects is rejected inline with the reason.
+- Destructive, paid or hard-to-reverse values keep an explicit confirmation.
 
 ## Validation and evidence
 
-- Test rapid changes, save failure, reload and a second device/session if stale state is a real risk.
-- Describe which steps were removed, which decision stayed visible and how failed writes recover.
+- Minimum: the `Phoenix.LiveViewTest` pair for the control: one valid change asserting the persisted record and rendered state, one rejected or failed change asserting the restored value and the error.
+- When turns allow: a rapid double change and a reload after the change, asserting the final persisted value is what the screen shows.
+- When turns allow: the control operated with the keyboard alone in the running application, with the accessibility tree showing its role, name and selected state.
+- When another session can change the same value: a second session or a stale-revision write exercised, with what the first user sees.
 
 ## Avoid
 
-- Do not add autosave to a complex operation merely because it looks modern.
-- Do not build a universal control with many modes when two simple domain-specific controls are clearer.
+- Do not add autosave or optimistic updates to a complex or costly operation because it looks modern; the round trip is the default.
+- Do not build a control on a `<div>` with handlers, express selection by color alone, or hide the current value behind an icon without a name.
+- Do not suppress a confirmation to save a click when the value is destructive, paid or hard to reverse.
+- Do not show "saved" from the client; render the server's value and restore the previous one on failure.
+- Do not fix the journey, the layout at a width or a late result here; route them.
 
 ## Completion
 
-A simpler interaction with equivalent rules, accessibility and reliable persistence.
+A control built on a native element that expresses the choice and its selected state, with pending, saved and failed feedback tied to the persisted value, the same business rules and confirmations as before, and tests for the accepted and rejected paths. For the journey across screens use [navigation-ux](../navigation-ux/SKILL.md); for late or duplicate results use [async-state](../async-state/SKILL.md); for keyboard and announcement barriers across the task use [accessibility](../accessibility/SKILL.md); for the transition that shows the state change use [motion-design](../motion-design/SKILL.md).
 
 Use the [Elixir context](../../ELIXIR.md) only for technology present in the project. Record a useful [handoff](../../HANDOFF.md) when another person or agent will continue the work.

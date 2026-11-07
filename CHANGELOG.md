@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Every workflow now opens with concrete symptoms and the linked neighbors it hands
+  off to, orders its inputs with a `Start at` line, ends each step in a condition,
+  names the artifact its first step produces, and marks the single `Minimum`
+  evidence that proves the fix, so a session that names a workflow has something
+  to open first and a bound to stop at. The 26 workflows that still repeated their
+  catalog sentence are rewritten to the depth of the eight revised earlier; those
+  eight gain the same `Start at` and `Minimum` markers. `layout-density` no longer
+  claims width behavior, which belongs to `responsive-layout`.
 - The managed block is found and hashed from marker to marker, so a linter that
   removes the blank lines around it, a CRLF checkout or a stripped final newline no
   longer reports "malformed" markers; blocks keep the file's line endings and owned

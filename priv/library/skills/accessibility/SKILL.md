@@ -15,8 +15,8 @@ Target WCAG 2.2 level AA unless the project names another level. A scanner resul
 
 ## Inputs to inspect
 
+- Start at: the rendered route's accessibility tree (the browser's accessibility tree, from devtools or a headless run): landmarks, heading order, accessible names, roles, current focus.
 - The task the user must complete, its interactive states (idle, loading, invalid, error, success, disabled) and the rendered DOM in each state, not the template source alone.
-- The accessibility tree of the page: landmarks, heading order, accessible names, roles, current focus. In this toolbox that is a Playwright snapshot or the browser devtools tree.
 - Keyboard path: tab order, activation keys, `Escape`, arrow keys inside composite widgets, what happens to focus after each change.
 - Contrast on the real background, text zoom to 200%, reflow at 320 CSS pixels, target size of controls that matter on touch.
 - For LiveView: how a patch changes the DOM (`phx-update`, streams), whether live regions survive it, and where focus lands after `push_patch`, a flash or a form error. See [Phoenix and LiveView](../../ELIXIR.md#phoenix-and-liveview).
@@ -55,10 +55,10 @@ Target WCAG 2.2 level AA unless the project names another level. A scanner resul
 
 ## Validation and evidence
 
-- A keyboard-only transcript of the task through at least one error state and one asynchronous completion: step, focus location, announcement.
-- The accessibility tree (or snapshot) at the fixed states, showing names, roles and relationships.
-- Contrast ratios for the changed text and controls, and the zoom or reflow check.
-- The list of what was not exercised: screen readers, browsers, touch devices, physical devices.
+- Minimum: a keyboard-only transcript of the task through at least one error state and one asynchronous completion: step, focus location, announcement.
+- When turns allow: the accessibility tree (or snapshot) at the fixed states, showing names, roles and relationships.
+- When turns allow: contrast ratios for the changed text and controls, and the zoom or reflow check.
+- When turns allow: the list of what was not exercised: screen readers, browsers, touch devices, physical devices.
 
 ## Avoid
 

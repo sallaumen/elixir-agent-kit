@@ -9,50 +9,65 @@ Default mode: **analyze-and-fix**. Read the [shared contract](../../CONTRACT.md)
 
 ## When to use
 
-Use when users lose context or need unnecessary steps to complete a multi-screen task.
+Use when a LiveView journey loses the user's context: a filter or selection on an index disappears after opening and closing a detail; browser back from a modal or drawer leaves the page instead of closing the overlay, or closing the overlay leaves a stale history entry; a deep link into a detail renders without the list, tenant or step it belongs to; a multi-step task (onboarding, checkout, a wizard) cannot be resumed after reload or forces re-entry of saved data; or a redirect after an action lands the user somewhere they cannot explain. Use it on every device, phone and desktop alike.
+
+This workflow owns history, URLs, overlays that act as navigation, back behavior, deep links and the sequence of a multi-step task. A layout that fails at one width is [responsive-layout](../responsive-layout/SKILL.md); one control's affordance or feedback is [direct-interactions](../direct-interactions/SKILL.md); the hierarchy of a single screen is [ui-identity](../ui-identity/SKILL.md); results that arrive late or overwrite the current selection are [async-state](../async-state/SKILL.md); authorization of a route or tenant is [security-boundaries](../security-boundaries/SKILL.md).
 
 ## Inputs to inspect
 
-- Entry routes, links, search, notifications, back/forward behavior, deep links, forms and existing journey documentation.
-- How overlays (dialogs, drawers, sheets) relate to the URL and history on every device: which ones represent navigation and which are transient local choices, and how `push_patch`, `push_navigate` and redirects are used. See [Phoenix and LiveView](../../ELIXIR.md#phoenix-and-liveview).
-- A primary user goal, likely detours, recovery path and representative data or account permissions.
+- Start at: the router (`router.ex`): the `live_session` groups, the routes of the journey and the LiveView and action each maps to; then that LiveView's `handle_params/3` for what it reads from the URL.
+- How each transition is made: `push_patch` (same process, URL changes), `push_navigate` (remount), `redirect` (leaves LiveView), plain links, and JS commands that show or hide overlays without touching the URL. See [Phoenix and LiveView](../../ELIXIR.md#phoenix-and-liveview).
+- Which state lives in the URL (path and query params), which in socket assigns, which in the session or database, and therefore what survives reload, back and a shared link.
+- The overlays in the journey (dialogs, drawers, sheets, inline panels) and whether each represents a place (a detail, a step) or a transient local choice.
+- The user's primary goal, the detours they legitimately take (compare two items, go back a step), the recovery path after an error, and the permissions of the account used to test.
 
 ## Workflow
 
-1. Walk a complete user journey, including entry, intermediate decisions, cancellation, completion and return. Use actual application state rather than a screenshot-only interpretation.
+1. Write a journey map: each step as a row with its URL, the transition that reaches it, the state the step needs, where that state lives (URL, assign, session, database), and what back does from there. Done when the map covers entry, the intermediate decisions, cancellation, completion and the return to where the user started.
 
-2. Locate lost filters, confusing labels, redundant forms, unexpected navigation and missing recovery. Explain how each problem affects task completion.
+2. Walk the journey in the running application with real data, following the map: open the detail, close it, press back with the overlay open, reload mid-step, open a deep link to the detail in a fresh session. Record for each row what the user actually sees. Done when every row has an observed result and the first point where context is lost is marked.
 
-3. Simplify the flow while retaining business constraints and meaningful confirmations. Preserve selected entities and unsaved work according to the product rules.
+3. Classify each overlay: a place gets a URL and a history entry (`push_patch` with its params) and back closes it to the underlying context; a transient choice gets no history entry and closes on `Escape` or its own control. Done when every overlay in the map has one classification and the code matches it.
 
-4. Verify browser back/forward, direct links, refresh and error recovery where relevant, on a phone width as well as desktop. Reproduce back with an overlay open, closing an overlay, and a deep link into a detail before changing history handling. Confirm the user can tell what happened and what to do next.
+4. Move the state that must survive to where it survives: filters and selection into URL params read in `handle_params/3`, wizard progress into the database or session keyed by the task, unsaved work preserved according to the product rule. Done when reload and a deep link reconstruct the step from the map's state column alone.
+
+5. Remove steps that do not inform a decision and keep confirmations whose consequence is destructive, paid or hard to reverse; make the next action and the way back visible on each step. Done when no row in the map is crossed without a decision and every row names its exit.
+
+6. Re-walk the map at a phone width and a desktop width: primary route, deep link, back and forward, reload, one recoverable error. Done when every row's observed result matches its intended result, or the mismatch is listed as unverified.
 
 ## Decision points
 
-- If the defect is within one control, use direct-interactions; if the layout itself breaks at a width, use responsive-layout.
-- When an overlay represents navigation (a detail, a step), the URL and history represent it and back closes it to the underlying context; when it is a transient local choice, do not add a history entry by reflex. Never install a global history interceptor to fix one overlay.
-- Keep exploratory comparisons and legitimate backtracking; remove steps only when they do not help a decision.
+- A place has a URL; a choice does not. Decide per overlay, never with a global history interceptor or a reflex history entry on every open.
+- State the user would expect in a shared link lives in the URL; personal transient state lives in assigns; state that must outlive the socket lives in the database or session.
+- `push_patch` for a change within the same LiveView, `push_navigate` when the process must restart, `redirect` only when leaving LiveView; a remount that drops the user's work is a finding.
+- Keep exploratory backtracking and comparisons; remove a step only when it does not help a decision.
+- A deep link that cannot reconstruct its context redirects to the nearest context it can, with a message, rather than rendering a partial page.
 
 ## Quality criteria
 
-- Make the next meaningful action discoverable at each step without hiding context or creating an endless wizard.
-- Preserve state when returning, reloading or following a direct link, according to the application’s actual navigation contract; closing a navigable overlay restores the underlying context and back never escapes the application unexpectedly.
-- Explain unavailable or partial information and provide a route to recover after errors rather than leaving a dead end.
-- Ensure labels, destinations and confirmation states match what the action really does, including destructive or paid consequences.
+- The next meaningful action and the way back are discoverable at every step without hiding the context the user came from.
+- Reload, back, forward and a direct link reconstruct the step from URL, session or database state; closing a navigable overlay restores the underlying context, and back never leaves the application unexpectedly.
+- Unavailable or partial information is explained and every error has a route to recover; no dead ends.
+- Labels and destinations match what the action does, including destructive or paid consequences; confirmations exist exactly where those consequences are.
+- The journey behaves the same at the phone and desktop widths, with differences named.
 
 ## Validation and evidence
 
-- Walk the primary route, a direct deep link, back/forward, reload and one recoverable error in the running product, at a phone width and a desktop width; state whether phone behavior was emulated or observed on a device.
-- Report a journey map with where context was lost, what changed and which paths remain unverified.
+- Minimum: the journey map with observed results, and a `Phoenix.LiveViewTest` walk of the primary route asserting the URL after each transition (`assert_patch/2`, `assert_redirect/2`) and the rendered context after a deep link to the detail.
+- When turns allow: back with an overlay open, closing the overlay, reload mid-step and a deep link, in the running application at a phone width and a desktop width, labeled emulated or observed on a device.
+- When turns allow: a reconnect (stop the view process and mount it again) showing the step and selection survive.
+- When the journey crosses a permission boundary: the walk repeated with a lower-privilege account.
 
 ## Avoid
 
-- Do not replace a useful exploratory journey with a forced linear wizard.
-- Do not judge the flow solely by a static route list or a happy-path screenshot.
-- Do not create a history trap: an overlay whose back button leaves the page, or an entry the user cannot return from.
+- Do not replace an exploratory journey with a forced linear wizard, or add a step whose only purpose is to confirm a reversible choice.
+- Do not judge the flow from the route list or a happy-path screenshot; walk it with real state.
+- Do not create a history trap: an overlay whose back leaves the page, a step the user cannot return from, or a global interceptor installed to fix one overlay.
+- Do not keep filters, selection or wizard progress only in socket assigns when the user expects them after reload or in a shared link.
+- Do not fix a width-dependent layout or a single control's feedback here; route them.
 
 ## Completion
 
-A complete, validated journey with fewer avoidable steps and preserved context. A single visual composition issue belongs to ui-identity or layout-density.
+A journey map in which every step has a URL or a justified absence of one, overlays are classified as places or choices, state lives where it survives reload and deep links, and the walk at phone and desktop widths matches the map, with unverified paths named. For a layout that fails at a width use [responsive-layout](../responsive-layout/SKILL.md); for a single control's feedback use [direct-interactions](../direct-interactions/SKILL.md); for late or duplicate results use [async-state](../async-state/SKILL.md); for route and tenant authorization use [security-boundaries](../security-boundaries/SKILL.md).
 
 Use the [Elixir context](../../ELIXIR.md) only for technology present in the project. Record a useful [handoff](../../HANDOFF.md) when another person or agent will continue the work.

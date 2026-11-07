@@ -15,6 +15,7 @@ This workflow concerns product revisions and the artifacts derived from them. Wh
 
 ## Inputs to inspect
 
+- Start at: the schema or query that links a revision to its assets (the foreign key, `belongs_to` or storage key that names the parent revision on each derived artifact).
 - The three identities in play: the stable entity (a product, a document, a design), its immutable revisions, and the mutable pointers that name one of them (selected, published, approved, default).
 - Every artifact derived from a revision: thumbnails, previews, exports, generated images, caches; where each records its parent revision, variant and orientation, and where it relies on a filename, a position or "latest".
 - The jobs that produce artifacts: inputs, duration, retries, and what happens when a result lands after the user moved on.
@@ -53,10 +54,10 @@ This workflow concerns product revisions and the artifacts derived from them. Wh
 
 ## Validation and evidence
 
-- The identity model (entity, revision, pointers, artifacts) with the identifiers found, and the weak-identity sites fixed.
-- Tests that deliver an artifact for an older revision after a newer selection, regenerate while browsing, and reload mid-change, asserting both stored pointers and what is displayed.
-- A trace of one artifact from job to screen with the transformations run and whether its origin, license and current revision are known.
-- Any storage, provider or migration path not exercised, named.
+- Minimum: one test that delivers an artifact for an older revision after a newer selection (or regenerates while browsing, or reloads mid-change) and asserts both the stored pointers and what is displayed.
+- When turns allow: the identity model (entity, revision, pointers, artifacts) with the identifiers found, and the weak-identity sites fixed.
+- When turns allow: a trace of one artifact from job to screen with the transformations run and whether its origin, license and current revision are known.
+- When turns allow: any storage, provider or migration path not exercised, named.
 
 ## Avoid
 

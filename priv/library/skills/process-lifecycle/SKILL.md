@@ -15,7 +15,7 @@ The user-visible side of asynchronous work (what the interface shows after recon
 
 ## Inputs to inspect
 
-- The supervision tree: `Application.start/2`, child specs, restart strategies, and which processes are started on demand (`DynamicSupervisor`, `Task.Supervisor`).
+- Start at: the suspect GenServer (or Task, poller) module and its place in the supervision tree: `Application.start/2`, child specs, restart strategies, and which processes are started on demand (`DynamicSupervisor`, `Task.Supervisor`).
 - For each suspect process: what state it holds, who else holds a copy, what writes it to durable storage, and what rebuilds it after restart.
 - Its message sources (timers, PubSub, monitors, callers) and the work it does per message; blocking calls inside callbacks; `call` timeouts on both sides.
 - Mailbox and memory under load (`Process.info/2` with `:message_queue_len`, `:memory`), and the dedupe or sequencing applied before it broadcasts.
@@ -23,7 +23,7 @@ The user-visible side of asynchronous work (what the interface shows after recon
 
 ## Workflow
 
-1. Decide whether a process is warranted: it owns state, a lifecycle or a concurrency limit. If it only groups functions, use functions. If several callers each need their own state, use one process per caller or none.
+1. Decide whether a process is warranted: it owns state, a lifecycle or a concurrency limit. If it only groups functions, use functions. If several callers each need their own state, use one process per caller or none. Write one line per candidate process (state owned, lifecycle or limit, or none); the step ends when each has a verdict.
 
 2. Name the owner of each piece of state and the durable source it can be rebuilt from. State that exists only in a process is lost on restart; decide whether that is acceptable and say so.
 
@@ -53,10 +53,10 @@ The user-visible side of asynchronous work (what the interface shows after recon
 
 ## Validation and evidence
 
-- The tree and ownership table (process, state, durable source, rebuild path, restart strategy).
-- Tests with `start_supervised!/1` that kill the process and assert rebuilt state, deliver duplicate and out-of-order messages, and send a burst with a mailbox assertion.
-- A trace of one message through the process with blocking points found and moved.
-- Measurements where a leak or growth was suspected: `:message_queue_len`, `:memory`, `:observer` or `:recon` when available, before and after.
+- Minimum: one test with `start_supervised!/1` that reproduces the reported failure (kill the process and assert rebuilt state, deliver a duplicate or out-of-order message, or send a burst with a mailbox assertion) and passes after the fix.
+- When turns allow: the tree and ownership table (process, state, durable source, rebuild path, restart strategy).
+- When turns allow: a trace of one message through the process with blocking points found and moved.
+- When a leak or growth was suspected: measurements of `:message_queue_len`, `:memory`, `:observer` or `:recon` when available, before and after.
 
 ## Avoid
 

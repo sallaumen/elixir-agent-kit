@@ -15,6 +15,7 @@ This workflow governs **interface motion**. Rendered video, motion graphics and 
 
 ## Inputs to inspect
 
+- Start at: the project's motion guidance (its design notes, motion tokens or the [motion reference](MOTION.md)) and the transition in question, stepped through in the running interface.
 - The running interface and the real state changes it must explain: load, open and close, select, reorder, submit, fail, reconnect, live update.
 - The existing tokens and transitions in CSS, the component library and JavaScript hooks: the properties animated, curves, durations, delays and reduced-motion handling.
 - The client stack: how updates arrive (full render, patch, stream append, client navigation), which properties the browser can composite, and the DOM structure that would carry spatial continuity.
@@ -54,10 +55,10 @@ This workflow governs **interface motion**. Rendered video, motion graphics and 
 
 ## Validation and evidence
 
-- Step frame by frame through a real entrance, exit and list change in the browser; record the actual curves and durations and the reason each was chosen.
-- Emulate `prefers-reduced-motion: reduce` and confirm that the same flow stays legible with the alternative treatment.
-- Exercise keyboard use, rapid repeated actions, a failed request and a reconnect; confirm that animation does not queue, block or replay.
-- Compare relevant wide and narrow widths, and report which states, devices or clients were not observed. A screenshot alone does not prove motion behavior.
+- Minimum: a frame-by-frame step through the transition in question (a real entrance, exit or list change) in the browser, recording the actual curves and durations and the reason each was chosen.
+- When turns allow: emulate `prefers-reduced-motion: reduce` and confirm that the same flow stays legible with the alternative treatment.
+- When turns allow: exercise keyboard use, rapid repeated actions, a failed request and a reconnect; confirm that animation does not queue, block or replay.
+- When turns allow: compare relevant wide and narrow widths, and report which states, devices or clients were not observed. A screenshot alone does not prove motion behavior.
 
 ## Avoid
 

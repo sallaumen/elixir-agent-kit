@@ -15,6 +15,7 @@ The output is a short list of risks, each with the cheapest test that can observ
 
 ## Inputs to inspect
 
+- Start at: the test directory for the changed module and `mix test --cover` on it, to see which existing tests reach the boundary and what they leave unreached.
 - The changed behavior and its public contract: the function, endpoint, LiveView event, job or message that a caller depends on.
 - Likely failure modes, ranked by consequence: wrong result, unauthorized access, lost or duplicated write, race, silent failure, broken compatibility with stored data.
 - Existing tests around the boundary: what they assert, what fixtures they build, whether any of them would fail if the behavior broke.
@@ -52,9 +53,9 @@ The output is a short list of risks, each with the cheapest test that can observ
 
 ## Validation and evidence
 
-- The risk list with the chosen seam per risk, and the mapping from each new test to the behavior it protects.
-- Output of the failing run (unfixed code or mutation) and of the passing run.
-- The focused suite and the project gate, with skips, fakes and unverified provider behavior named.
+- Minimum: output of the failing run (unfixed code or a one-line mutation) and of the passing run for the new test.
+- When turns allow: the risk list with the chosen seam per risk, and the mapping from each new test to the behavior it protects.
+- When turns allow: the focused suite and the project gate, with skips, fakes and unverified provider behavior named.
 
 ## Removing duplicates
 
