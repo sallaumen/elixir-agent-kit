@@ -57,11 +57,12 @@
     {
       "id": "E05",
       "request": "Os botões estão enormes e os blocos desalinhados; no ultrawide fica tudo numa coluna estreita.",
-      "expected_primary": "layout-density",
+      "expected_primary": "responsive-layout",
       "allowed_alternatives": [
-        "responsive-layout"
+        "layout-density"
       ],
       "success_signals": [
+        "Tratar o comportamento por largura (ultrawide em coluna única) como responsive-layout, com layout-density só para a densidade dentro de uma largura",
         "Melhorar proporções e aproveitamento horizontal",
         "Preservar legibilidade"
       ],
@@ -89,13 +90,15 @@
     {
       "id": "E07",
       "request": "Há freezes leves quando fazemos deploy. Ainda não sei se é renderização, rede ou reconexão. Investigue e corrija.",
-      "expected_primary": "performance",
+      "expected_primary": "debugging",
       "allowed_alternatives": [
-        "debugging"
+        "performance",
+        "process-lifecycle"
       ],
       "success_signals": [
-        "Reproduzir e medir antes de atribuir causa",
-        "Comparar condições equivalentes"
+        "Reproduzir e medir antes de atribuir causa; sem medição não há performance",
+        "Comparar condições equivalentes (antes e depois do deploy, mesma carga)",
+        "Considerar reinício de processos e reconexão como hipóteses concorrentes"
       ],
       "failure_signals": [
         "Desativar animações e realtime indiscriminadamente"
@@ -632,6 +635,72 @@
       "failure_signals": [
         "Tratar o contrato local como substituto do workflow e pular a seleção",
         "Esvaziar o estado para 'refletir' a falha"
+      ]
+    },
+    {
+      "id": "E47",
+      "request": "No celular a barra de ações do card fica cortada à direita e o botão de concluir não cabe no polegar; no desktop está tudo certo.",
+      "expected_primary": "responsive-layout",
+      "allowed_alternatives": [
+        "layout-density",
+        "accessibility"
+      ],
+      "success_signals": [
+        "Reproduzir na largura reportada antes de alterar",
+        "Declarar a matriz de larguras e alvos de toque e provar o antes e depois na largura do celular",
+        "Não alterar o desktop que já funciona"
+      ],
+      "failure_signals": [
+        "Reduzir fonte ou esconder a ação para caber",
+        "Abrir uma revisão de identidade visual ou de densidade do desktop"
+      ]
+    },
+    {
+      "id": "E48",
+      "request": "Adicione uma linha de log com o id do job no início do perform deste worker, só isso.",
+      "expected_primary": "NONE",
+      "allowed_alternatives": [],
+      "success_signals": [
+        "Executar a edição delimitada e especificada com verificação proporcional (compilar e rodar o teste do worker)",
+        "Não incluir segredos nem payload bruto na linha de log"
+      ],
+      "failure_signals": [
+        "Abrir process-lifecycle, ai-orchestration ou provider-calls para uma linha de log",
+        "Rever o worker inteiro ou sua fila"
+      ]
+    },
+    {
+      "id": "E49",
+      "request": "No desktop a tela de detalhes do ticket tem tudo do mesmo tamanho: título, metadados e ações disputam atenção, e os grupos ficam colados. Não quebra em nenhuma largura, só é difícil de ler.",
+      "expected_primary": "layout-density",
+      "allowed_alternatives": [
+        "ui-identity"
+      ],
+      "success_signals": [
+        "Tratar como densidade e agrupamento dentro de uma largura, não como comportamento por largura",
+        "Medir espaçamentos e escala antes e depois na largura reportada",
+        "Preservar a identidade visual do projeto"
+      ],
+      "failure_signals": [
+        "Abrir responsive-layout sem um sintoma de largura",
+        "Redesenhar o sistema de componentes para uma tela"
+      ]
+    },
+    {
+      "id": "E50",
+      "request": "A lista do board leva 2,4 s para renderizar com 300 cartões (medido no telemetry de montagem do LiveView; era 300 ms com 50). Reduza sem mudar o que a tela mostra.",
+      "expected_primary": "performance",
+      "allowed_alternatives": [
+        "async-state"
+      ],
+      "success_signals": [
+        "Partir da medição existente e reproduzi-la com a mesma escala de dados antes de mudar",
+        "Provar o antes e depois com a mesma sonda e repetição",
+        "Manter o resultado da tela idêntico"
+      ],
+      "failure_signals": [
+        "Abrir debugging ou async-state para um caso já medido e correto",
+        "Paginar ou esconder cartões sem o usuário pedir"
       ]
     }
   ]

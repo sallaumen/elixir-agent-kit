@@ -47,14 +47,6 @@ After reviewing a release, change the tag in `mix.exs`, run
 Commit the dependency, lock and generated references together. Keep tags pinned;
 following `main` silently would make identical project revisions behave differently.
 
-## Migrating copied installations
-
-Since 0.2 the kit installs dependency references. Synchronizing from 0.1 removes only files
-recorded in its ownership manifest, after verifying they are unmodified. Local
-edits block the entire migration. Preserve such edits as proposals or local rules,
-then restore the recorded originals before retrying. Never delete the manifest to
-bypass a conflict. Unowned files and surrounding local instruction text survive.
-
 A fresh checkout must run `mix deps.get` before agents can read the library. The
 client must be able to read dependency files even when Git ignores `deps/`; verify
 that in a fresh session. This layout registers no per-workflow native skills or

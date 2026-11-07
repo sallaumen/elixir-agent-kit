@@ -18,7 +18,7 @@ test-strategy	analyze-and-fix	Use when a passing suite misses important bugs, th
 code-review	review	Use when reviewing a bounded diff or pull request for actionable defects and regressions.	code
 debugging	analyze-and-fix	Use when a wrong result, exception or intermittent failure has no demonstrated root cause.	code
 performance	analyze-and-fix	Use when measured latency, freezes, excessive work or rendering cost affects a real workflow.	code
-async-state	analyze-and-fix	Use when progress stalls, success appears too early or stale asynchronous results overwrite current state.	code
+async-state	analyze-and-fix	Use when progress stalls, success appears too early, stale asynchronous results overwrite current state, or a failed refresh erases the last good state.	code
 process-lifecycle	analyze-and-fix	Use when a GenServer, Task, poller or supervised process holds state, leaks, blocks callers, duplicates work or behaves differently after a restart.	code
 ai-orchestration	analyze-and-fix	Use when agent jobs, queues, workers and model capacity are conflated or incorrectly accounted for.	domains
 notifications	analyze-and-fix	Use when bots or notifications fail, repeat or produce unexplained message volume.	domains

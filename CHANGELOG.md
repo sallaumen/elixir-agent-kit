@@ -2,6 +2,22 @@
 
 ## Unreleased
 
+- The routing guide separates the pairs live sessions confused: density within one
+  width versus behavior across widths, code review versus delivery validation,
+  notification transport versus alert lifecycle, a late result on the wrong revision
+  versus a stale result overwriting state, and debugging as the fallback when no
+  area workflow names the symptom. `async-state` names a failed refresh that erases
+  the last good state. The catalog header lists all eight operational domains, and
+  the installer history left the practice-evolution guide.
+- Evaluation cases: E05 expects `responsive-layout`, E07 expects `debugging`, and
+  E47 to E50 add a phone overflow, a backend NONE, a density-only screen and a
+  measured render time, so every workflow has a primary case.
+- `scripts/check_library.py` now enforces the workflow template (headings in order,
+  a When to use that goes beyond the catalog sentence, `Start at` and `Minimum`
+  lines, no em dashes or operator tools), a primary routing case per workflow,
+  CATALOG.md and README rows equal to `catalog.tsv`, the evals README case count,
+  Markdown anchors, external skill links pinned to a commit, and every documented
+  tag equal to the `mix.exs` version.
 - Every workflow now opens with concrete symptoms and the linked neighbors it hands
   off to, orders its inputs with a `Start at` line, ends each step in a condition,
   names the artifact its first step produces, and marks the single `Minimum`
