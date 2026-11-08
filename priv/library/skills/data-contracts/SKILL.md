@@ -23,7 +23,7 @@ This workflow answers "who owns this field and does every layer agree with the o
 
 - Start at: the field named in the report or in the failing test, then `grep -rn "field_name" lib/ test/` to list every module that reads or writes it.
 - The Ecto schema and every changeset that casts or validates the field, and the migration that created the column with its constraints and default. See [Ecto and migrations](../../elixir/ecto.md).
-- The context functions that write it and the `Ecto.Multi` or `Repo.transaction/2` around them, including what runs after commit.
+- The context functions that write it and the `Ecto.Multi` or `Repo.transact/2` around them, including what runs after commit.
 - The LiveView assigns, form and `handle_event` clauses that pass the value in and out, and what the view shows when the value is missing. See [Phoenix and LiveView](../../elixir/phoenix-liveview.md).
 - Derived copies: denormalized columns, ETS or assign caches, PubSub payloads, Oban job args and outward API responses that carry the same value. See [Oban](../../elixir/oban.md).
 - Tests that touch the field, and which layer each one exercises; note whether any test feeds form params through to the row.
