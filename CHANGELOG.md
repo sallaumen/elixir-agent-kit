@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Task size now changes the route and the execution: `ROUTING.md` gains a "Size
+  changes the choice" section, every workflow gains a required `## Size` section
+  saying what to trim, keep or slice at each size, and `START.md` surfaces the
+  rule at choice time. `scripts/check_library.py` requires the section and its
+  Small, Medium and Large bullets in all 38 workflows.
+- Five new evaluation cases E83 to E87 (87 total) test size-routed pairs: the
+  same kind of request changes route by size (competing flows, paid calls), and a
+  fully specified small edit stays NONE.
 - `docs/versioning.md` defines the public interface under semantic versioning
   (configuration keys, Mix tasks and flags, file layout, the `state.tsv` format,
   the block markers and the stable workflow IDs), the versioning and deprecation

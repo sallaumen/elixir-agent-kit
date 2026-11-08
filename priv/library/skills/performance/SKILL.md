@@ -13,6 +13,12 @@ Use when a page or LiveView mount is measured slower than its budget; when a req
 
 This workflow treats only measured cost on a path that returns the right result. A spinner that never ends or a result that lands on the wrong record is [async-state](../async-state/SKILL.md) (correctness, not speed). A slow call because a GenServer sits in a long `handle_call` or its mailbox is growing is [process-lifecycle](../process-lifecycle/SKILL.md). A slow paid provider call goes to [provider-calls](../provider-calls/SKILL.md) first, because retries there cost money. Without a measurement, the symptom goes to [debugging](../debugging/SKILL.md).
 
+## Size
+
+- **Small**: measure one slow stage, change one mechanism and re-measure with the same probe; skip the full measurement table.
+- **Medium**: run the workflow as written for one path: the measurement table, the split by stage and one mechanism removed.
+- **Large**: a whole path across several stages or many slow paths; slice per stage, and route a blocked process to process-lifecycle or an index migration to migration-compatibility as later slices.
+
 ## Inputs to inspect
 
 - Start at: the measurement that triggered the request (a telemetry event, a dashboard timing, a log line with a duration, a user-reported path), then reproduce it with `:timer.tc/1` or a Benchee run around the suspected function. See [Telemetry and observability](../../elixir/telemetry.md).

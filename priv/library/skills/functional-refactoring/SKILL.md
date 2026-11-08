@@ -13,6 +13,12 @@ Use when testing one rule of a module needs the database, a frozen clock and an 
 
 The separating rule among the code workflows: a whole module whose functions interleave hidden inputs, decisions and effects is this workflow; one function mixing a decision with effects is [abstraction-layers](../abstraction-layers/SKILL.md); code drifting from a pattern the project already chose is [house-patterns](../house-patterns/SKILL.md); working code that is only hard to read is [readable-code](../readable-code/SKILL.md); a misleading module name or public API is [module-design](../module-design/SKILL.md). When a request only says "refactor this module", hidden dependencies or rules that are hard to test point here and reading obstacles alone point to readable-code; with both, this workflow runs first and readable-code follows as a later slice of the same plan.
 
+## Size
+
+- **Small**: make one hidden input explicit at the edge and extract one calculation in a small module, with a stub-free test; skip the full module inventory.
+- **Medium**: run the workflow as written for one module: the inventory, the pinned public seam and the extracted, stub-free tested calculations.
+- **Large**: several modules or one shared decision; slice per module, and hand the reading obstacles left behind to readable-code as a later slice; a single function mixing levels is abstraction-layers.
+
 ## Inputs to inspect
 
 - Start at: the module named in the request, with `grep -n "def \|defp " lib/<path>.ex` to list its functions, then a search for implicit inputs inside it: `grep -n "utc_\|_env\|System\.\|:rand\.\|Repo\.\|:ets\.\|:persistent_term\|Process\.get" lib/<path>.ex`.

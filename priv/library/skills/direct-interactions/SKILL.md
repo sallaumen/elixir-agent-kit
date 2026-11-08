@@ -13,6 +13,12 @@ Use when a LiveView makes the user open a form, pick a value and submit to chang
 
 This workflow owns one control's affordance, feedback and persistence. The journey across screens and what back does belongs to [navigation-ux](../navigation-ux/SKILL.md); results that arrive late or for the wrong record belong to [async-state](../async-state/SKILL.md); keyboard and screen-reader barriers across a whole task belong to [accessibility](../accessibility/SKILL.md); the control's size or placement at a width belongs to [responsive-layout](../responsive-layout/SKILL.md); the transition that shows a state change belongs to [motion-design](../motion-design/SKILL.md).
 
+## Size
+
+- **Small**: add or correct one control's pending, saved and failed feedback on a native element, with one accepted and one rejected test; skip the full control card.
+- **Medium**: run the workflow as written for one control: the card, the representation, the states and the accepted and rejected tests.
+- **Large**: several controls or one interaction pattern across screens; slice per control, and route shared patterns to design-system and a keyboard barrier across the task to accessibility as later slices.
+
 ## Inputs to inspect
 
 - Start at: the template and event handlers for the control (`phx-click`, `phx-change`, `phx-submit`, `phx-value-*`) and the context function the handler calls to persist the change; then the changeset that validates it.
@@ -68,6 +74,6 @@ This workflow owns one control's affordance, feedback and persistence. The journ
 
 ## Completion
 
-A control built on a native element that expresses the choice and its selected state, with pending, saved and failed feedback tied to the persisted value, the same business rules and confirmations as before, and tests for the accepted and rejected paths. For the journey across screens use [navigation-ux](../navigation-ux/SKILL.md); for late or duplicate results use [async-state](../async-state/SKILL.md); for keyboard and announcement barriers across the task use [accessibility](../accessibility/SKILL.md); for the transition that shows the state change use [motion-design](../motion-design/SKILL.md).
+A control built on a native element that expresses the choice and its selected state, with pending, saved and failed feedback tied to the persisted value, the same business rules and confirmations as before, and tests for the accepted and rejected paths. For the journey across screens use [navigation-ux](../navigation-ux/SKILL.md); for late or duplicate results use [async-state](../async-state/SKILL.md); for keyboard and announcement barriers across the task use [accessibility](../accessibility/SKILL.md); for the transition that shows the state change use [motion-design](../motion-design/SKILL.md); for a shared interaction pattern across screens use [design-system](../design-system/SKILL.md).
 
 Use the [Elixir context](../../ELIXIR.md) only for technology present in the project. Record a useful [handoff](../../HANDOFF.md) when another person or agent will continue the work.

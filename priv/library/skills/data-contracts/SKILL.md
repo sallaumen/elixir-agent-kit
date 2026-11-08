@@ -13,6 +13,12 @@ Use when a LiveView form accepts a value the changeset later rejects, or renders
 
 This workflow answers "who owns this field and does every layer agree with the owner". When the disagreement is between two versions of the shape (a column rename, a changed job argument, an enum value that old rows still carry) hand it to [migration-compatibility](../migration-compatibility/SKILL.md). When the disagreement is about which actor may read or write the data, hand it to [security-boundaries](../security-boundaries/SKILL.md). When the disagreement is between messages in time (a stale result overwriting a newer one) use [async-state](../async-state/SKILL.md). One function mixing a rule with transport mechanics, without any ownership conflict, is [abstraction-layers](../abstraction-layers/SKILL.md).
 
+## Size
+
+- **Small**: give one field one owner and one test through the owning boundary; skip the full ownership table for the other fields.
+- **Medium**: run the workflow as written for one field or one flow: the ownership table, the mismatch reproduction and the owning-boundary test.
+- **Large**: several fields or a whole context disagree; slice per field, and hand a stored shape that must survive a version change to migration-compatibility as a later slice.
+
 ## Inputs to inspect
 
 - Start at: the field named in the report or in the failing test, then `grep -rn "field_name" lib/ test/` to list every module that reads or writes it.

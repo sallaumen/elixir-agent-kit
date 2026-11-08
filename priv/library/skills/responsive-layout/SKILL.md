@@ -13,6 +13,12 @@ Use when content overflows or truncates at some width, when a wide screen collap
 
 Browser history, back-button behavior and overlays that act as navigation belong to [navigation-ux](../navigation-ux/SKILL.md), on every device.
 
+## Size
+
+- **Small**: fix one control's overflow or reach at one width and re-check that width; skip the full viewport matrix.
+- **Medium**: run the workflow as written for one task across the declared viewport matrix, with real content, touch and keyboard.
+- **Large**: several layouts or tasks fail across widths, or a shared component is consumed widely; slice per layout or component and hand shared component rules to design-system as a later slice.
+
 ## Inputs to inspect
 
 - Start at: the rendered route at the reported width (the phone width when none was reported), with real data.
@@ -67,6 +73,6 @@ Browser history, back-button behavior and overlays that act as navigation belong
 
 ## Completion
 
-A declared viewport matrix in which the task works with real content, touch and keyboard, with unsupported cases named. For spacing and density within one width use [layout-density](../layout-density/SKILL.md); for history, back and overlays use [navigation-ux](../navigation-ux/SKILL.md).
+A declared viewport matrix in which the task works with real content, touch and keyboard, with unsupported cases named. For spacing and density within one width use [layout-density](../layout-density/SKILL.md); for history, back and overlays use [navigation-ux](../navigation-ux/SKILL.md); for a shared component's rules across screens use [design-system](../design-system/SKILL.md).
 
 Use the [Elixir context](../../ELIXIR.md) only for technology present in the project. Record a useful [handoff](../../HANDOFF.md) when another person or agent will continue the work.

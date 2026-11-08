@@ -7,6 +7,24 @@ shows a cross-tenant record needs `security-boundaries` under backend and data.
 Follow the trigger, not the directory name. A small, specified edit may need no
 workflow beyond the shared contract and project gates.
 
+## Size changes the choice
+
+Classify the size from the request and revise it after the first inspection; the
+[contract](CONTRACT.md#plan-in-proportion-to-size) defines the three sizes. Size
+changes which route fits:
+
+- **Small and fully specified** (one function or file, no open question): NONE,
+  even where an area otherwise applies. When a small edit still touches the risk
+  a workflow names (a one-line race, one query leaking a tenant), pick that
+  workflow and apply only its `Size` small line.
+- **Medium** (one flow or module, one delivery): the narrowest workflow whose
+  trigger matches the single primary risk.
+- **Large** (crosses contexts, touches data and code together, or needs several
+  deliveries): `delivery-coordination` when the work is several deliveries with
+  owners across areas; otherwise the workflow for the one dominant risk, sliced
+  by its `Size` large line, with a neighboring workflow as a later slice of the
+  same plan when a second risk is real.
+
 | Start here when the problem is… | Area | Typical distinctions |
 |---|---|---|
 | A screen's meaning, interaction, layout, navigation, accessibility, motion or assets | [Frontend and user experience](CATALOG.md#frontend-and-user-experience) | Identity versus density; density within one width (layout-density) versus behavior across widths, overflow and touch targets (responsive-layout); layout at a width versus history and overlays (navigation-ux, on every device); design system versus one screen; motion versus state feedback |

@@ -13,6 +13,12 @@ Use when the catalog shows a size or color that the supplier's current data does
 
 This workflow owns the evidence that an exact variant and destination are supported before the offering is presented. Whether the supplier integration is connected and its credentials valid belongs to [integration-setup](../integration-setup/SKILL.md); which revision of the product an artifact belongs to is [revision-lineage](../revision-lineage/SKILL.md); the supplier request itself is [provider-calls](../provider-calls/SKILL.md).
 
+## Size
+
+- **Small**: fill one eligibility row with evidence and a date and prove one unsupported sibling stays unsupported; skip the full eligibility table.
+- **Medium**: run the workflow as written for one offer and a sibling variant: the eligibility table, the single domain rule and the consumer agreement tests.
+- **Large**: the whole catalog, publication and order path; slice per consumer or offer, and route integration readiness to integration-setup or artifact revisions to revision-lineage as later slices.
+
 ## Inputs to inspect
 
 - Start at: the function that decides whether an offer can be shown or sold (`grep -rn "eligib\|available?\|can_sell\|supported" lib/`) and the one offer whose support is in doubt.

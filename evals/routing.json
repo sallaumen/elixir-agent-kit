@@ -1266,6 +1266,80 @@
       "failure_signals": [
         "Escolhe um workflow de refatoração ou escreve um arquivo de plano"
       ]
+    },
+    {
+      "id": "E83",
+      "request": "O projeto tem dois fluxos de onboarding que parecem fazer a mesma coisa, cada um com rotas, jobs e testes próprios. Descubra qual é o vivo e consolide no outro, numa entrega só.",
+      "expected_primary": "code-consolidation",
+      "allowed_alternatives": [],
+      "expected_size": "medium",
+      "success_signals": [
+        "Monta a tabela de evidências (chamadores, rotas, jobs, testes) e escolhe o caminho canônico",
+        "Consolida numa entrega só preservando o comportamento dos chamadores"
+      ],
+      "failure_signals": [
+        "Apaga um caminho sem preencher as colunas de evidência",
+        "Mantém os dois caminhos ou abre entregas paralelas para uma tarefa média"
+      ]
+    },
+    {
+      "id": "E84",
+      "request": "O produto tem quatro áreas pela metade, espalhadas em três contextos, cada uma com rotas, jobs e testes próprios. Escolha o que concluir ou retirar e divida em entregas revisáveis com donos e ordem.",
+      "expected_primary": "delivery-coordination",
+      "allowed_alternatives": [],
+      "expected_size": "large",
+      "success_signals": [
+        "Classifica como grande e escreve a tabela de entregas (fatia, dono, arquivos, critério de aceite, ordem) antes de editar",
+        "Cada fatia segue o workflow do risco que ela tem"
+      ],
+      "failure_signals": [
+        "Edita antes de escrever a tabela de entregas",
+        "Trata como uma única consolidação sem donos nem ordem"
+      ]
+    },
+    {
+      "id": "E85",
+      "request": "A chamada à API paga de geocodificação, num único módulo, cobra duas vezes quando a resposta demora. Faça o retry ser idempotente sem mexer em mais nada.",
+      "expected_primary": "provider-calls",
+      "allowed_alternatives": [],
+      "expected_size": "medium",
+      "success_signals": [
+        "Lê a semântica de idempotência do provedor e usa uma chave idempotente ou confirma que a primeira tentativa não completou",
+        "Testa que um retry cobra exatamente uma vez"
+      ],
+      "failure_signals": [
+        "Retenta a chamada paga sem chave idempotente",
+        "Reescreve o cliente inteiro para uma tarefa de um módulo"
+      ]
+    },
+    {
+      "id": "E86",
+      "request": "As chamadas pagas do produto estão espalhadas por três contextos e dois workers, cada um com dono e retry próprios, sem orçamento nem auditoria. Divida a unificação em um cliente único com orçamento, registro e motivo tipado de falha, em entregas revisáveis com donos e ordem de integração.",
+      "expected_primary": "delivery-coordination",
+      "allowed_alternatives": [],
+      "expected_size": "large",
+      "success_signals": [
+        "Classifica como grande e escreve a tabela de entregas com dono e ordem antes de editar",
+        "Cada fatia aplica o fluxo de chamada paga (orçamento antes da rede, registro, falha tipada)"
+      ],
+      "failure_signals": [
+        "Edita antes de planejar",
+        "Trata como uma única chamada paga (provider-calls) sem dividir em entregas com donos"
+      ]
+    },
+    {
+      "id": "E87",
+      "request": "No módulo de cobrança, troque o valor do timeout da única chamada HTTP de 5000 para 10000. Está totalmente especificado.",
+      "expected_primary": "NONE",
+      "allowed_alternatives": [],
+      "expected_size": "small",
+      "success_signals": [
+        "Faz a edição direta sem escolher workflow nem criar plano"
+      ],
+      "failure_signals": [
+        "Escolhe provider-calls ou outro workflow para uma edição totalmente especificada",
+        "Escreve um arquivo de plano"
+      ]
     }
   ]
 }

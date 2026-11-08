@@ -13,6 +13,12 @@ Use when a LiveView journey loses the user's context: a filter or selection on a
 
 This workflow owns history, URLs, overlays that act as navigation, back behavior, deep links and the sequence of a multi-step task. A layout that fails at one width is [responsive-layout](../responsive-layout/SKILL.md); one control's affordance or feedback is [direct-interactions](../direct-interactions/SKILL.md); the hierarchy of a single screen is [ui-identity](../ui-identity/SKILL.md); results that arrive late or overwrite the current selection are [async-state](../async-state/SKILL.md); authorization of a route or tenant is [security-boundaries](../security-boundaries/SKILL.md).
 
+## Size
+
+- **Small**: fix one transition (one overlay classification or one piece of state moved to the URL) and walk only that path; skip the full journey map.
+- **Medium**: run the workflow as written for one journey: the map, the walk at phone and desktop widths, and the LiveView test of each transition.
+- **Large**: a whole journey across many steps and overlays, or several journeys; slice per step or overlay, and route deep links that cross an authorization boundary to security-boundaries as a later slice.
+
 ## Inputs to inspect
 
 - Start at: the router (`router.ex`): the `live_session` groups, the routes of the journey and the LiveView and action each maps to; then that LiveView's `handle_params/3` for what it reads from the URL.

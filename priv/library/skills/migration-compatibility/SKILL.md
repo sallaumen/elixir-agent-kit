@@ -13,6 +13,12 @@ Use when a column or schema field is renamed while a running release still reads
 
 This workflow moves a persisted representation from one shape to another with both versions live. Which layer owns the field and what its shape should be is decided first in [data-contracts](../data-contracts/SKILL.md); the release and deploy mechanics themselves belong to [build-dependencies](../build-dependencies/SKILL.md); the rollout gate is [delivery-validation](../delivery-validation/SKILL.md); and once the contract step has removed the old path, deleting the dead code and its tests is [code-consolidation](../code-consolidation/SKILL.md).
 
+## Size
+
+- **Small**: run only the expand step for one additive change (a new column or enum value) with a legacy-row test; skip the full expand, migrate, contract sequence.
+- **Medium**: run the workflow as written for one persisted representation: the inventory, the coexistence window and the expand, migrate, contract sequence with its rollback boundary.
+- **Large**: several representations or a whole schema and job rename; slice per representation, and decide the target shape in data-contracts first, the release mechanics in build-dependencies, and the dead-path removal in code-consolidation as later slices.
+
 ## Inputs to inspect
 
 - Start at: the newest files in `priv/repo/migrations/` and the diff of schemas and workers, then `grep -rn "use Oban.Worker\|Ecto.Enum\|embedded_schema\|term_to_binary\|Jason.Encoder" lib/` to list every persisted name and shape.

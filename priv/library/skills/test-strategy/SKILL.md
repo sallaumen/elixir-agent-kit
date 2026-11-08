@@ -13,6 +13,12 @@ Use when a bug shipped through a green suite, when a change touches authorizatio
 
 The output is a short list of risks, each with the cheapest test that can observe it failing, and the tests themselves.
 
+## Size
+
+- **Small**: write one regression test for one known risk and show it failing once; skip the full risk list.
+- **Medium**: run the workflow as written for one change: the risk list, one test per risk at the cheapest observing seam and the failing-then-passing runs.
+- **Large**: a whole domain's test strategy; slice per risk or behavior, and find a failure with no known cause in debugging first.
+
 ## Inputs to inspect
 
 - Start at: the test directory for the changed module and `mix test --cover` on it, to see which existing tests reach the boundary and what they leave unreached.

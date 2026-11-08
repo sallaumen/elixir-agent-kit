@@ -13,6 +13,12 @@ Use when "the latest" and "the approved" versions disagree and the product shows
 
 This workflow concerns product revisions and the artifacts derived from them. Which build or dependency is running in an environment belongs to [delivery-validation](../delivery-validation/SKILL.md) and [build-dependencies](../build-dependencies/SKILL.md).
 
+## Size
+
+- **Small**: fix one weak identity (one artifact keyed by latest, or one viewing action that selects) with one ordering test; skip the full identity model.
+- **Medium**: run the workflow as written for one flow: the identity model, the trace and the risky-orderings tests.
+- **Large**: the whole revision and artifact surface; slice per artifact or pointer, and route the late-result interface mechanics to async-state or offer eligibility to commercial-eligibility as later slices.
+
 ## Inputs to inspect
 
 - Start at: the schema or query that links a revision to its assets (the foreign key, `belongs_to` or storage key that names the parent revision on each derived artifact).

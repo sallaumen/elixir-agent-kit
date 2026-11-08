@@ -13,6 +13,12 @@ Use when a feature branch is merged and someone asks whether the request was act
 
 This workflow checks and reports; it does not fix, merge, publish or deploy. A defect in the diff before integration is [code-review](../code-review/SKILL.md). A defect found here that needs a cause is handed to [debugging](../debugging/SKILL.md) with the failing criterion. Which commands run as the gate is [pipeline-design](../pipeline-design/SKILL.md). Dividing the follow-up work the validation exposes is [delivery-coordination](../delivery-coordination/SKILL.md). Whether the validated revision is the one the lineage says is current is [revision-lineage](../revision-lineage/SKILL.md).
 
+## Size
+
+- **Small**: check one acceptance criterion against one piece of evidence on the pinned revision; skip the full criteria table.
+- **Medium**: run the workflow as written for one integrated revision: the criteria table with evidence class per row and a reproduction per failed row.
+- **Large**: a release validation across many criteria and consumers; slice per criterion, and hand a failed criterion's cause to debugging or sequencing the follow-ups to delivery-coordination.
+
 ## Inputs to inspect
 
 - Start at: the original request and its acceptance criteria (the issue, the PR description, the handoff), then the exact integrated revision: `git log -1` on the merged branch or tag, and `git diff <base>...<revision> --stat`.

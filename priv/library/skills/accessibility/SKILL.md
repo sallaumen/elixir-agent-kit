@@ -13,6 +13,12 @@ Use when a control works with a mouse but not a keyboard, when errors or live up
 
 Target WCAG 2.2 level AA unless the project names another level. A scanner result, an `aria-*` attribute or a screenshot is not evidence; a keyboard path through the real task is.
 
+## Size
+
+- **Small**: fix one barrier (one missing name, one unannounced error or one focus loss) and walk only that state; skip the full accessibility-tree audit.
+- **Medium**: run the workflow as written for one task: the keyboard walk, the accessibility tree and the contrast, zoom and target checks.
+- **Large**: a whole surface or many barriers across states; slice per barrier or state, and route a reading-order problem to layout-density or a journey problem to navigation-ux as later slices.
+
 ## Inputs to inspect
 
 - Start at: the rendered route's accessibility tree (the browser's accessibility tree, from devtools or a headless run): landmarks, heading order, accessible names, roles, current focus.

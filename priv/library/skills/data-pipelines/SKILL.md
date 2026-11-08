@@ -13,6 +13,12 @@ Use when a CSV import of a few gigabytes exhausts memory or inserts some rows tw
 
 The separating rule: the flow of many items and its delivery guarantees is this workflow; CI and validation pipelines are [pipeline-design](../pipeline-design/SKILL.md); one GenServer's state, mailbox or restart is [process-lifecycle](../process-lifecycle/SKILL.md); a single paid call inside the flow is [provider-calls](../provider-calls/SKILL.md); capacity shared across agent workers and queues is [ai-orchestration](../ai-orchestration/SKILL.md); a measured slow path that returns correct results is [performance](../performance/SKILL.md). Background work that starts in the application's own database and must be retried is usually an Oban job; see [Oban](../../elixir/oban.md).
 
+## Size
+
+- **Small**: bound one stage or make one effect idempotent, with one duplicate or poisoned-item test; skip the full flow card.
+- **Medium**: run the workflow as written for one flow: the flow card, the reproduced symptom and the duplicate and poisoned-item tests.
+- **Large**: a whole flow across many stages or consumers; slice per stage, and route a paid call inside the flow to provider-calls or a single stuck process to process-lifecycle as later slices.
+
 ## Inputs to inspect
 
 - Start at: the entry point of the flow (the Broadway module and its producer options, the function that opens the file or stream, the `Task.async_stream/3` call, the GenStage producer), then its last effect (the insert, the outbound call, the acknowledgement).

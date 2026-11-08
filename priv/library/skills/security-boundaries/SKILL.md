@@ -13,6 +13,12 @@ Use when a LiveView `mount/3` or `handle_event/3` loads a record by the id in pa
 
 This workflow asks which actor may reach which resource through which boundary. When the question is whether layers agree on a value, use [data-contracts](../data-contracts/SKILL.md). When the untrusted content is a prompt, a provider response or a budget for a paid call, use [provider-calls](../provider-calls/SKILL.md); it treats that content as data. When a wrong result has no actor or boundary dimension, use [debugging](../debugging/SKILL.md). Setup of credentials for a new integration belongs to [integration-setup](../integration-setup/SKILL.md).
 
+## Size
+
+- **Small**: scope one read or write at its boundary and prove one allowed and one denied actor; skip the full boundary table for the rest of the surface.
+- **Medium**: run the workflow as written for one operation: the boundary table, the trace and the allowed and denied tests.
+- **Large**: boundaries across many operations and side paths; slice per operation or boundary, and route the prompt or provider-content boundary to provider-calls and credential setup to integration-setup as later slices.
+
 ## Inputs to inspect
 
 - Start at: the route or event named in the report; run `mix phx.routes | grep <path>` to find its pipeline and `live_session`, then open the mount, event handler or controller action it reaches.

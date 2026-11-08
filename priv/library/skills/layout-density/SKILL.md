@@ -13,6 +13,12 @@ Use when a LiveView page is hard to scan at the width the user works at even tho
 
 This workflow owns spacing, alignment, grouping and information density within one viewport width. Any symptom stated as "at a width", "on the phone", "overflows", "truncates", "at a breakpoint", "the touch target is too small" or "out of thumb reach" belongs to [responsive-layout](../responsive-layout/SKILL.md), including a wide screen that collapses into one narrow column. When the screen's hierarchy or identity is the problem rather than its spacing, route to [ui-identity](../ui-identity/SKILL.md); when the spacing scale itself is missing or inconsistent across screens, route to [design-system](../design-system/SKILL.md).
 
+## Size
+
+- **Small**: realign one group of labels, values and actions on the existing scale at the reported width; skip the full reading-order list and re-render only that state.
+- **Medium**: run the workflow as written for one screen at one width: the reading-order list, measured before and after, and the long, large, empty and one-item states.
+- **Large**: the same defects span several screens, or the spacing scale itself is missing; slice per screen and hand a scale that must hold across screens to design-system as a later slice.
+
 ## Inputs to inspect
 
 - Start at: the route the user named, rendered in the running application at the one width they reported, with real data volumes; then the spacing, grid and type scale the project defines (its CSS configuration or design guidance).

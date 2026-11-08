@@ -13,6 +13,12 @@ Use when `mix test` passes locally but CI fails, or the reverse, and nobody can 
 
 This workflow owns the shape of validation: which command checks what, where it runs, and what it is allowed to touch. A build or dependency resolution that fails or differs across environments (`mix.lock` drift, an OTP or Elixir version, a native dependency, a stale `_build`) is [build-dependencies](../build-dependencies/SKILL.md). Whether a delivery passed its criteria is [delivery-validation](../delivery-validation/SKILL.md). Which tests the suite should contain is [test-strategy](../test-strategy/SKILL.md). Sequencing the deliveries that the pipeline gates is [delivery-coordination](../delivery-coordination/SKILL.md). A data pipeline (an import, a stream, a queue consumer) is not this workflow; it is [data-pipelines](../data-pipelines/SKILL.md).
 
+## Size
+
+- **Small**: align one local command with its CI command and record one inventory row; skip the full pipeline inventory.
+- **Medium**: run the workflow as written for one project: the pipeline inventory, the parity gaps closed and the canonical commands run.
+- **Large**: a whole pipeline restructure or matrix; slice per concern, and route a build or dependency failure to build-dependencies as a later slice.
+
 ## Inputs to inspect
 
 - Start at: the CI configuration and the aliases in `mix.exs`, then run the alias CI uses locally and compare its output with the last CI log. See [Build, dependencies and releases](../../elixir/build-releases.md).

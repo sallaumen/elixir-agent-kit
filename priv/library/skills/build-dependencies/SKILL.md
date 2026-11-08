@@ -13,6 +13,12 @@ Use when `mix deps.get` or `mix compile` succeeds on one machine and fails on an
 
 This workflow treats a build or dependency that fails or differs across environments. How the validation pipeline is organized, which command gates what, and whether local and CI run the same commands is [pipeline-design](../pipeline-design/SKILL.md). A test that still fails for a code reason once the build is reproducible is [debugging](../debugging/SKILL.md). A release that builds but does not satisfy its acceptance criteria where it is deployed is [delivery-validation](../delivery-validation/SKILL.md) for the acceptance question and this workflow for the build question.
 
+## Size
+
+- **Small**: reproduce one version or lockfile drift in a clean checkout, change one constraint and verify both environments; skip the full environment table.
+- **Medium**: run the workflow as written for one failure: the environment table, the clean checkout reproduction and one boundary changed.
+- **Large**: several dependencies or native builds across runtimes; slice per dependency, and route how the pipeline is organized to pipeline-design as a later slice.
+
 ## Inputs to inspect
 
 - Start at: the exact failing command and its full output, then `elixir --version`, `.tool-versions` (or the equivalent) and `MIX_ENV` in both the failing and the passing environment. See [Build, dependencies and releases](../../elixir/build-releases.md).

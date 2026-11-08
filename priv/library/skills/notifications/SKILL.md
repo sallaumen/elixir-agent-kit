@@ -13,6 +13,12 @@ Use when a chat bot or email sender stops delivering and the logs show only time
 
 This workflow owns transport: the path from an emitted event to a delivered message, with its dedup key, retries and rate limits. The rule that separates it from [operational-alerts](../operational-alerts/SKILL.md): if the question is "why did this message fail, repeat or multiply", it is transport and belongs here; if the question is "why does this alert repeat, look current when it is historical, or appear resolved when someone acknowledged it", it is incident lifecycle and belongs there. The single paid provider request and its audit row belong to [provider-calls](../provider-calls/SKILL.md); whether the bot is configured at all belongs to [integration-setup](../integration-setup/SKILL.md).
 
+## Size
+
+- **Small**: give one message a stable delivery key and prove a duplicate sends once; skip the full delivery table.
+- **Medium**: run the workflow as written for one channel: the delivery table, the duplicate producer and the retry policy mapped to provider responses.
+- **Large**: several channels or a whole delivery chain; slice per channel, and route the incident lifecycle to operational-alerts or the paid send to provider-calls as later slices.
+
 ## Inputs to inspect
 
 - Start at: the send function for the affected channel (`grep -rn "deliver\|send_message\|notify" lib/`) and the first log line or counter that showed the failure or the volume.

@@ -13,6 +13,12 @@ Use when the project's contract says every network client is built once and pass
 
 The separating rule among the code workflows: code that drifts from a pattern the project already chose is this workflow; two implementations of the same job, one of which should go, is [code-consolidation](../code-consolidation/SKILL.md); one function mixing a decision with effects is [abstraction-layers](../abstraction-layers/SKILL.md); a name or location that misleads is [module-design](../module-design/SKILL.md); no agreed pattern, or ownership in dispute across modules, is [architecture-review](../architecture-review/SKILL.md) first. A diff to judge before merge is [code-review](../code-review/SKILL.md), which may cite the pattern card this workflow writes. A rename of a persisted worker or serialized module along the way is [migration-compatibility](../migration-compatibility/SKILL.md). One module refactored in a functional or readable style, with no project pattern to conform to and no convention being chosen for many modules, is [functional-refactoring](../functional-refactoring/SKILL.md) or [readable-code](../readable-code/SKILL.md); choosing that convention for many modules stays with architecture-review.
 
+## Size
+
+- **Small**: conform one deviating site to the written pattern with a public-seam test passing before and after; skip the full deviation table.
+- **Medium**: run the workflow as written for one rule: the pattern card, the deviation table and one rule conformed one site at a time.
+- **Large**: many sites across modules, or the pattern itself is not yet chosen; slice per site, and settle a not-yet-agreed pattern in architecture-review first; a single module in a functional or readable style is functional-refactoring or readable-code.
+
 ## Inputs to inspect
 
 - Start at: the written source of the pattern (the project's contract section, an architecture decision record, `AGENTS.md`, a style guide) or, when only code shows it, the exemplar modules the request or the owner names; then one search that narrows to candidate deviations, such as `grep -rn "Req\.new(" lib/` for clients built at each call. A candidate becomes a deviation only after reading it confirms it breaks the card.

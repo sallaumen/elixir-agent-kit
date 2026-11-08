@@ -1,6 +1,6 @@
 # Routing evaluation cases
 
-These 82 cases keep the original requests (all in Portuguese) and their evaluator
+These 87 cases keep the original requests (all in Portuguese) and their evaluator
 criteria, in either language, with public workflow IDs. `EVOLUTION` routes to the maintenance guide;
 `NONE` means a bounded task does not need a broader workflow. Cases stay outside
 the installed library so expected answers are not injected into agent instructions.
@@ -114,3 +114,19 @@ workflow in those areas now has a medium and a large case, and
 review, where the expected behavior is a written review plan and no edit. E79 to
 E81 are medium cases, where the first-step artifact in the reply is the plan and a
 plan file is a failure. E82 is a small case that expects `NONE` and no plan.
+
+E83 to E87 test that size changes the route, following the "Size changes the
+choice" section of `ROUTING.md`. E83 and E84 are one pair of the same kind of
+request at two sizes: two competing onboarding paths in one delivery is
+`code-consolidation` (medium), while several half-done areas across contexts,
+finished or retired in owned deliveries, is `delivery-coordination` (large). E85
+and E86 are the provider-call pair: one module whose retry charges twice is
+`provider-calls` (medium), while the same call discipline across three contexts
+and two workers, each with its own owner and retry, delivered in owned pieces, is
+`delivery-coordination` (large, and a `provider-calls` answer is its failure
+signal). E87 keeps the small boundary measurable: a fully specified timeout
+change stays `NONE` even where the provider-call area nominally applies.
+
+The large arm of each pair deliberately reuses the shape of an earlier large case
+(E84 echoes E01, E86 echoes E68); the pair's value is the size contrast within
+the pair, not a new large-route discovery.

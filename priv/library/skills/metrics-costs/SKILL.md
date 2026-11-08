@@ -13,6 +13,12 @@ Use when the dashboard's "cost this month" differs from the provider invoice and
 
 This workflow owns metric definitions and the aggregation from source rows to a displayed number. The per-call row with cost, units and outcome is produced by [provider-calls](../provider-calls/SKILL.md); the capacity counters it reads are owned by [ai-orchestration](../ai-orchestration/SKILL.md); a rule duplicated between a context and a screen is also [data-contracts](../data-contracts/SKILL.md); if the number is right but the screen is hard to scan, that is [layout-density](../layout-density/SKILL.md).
 
+## Size
+
+- **Small**: correct one aggregation rule (one dedupe or one currency boundary) with one test; skip the full metric definition table.
+- **Medium**: run the workflow as written for one metric: the definition table, the hand recomputation and the aggregation test.
+- **Large**: many metrics or screens; slice per metric, and route the per-call row to provider-calls or the capacity counters to ai-orchestration as later slices.
+
 ## Inputs to inspect
 
 - Start at: the query or function behind the one number in question (`grep -rn "sum(\|count(\|aggregate" lib/` in the context that feeds the screen) and the screen or report that shows it.

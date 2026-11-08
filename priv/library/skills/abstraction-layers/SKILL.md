@@ -13,6 +13,12 @@ Use when one context function builds an Ecto query, calls an HTTP client, decide
 
 The separating rule among the code workflows: one function, or a small cluster around one entry point, mixing a business decision with transport, persistence or effects is this workflow; which context should own that function is [architecture-review](../architecture-review/SKILL.md); a module whose name or public API is wrong while its content is sound is [module-design](../module-design/SKILL.md); two implementations of the same operation is [code-consolidation](../code-consolidation/SKILL.md); the same mix repeated across many modules that should follow a split the project already chose is [house-patterns](../house-patterns/SKILL.md). Ownership is assumed settled here. A whole module whose functions interleave hidden inputs, decisions and effects is [functional-refactoring](../functional-refactoring/SKILL.md).
 
+## Size
+
+- **Small**: extract one decision from one function into a pure, stub-free tested function, keeping the effects in place; skip the full level table.
+- **Medium**: run the workflow as written for one operation: the level table, the effect inventory and the extracted, stub-free tested calculations.
+- **Large**: a cluster around one entry point with several mixing points; slice per function, and hand contested ownership to architecture-review or naming to module-design as later slices; a whole module that interleaves hidden inputs and effects is functional-refactoring.
+
 ## Inputs to inspect
 
 - Start at: the public function named in the request or called by the failing test, then its body and each immediate callee, with `grep -n "def " lib/<path>` to list what else the module exposes.

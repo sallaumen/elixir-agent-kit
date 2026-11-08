@@ -13,6 +13,12 @@ Use when a demo or training run enqueues the same Oban worker as production and 
 
 This workflow owns the boundary between a simulated flow and real operations: which modules, tables, queues and providers both touch, and the flag or scope that separates them at the effect. The single provider call's budget and audit row belong to [provider-calls](../provider-calls/SKILL.md); tenant and credential boundaries in general belong to [security-boundaries](../security-boundaries/SKILL.md); totals that must exclude simulated rows belong to [metrics-costs](../metrics-costs/SKILL.md).
 
+## Size
+
+- **Small**: close one shared effect path with the context key and prove a simulated action reaches no real client; skip the full shared-path map.
+- **Medium**: run the workflow as written for one flow: the shared-path map, the separating boundary and the end-to-end fake-client tests.
+- **Large**: the whole simulation surface across modules and queues; slice per effect boundary, and route the fake client to provider-calls or tenant and credential boundaries to security-boundaries as later slices.
+
 ## Inputs to inspect
 
 - Start at: how the mode is selected (`grep -rn "simulat\|sandbox\|demo\|training" lib/ config/`) and the one effect (a provider call, a send, a payment, a publish) the user fears the simulation could trigger.

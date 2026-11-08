@@ -13,6 +13,12 @@ Use when an interface moves with one borrowed default (everything fades up on th
 
 This workflow governs **interface motion**. Rendered video, motion graphics and animated decks are a different craft; the [routing guide](../../ROUTING.md) points to an external skill for those.
 
+## Size
+
+- **Small**: replace one borrowed or default transition with a curve and duration chosen for that property and a reduced-motion alternative; skip the register-wide pass.
+- **Medium**: run the workflow as written for one surface: the motion inventory, one register and the frame-by-frame validation.
+- **Large**: motion across many surfaces, or the motion tokens themselves are missing; slice per surface and hand shared tokens to design-system as a later slice.
+
 ## Inputs to inspect
 
 - Start at: the project's motion guidance (its design notes, motion tokens or the [motion reference](MOTION.md)) and the transition in question, stepped through in the running interface.
