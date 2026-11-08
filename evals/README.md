@@ -1,6 +1,6 @@
 # Routing evaluation cases
 
-These 66 cases keep the original requests (all in Portuguese) and their evaluator
+These 82 cases keep the original requests (all in Portuguese) and their evaluator
 criteria, in either language, with public workflow IDs. `EVOLUTION` routes to the maintenance guide;
 `NONE` means a bounded task does not need a broader workflow. Cases stay outside
 the installed library so expected answers are not injected into agent instructions.
@@ -76,3 +76,11 @@ symptoms, where the expected route is `functional-refactoring` first with
 `readable-code` planned as a later slice; E66 renames a public function, a
 negative case for `readable-code` (`module-design`, or `NONE` for the bounded
 edit).
+
+E67 to E82 complete the size coverage of the code and backend workflows: every
+workflow in those areas now has a medium and a large case, and
+`scripts/check_library.py` keeps it that way. The large cases expect a plan in
+`.elixir-agent-kit/plans/` before the first edit, except E76, a large read-only
+review, where the expected behavior is a written review plan and no edit. E79 to
+E81 are medium cases, where the first-step artifact in the reply is the plan and a
+plan file is a failure. E82 is a small case that expects `NONE` and no plan.

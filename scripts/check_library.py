@@ -105,6 +105,21 @@ for case in cases:
         errors.append(f"Incomplete evaluation case: {case['id']}")
     if case.get("expected_size") not in {"small", "medium", "large"}:
         errors.append(f"Evaluation case lacks expected_size small, medium or large: {case['id']}")
+areas = {row[0]: row[3] for row in rows}
+for skill_id in ids:
+    if areas[skill_id] not in {"code", "backend"}:
+        continue
+    sizes = {case.get("expected_size") for case in cases if case["expected_primary"] == skill_id}
+    for size in ["medium", "large"]:
+        if size not in sizes:
+            errors.append(f"No {size} evaluation case expects: {skill_id}")
+small_none = [
+    case for case in cases
+    if case.get("expected_size") == "small"
+    and "NONE" in [case["expected_primary"]] + case["allowed_alternatives"]
+]
+if len(small_none) < 4:
+    errors.append(f"Fewer than four small evaluation cases accept NONE: {len(small_none)}")
 evals_readme = (ROOT / "evals/README.md").read_text()
 if f"These {len(cases)} cases" not in evals_readme:
     errors.append(f"evals/README.md does not state the case count {len(cases)}")
