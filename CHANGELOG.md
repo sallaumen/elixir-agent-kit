@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- `docs/versioning.md` defines the public interface under semantic versioning
+  (configuration keys, Mix tasks and flags, file layout, the `state.tsv` format,
+  the block markers and the stable workflow IDs), the versioning and deprecation
+  policy, and an upgrade guide; `scripts/check_library.py` keeps the documented
+  workflow IDs in sync with `catalog.tsv`.
+
 - Every code and backend workflow has a medium and a large evaluation case
   (E67 to E82, 82 total), and `scripts/check_library.py` enforces that coverage.
 - `scripts/eval_matrix.py` prints the coverage matrix by workflow and task size,
