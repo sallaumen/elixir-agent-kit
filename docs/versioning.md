@@ -54,8 +54,8 @@ Installed library, read from the dependency, never copied into the project:
   `HANDOFF.md`, `CATALOG.md`, `catalog.tsv`, `LICENSE`
 - `priv/library/skills/<id>/SKILL.md` - one body per workflow ID
 - `priv/library/elixir/*.md` - per-technology references
-- `priv/library/templates/*.md` - decision, diagnosis, delivery, practice,
-  task-plan and validation templates
+- `priv/library/templates/*.md` - decision, diagnosis, delivery-plan,
+  practice-proposal, task-plan and validation templates
 
 Generated in the consuming project:
 
