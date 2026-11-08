@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.0.0 — 2026-11-08
+
+- First stable release. The 0.x fronts are complete and published: size-guided
+  routing with a per-workflow `## Size` section (0.9.0), the quality review of
+  all 38 workflows (0.10.0), and the public-interface and versioning
+  documentation (0.9.0).
+- A field round on four real projects ran the kit at v0.10.0: two readable-code
+  medium executions merged with full gates, and a written no-real-need rationale
+  for the other code/backend workflows, whose machine-enforced project guards
+  already prevent those defect classes (see
+  evals/results/2026-11-08-deepseek.md).
+
 ## 0.10.0 — 2026-11-08
 
 - Quality review of all 38 workflows: every numbered step now ends in an
