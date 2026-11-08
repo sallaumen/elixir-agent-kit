@@ -91,9 +91,9 @@ for skill_id, mode, description, area in rows:
     if re.search(r"/Users/|playwright|\bmcp\b", text, re.I):
         errors.append(f"Operator environment named in workflow text: {skill_id}")
     size_body = text.split("## Size", 1)[1].split("\n## ", 1)[0] if "## Size" in text else ""
-    for size in ["Small", "Medium", "Large"]:
-        if f"**{size}**" not in size_body:
-            errors.append(f"Size section lacks {size}: {skill_id}")
+    order = [size_body.find(f"**{size}**") for size in ["Small", "Medium", "Large"]]
+    if any(pos == -1 for pos in order) or not (order[0] < order[1] < order[2]):
+        errors.append(f"Size section must state Small, Medium, Large in order: {skill_id}")
 
 cases = json.loads((ROOT / "evals/routing.json").read_text())["cases"]
 case_ids = [case["id"] for case in cases]

@@ -1314,19 +1314,17 @@
     },
     {
       "id": "E86",
-      "request": "As chamadas pagas do produto estão espalhadas por três contextos e dois workers, sem orçamento nem auditoria, cada uma com seu retry. Divida a unificação em um cliente único com orçamento, registro e motivo tipado de falha, em entregas revisáveis com donos.",
+      "request": "As chamadas pagas do produto estão espalhadas por três contextos e dois workers, cada um com dono e retry próprios, sem orçamento nem auditoria. Divida a unificação em um cliente único com orçamento, registro e motivo tipado de falha, em entregas revisáveis com donos e ordem de integração.",
       "expected_primary": "delivery-coordination",
-      "allowed_alternatives": [
-        "provider-calls"
-      ],
+      "allowed_alternatives": [],
       "expected_size": "large",
       "success_signals": [
-        "Classifica como grande e escreve a tabela de entregas com dono e ordem",
+        "Classifica como grande e escreve a tabela de entregas com dono e ordem antes de editar",
         "Cada fatia aplica o fluxo de chamada paga (orçamento antes da rede, registro, falha tipada)"
       ],
       "failure_signals": [
         "Edita antes de planejar",
-        "Só troca os clientes sem registro de auditoria nem teste de falha"
+        "Trata como uma única chamada paga (provider-calls) sem dividir em entregas com donos"
       ]
     },
     {

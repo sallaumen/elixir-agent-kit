@@ -73,6 +73,6 @@ Browser history, back-button behavior and overlays that act as navigation belong
 
 ## Completion
 
-A declared viewport matrix in which the task works with real content, touch and keyboard, with unsupported cases named. For spacing and density within one width use [layout-density](../layout-density/SKILL.md); for history, back and overlays use [navigation-ux](../navigation-ux/SKILL.md).
+A declared viewport matrix in which the task works with real content, touch and keyboard, with unsupported cases named. For spacing and density within one width use [layout-density](../layout-density/SKILL.md); for history, back and overlays use [navigation-ux](../navigation-ux/SKILL.md); for a shared component's rules across screens use [design-system](../design-system/SKILL.md).
 
 Use the [Elixir context](../../ELIXIR.md) only for technology present in the project. Record a useful [handoff](../../HANDOFF.md) when another person or agent will continue the work.

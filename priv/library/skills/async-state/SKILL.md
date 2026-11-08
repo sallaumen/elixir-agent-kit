@@ -17,7 +17,7 @@ The question this workflow answers is: who owns each state transition, how is a 
 
 - **Small**: fix one transition's owner or key (one stale overwrite or one missing dedupe) with one ordering test; skip the full lifecycle.
 - **Medium**: run the workflow as written for one flow: the lifecycle with its owners, the trace and the duplicate, delayed and out-of-order tests.
-- **Large**: a whole flow across process, persisted state and interface, or several transitions; slice per transition, and route process ownership to process-lifecycle or the stored data to data-contracts as later slices.
+- **Large**: a whole flow across process, persisted state and interface, or several transitions; slice per transition and route process ownership to process-lifecycle as a later slice.
 
 ## Inputs to inspect
 
