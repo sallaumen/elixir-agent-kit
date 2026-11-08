@@ -1024,6 +1024,248 @@
         "Seleciona readable-code e faz uma limpeza geral do módulo",
         "Renomeia sem procurar os chamadores"
       ]
+    },
+    {
+      "id": "E67",
+      "request": "Audite e corrija o isolamento por organização em todo o painel: LiveViews, controllers da API e os jobs Oban que leem dados de clientes, porque um usuário viu pedidos de outra empresa.",
+      "expected_primary": "security-boundaries",
+      "allowed_alternatives": [],
+      "expected_size": "large",
+      "success_signals": [
+        "Classifica como grande e escreve o plano em .elixir-agent-kit/plans/ antes da primeira edição",
+        "Escreve a tabela de fronteiras (operação, ator, recurso, onde a regra é aplicada) antes de corrigir"
+      ],
+      "failure_signals": [
+        "Edita código antes de escrever o plano",
+        "Corrige só a rota relatada e declara o painel seguro"
+      ]
+    },
+    {
+      "id": "E68",
+      "request": "Todas as chamadas à API de IA paga, espalhadas em três contextos e dois workers, precisam passar por um cliente único com orçamento, registro de auditoria e motivo de falha tipado.",
+      "expected_primary": "provider-calls",
+      "allowed_alternatives": [],
+      "expected_size": "large",
+      "success_signals": [
+        "Classifica como grande e escreve o plano em .elixir-agent-kit/plans/ antes da primeira edição",
+        "Mapeia cada ponto de chamada e marca os que não passam pelo cliente compartilhado"
+      ],
+      "failure_signals": [
+        "Edita código antes de escrever o plano",
+        "Troca as chamadas sem registro de auditoria nem teste de falha"
+      ]
+    },
+    {
+      "id": "E69",
+      "request": "A importação noturna de 2 milhões de linhas de CSV estoura a memória, duplica pedidos quando reinicia e trava a fila do Oban; reestruture o fluxo de ponta a ponta.",
+      "expected_primary": "data-pipelines",
+      "allowed_alternatives": [],
+      "expected_size": "large",
+      "success_signals": [
+        "Classifica como grande e escreve o plano em .elixir-agent-kit/plans/ antes da primeira edição",
+        "Escreve o cartão do fluxo (origem, identidade do item, estágios, confirmação, limite de memória) antes de editar"
+      ],
+      "failure_signals": [
+        "Edita código antes de escrever o plano",
+        "Aumenta memória ou timeout sem tratar identidade e confirmação dos itens"
+      ]
+    },
+    {
+      "id": "E70",
+      "request": "As funções de checkout de quatro contextos misturam regra de preço, Repo e broadcast no mesmo corpo; separe decisão e efeito em todas elas sem mudar o comportamento.",
+      "expected_primary": "abstraction-layers",
+      "allowed_alternatives": [
+        "functional-refactoring"
+      ],
+      "expected_size": "large",
+      "success_signals": [
+        "Classifica como grande e escreve o plano em .elixir-agent-kit/plans/ antes da primeira edição",
+        "Faz a tabela de níveis de cada função, com uma fatia por função no plano"
+      ],
+      "failure_signals": [
+        "Edita código antes de escrever o plano",
+        "Muda a ordem ou a transação dos efeitos ao extrair"
+      ]
+    },
+    {
+      "id": "E71",
+      "request": "Os módulos Accounts, Billing e Ops trocaram de responsabilidade ao longo do tempo; renomeie e reorganize esses módulos e suas funções públicas, atualizando chamadores, configuração e supervisores.",
+      "expected_primary": "module-design",
+      "allowed_alternatives": [
+        "architecture-review"
+      ],
+      "expected_size": "large",
+      "success_signals": [
+        "Classifica como grande e escreve o plano em .elixir-agent-kit/plans/ antes da primeira edição",
+        "Escreve o mapa de renomeação com os chamadores por tipo antes de renomear"
+      ],
+      "failure_signals": [
+        "Edita código antes de escrever o plano",
+        "Renomeia sem procurar referências em configuração e supervisores"
+      ]
+    },
+    {
+      "id": "E72",
+      "request": "O projeto tem três fluxos de onboarding meio abandonados, cada um com rotas, jobs e testes próprios; descubra qual é o vivo e remova os outros com segurança.",
+      "expected_primary": "code-consolidation",
+      "allowed_alternatives": [],
+      "expected_size": "large",
+      "success_signals": [
+        "Classifica como grande e escreve o plano em .elixir-agent-kit/plans/ antes da primeira edição",
+        "Monta a tabela de evidências (chamadores, rotas, jobs, telemetria, intenção) por caminho"
+      ],
+      "failure_signals": [
+        "Edita código antes de escrever o plano",
+        "Apaga um caminho sem evidência de que nada o alcança"
+      ]
+    },
+    {
+      "id": "E73",
+      "request": "O contrato do projeto diz que todo job Oban é idempotente por chave única; traga para o padrão os 14 workers que ainda não seguem isso, sem mudar o que eles fazem.",
+      "expected_primary": "house-patterns",
+      "allowed_alternatives": [],
+      "expected_size": "large",
+      "success_signals": [
+        "Classifica como grande e escreve o plano em .elixir-agent-kit/plans/ antes da primeira edição",
+        "Escreve o cartão do padrão com a fonte escrita e a busca que detecta desvios"
+      ],
+      "failure_signals": [
+        "Edita código antes de escrever o plano",
+        "Refatora todos os workers num único passo, sem teste de fronteira por worker"
+      ]
+    },
+    {
+      "id": "E74",
+      "request": "Os cinco maiores módulos de LiveView do painel funcionam e têm testes, mas são ilegíveis: handle_event com aninhamento profundo, nomes vagos e comentários repetindo o código. Deixe todos legíveis sem mudar o comportamento.",
+      "expected_primary": "readable-code",
+      "allowed_alternatives": [],
+      "expected_size": "large",
+      "success_signals": [
+        "Classifica como grande e escreve o plano em .elixir-agent-kit/plans/ antes da primeira edição",
+        "Escreve as notas de leitura por módulo, com uma fatia por módulo no plano"
+      ],
+      "failure_signals": [
+        "Edita código antes de escrever o plano",
+        "Renomeia funções públicas ou eventos usados nos templates"
+      ]
+    },
+    {
+      "id": "E75",
+      "request": "A suíte passa, mas bugs de cobrança, permissão e concorrência chegaram à produção nos últimos três meses; reorganize a estratégia de testes de todo o domínio de pagamentos.",
+      "expected_primary": "test-strategy",
+      "allowed_alternatives": [],
+      "expected_size": "large",
+      "success_signals": [
+        "Classifica como grande e escreve o plano em .elixir-agent-kit/plans/ antes da primeira edição",
+        "Lista os comportamentos que podem quebrar, ordenados por consequência, antes de escrever testes"
+      ],
+      "failure_signals": [
+        "Edita código antes de escrever o plano",
+        "Mede o sucesso por cobertura de linhas"
+      ]
+    },
+    {
+      "id": "E76",
+      "request": "Revise este PR de 3.000 linhas que mexe em migração, contexto, LiveView e workers. Só leitura: quero os achados.",
+      "expected_primary": "code-review",
+      "allowed_alternatives": [],
+      "expected_size": "large",
+      "success_signals": [
+        "Declara tamanho grande, escreve o plano da revisão e não edita código",
+        "Lista os comportamentos alterados com o arquivo e o teste que cobre cada um"
+      ],
+      "failure_signals": [
+        "Corrige o código durante a revisão",
+        "Revisa só parte do diff e declara o PR aprovado"
+      ]
+    },
+    {
+      "id": "E77",
+      "request": "O dashboard leva 9 s para abrir com 50 mil pedidos, medido por telemetry; a lentidão passa por queries, assigns grandes na LiveView e um GenServer de agregação. Reduza mantendo o que a tela mostra.",
+      "expected_primary": "performance",
+      "allowed_alternatives": [],
+      "expected_size": "large",
+      "success_signals": [
+        "Classifica como grande e escreve o plano em .elixir-agent-kit/plans/ antes da primeira edição",
+        "Escreve a tabela de medição por estágio antes de otimizar"
+      ],
+      "failure_signals": [
+        "Edita código antes de escrever o plano",
+        "Otimiza sem medir antes e depois na mesma escala de dados"
+      ]
+    },
+    {
+      "id": "E78",
+      "request": "Temos sete GenServers de cache, pollers e filas espalhados pela árvore de supervisão; alguns duplicam trabalho depois de reiniciar e outros bloqueiam quem chama. Revise todos.",
+      "expected_primary": "process-lifecycle",
+      "allowed_alternatives": [],
+      "expected_size": "large",
+      "success_signals": [
+        "Classifica como grande e escreve o plano em .elixir-agent-kit/plans/ antes da primeira edição",
+        "Decide para cada processo se ele se justifica (estado, ciclo de vida ou limite de concorrência) antes de mexer"
+      ],
+      "failure_signals": [
+        "Edita código antes de escrever o plano",
+        "Adiciona mais processos ou tabelas ETS para contornar o bloqueio"
+      ]
+    },
+    {
+      "id": "E79",
+      "request": "O campo status do pedido é decidido na LiveView e no job de faturamento com regras diferentes; defina um dono só para esse campo.",
+      "expected_primary": "data-contracts",
+      "allowed_alternatives": [],
+      "expected_size": "medium",
+      "success_signals": [
+        "Declara tamanho médio e usa o artefato do primeiro passo como plano na resposta, sem arquivo de plano",
+        "Escreve a tabela de dono do campo com consumidores e invariante"
+      ],
+      "failure_signals": [
+        "Cria um arquivo de plano para uma tarefa média",
+        "Copia a mesma regra para os dois lugares em vez de dar um dono ao campo"
+      ]
+    },
+    {
+      "id": "E80",
+      "request": "Vamos trocar o valor de enum pending_payment por awaiting_payment nos pedidos já gravados, com deploy sem parada.",
+      "expected_primary": "migration-compatibility",
+      "allowed_alternatives": [],
+      "expected_size": "medium",
+      "success_signals": [
+        "Declara tamanho médio e usa o artefato do primeiro passo como plano na resposta, sem arquivo de plano",
+        "Inventaria onde o valor está persistido e quem lê e escreve em cada versão"
+      ],
+      "failure_signals": [
+        "Cria um arquivo de plano para uma tarefa média",
+        "Renomeia o enum numa migração só, sem fase de expansão"
+      ]
+    },
+    {
+      "id": "E81",
+      "request": "O contexto Catalog grava direto na tabela de estoque do contexto Inventory; quero entender se essa dependência está no lugar certo antes de mexer.",
+      "expected_primary": "architecture-review",
+      "allowed_alternatives": [],
+      "expected_size": "medium",
+      "success_signals": [
+        "Declara tamanho médio e usa o artefato do primeiro passo como plano na resposta, sem arquivo de plano",
+        "Escreve o mapa de dono com as arestas de dependência e a direção de cada uma"
+      ],
+      "failure_signals": [
+        "Cria um arquivo de plano para uma tarefa média",
+        "Move código entre contextos antes de mapear a dependência"
+      ]
+    },
+    {
+      "id": "E82",
+      "request": "Adicione @spec à função pública Billing.total/1; os tipos de entrada e saída já estão definidos no módulo.",
+      "expected_primary": "NONE",
+      "allowed_alternatives": [],
+      "expected_size": "small",
+      "success_signals": [
+        "Faz a edição direta sem escolher workflow nem criar plano"
+      ],
+      "failure_signals": [
+        "Escolhe um workflow de refatoração ou escreve um arquivo de plano"
+      ]
     }
   ]
 }

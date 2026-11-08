@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+- Every code and backend workflow has a medium and a large evaluation case
+  (E67 to E82, 82 total), and `scripts/check_library.py` enforces that coverage.
+- `scripts/eval_matrix.py` prints the coverage matrix by workflow and task size,
+  and, from live-round result files in `evals/results/*.tsv`, an outcome matrix of
+  routing, stated size, the plan rule and completion. It reads files only and
+  calls no model; `check_library.py` validates every committed result file.
+- `evals/README.md` documents how to run a size round.
+
 ## 0.8.0 — 2026-11-07
 
 - New workflows `functional-refactoring` and `readable-code` (code area), both

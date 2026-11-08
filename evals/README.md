@@ -1,6 +1,6 @@
 # Routing evaluation cases
 
-These 66 cases keep the original requests (all in Portuguese) and their evaluator
+These 82 cases keep the original requests (all in Portuguese) and their evaluator
 criteria, in either language, with public workflow IDs. `EVOLUTION` routes to the maintenance guide;
 `NONE` means a bounded task does not need a broader workflow. Cases stay outside
 the installed library so expected answers are not injected into agent instructions.
@@ -10,6 +10,36 @@ context. Keep criteria with an independent evaluator. Record model/client versio
 package revision, actual selected files, actions and results. Include negative,
 neighboring-workflow and insufficient-input cases. Never infer model compliance
 from structural validation. No paid/model evaluations run automatically.
+
+## Running a size round
+
+`python3 scripts/eval_matrix.py` prints the coverage matrix: the code and backend
+workflows in rows, small, medium and large in columns, and the case IDs in each
+cell. A live round fills that matrix with observed runs:
+
+1. Install the kit at a fixed version in a disposable worktree of a real consumer
+   and run `mix agent_kit.check`.
+2. Start one fresh client session per run with the case request, one sentence of
+   project context, and a closing request to list the files read and the workflow
+   chosen. Reset the worktree between runs.
+3. Record one row per run in `evals/results/YYYY-MM-DD-<client>.tsv` from the
+   transcript, which is the evidence. The header is
+   `run case client model kit routed size_stated plan outcome turns tokens notes`
+   (tab-separated). `size_stated` is `small`, `medium`, `large` or `none`; `plan` is
+   `before_edit`, `after_edit`, `none`, or `review` for a plan written in a mode that
+   does not edit; `outcome` is `finished`, `turn_cap` or `error`; `turns` and
+   `tokens` are integers or empty.
+4. Have an independent evaluator judge each run against the case's success and
+   failure signals, and note the verdict in `notes`.
+5. Run `python3 scripts/eval_matrix.py evals/results/<file>.tsv` for the outcome
+   matrix (runs, routed, size, plan and finished per cell; large passes the plan
+   rule with `before_edit` or `review`, small and medium with `none`) and commit
+   the `.tsv` with a short Markdown summary beside it.
+
+`scripts/check_library.py` validates every committed `.tsv`, so a malformed row
+fails CI. Runs are manual and paid; nothing here calls a model.
+
+## Case notes
 
 E25 removes private product names. E27 corrects a contradictory legacy criterion:
 its user explicitly authorizes merge/deployment, so requesting the same authority
@@ -76,3 +106,11 @@ symptoms, where the expected route is `functional-refactoring` first with
 `readable-code` planned as a later slice; E66 renames a public function, a
 negative case for `readable-code` (`module-design`, or `NONE` for the bounded
 edit).
+
+E67 to E82 complete the size coverage of the code and backend workflows: every
+workflow in those areas now has a medium and a large case, and
+`scripts/check_library.py` keeps it that way. The large cases expect a plan in
+`.elixir-agent-kit/plans/` before the first edit, except E76, a large read-only
+review, where the expected behavior is a written review plan and no edit. E79 to
+E81 are medium cases, where the first-step artifact in the reply is the plan and a
+plan file is a failure. E82 is a small case that expects `NONE` and no plan.

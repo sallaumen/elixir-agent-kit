@@ -29,6 +29,10 @@ setup complete. Do not silently copy the whole library as a workaround.
    a stop-and-ask trigger from the contract.
 6. Record package revision, client/harness version, paths and observed behavior.
 
+For a repeatable round across many cases and sizes, follow
+[Running a size round](https://github.com/sallaumen/elixir-agent-kit/blob/main/evals/README.md#running-a-size-round)
+and record the runs as a result file the matrix script reads.
+
 Repeat in isolated executor worktrees; a parent session's access proves nothing
 about a worker. Filesystem and Mix smoke tests verify links, preservation,
 migration, exclusion from production and repeatability. They do not prove live

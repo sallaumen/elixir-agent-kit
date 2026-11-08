@@ -2,6 +2,7 @@
 """Check workflow metadata, structure, routing coverage, provenance and local Markdown links."""
 import json
 import re
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -105,6 +106,21 @@ for case in cases:
         errors.append(f"Incomplete evaluation case: {case['id']}")
     if case.get("expected_size") not in {"small", "medium", "large"}:
         errors.append(f"Evaluation case lacks expected_size small, medium or large: {case['id']}")
+areas = {row[0]: row[3] for row in rows}
+for skill_id in ids:
+    if areas[skill_id] not in {"code", "backend"}:
+        continue
+    sizes = {case.get("expected_size") for case in cases if case["expected_primary"] == skill_id}
+    for size in ["medium", "large"]:
+        if size not in sizes:
+            errors.append(f"No {size} evaluation case expects: {skill_id}")
+small_none = [
+    case for case in cases
+    if case.get("expected_size") == "small"
+    and "NONE" in [case["expected_primary"]] + case["allowed_alternatives"]
+]
+if len(small_none) < 4:
+    errors.append(f"Fewer than four small evaluation cases accept NONE: {len(small_none)}")
 evals_readme = (ROOT / "evals/README.md").read_text()
 if f"These {len(cases)} cases" not in evals_readme:
     errors.append(f"evals/README.md does not state the case count {len(cases)}")
@@ -142,6 +158,16 @@ for path in paths:
             errors.append(f"Missing anchor: {path.relative_to(ROOT)} -> {target}")
     if re.search(r'/Users/|gh[pousr]_[A-Za-z0-9]{20,}|sk-[A-Za-z0-9]{24,}', text):
         errors.append(f"Possible private path or credential: {path.relative_to(ROOT)}")
+
+sys.path.insert(0, str(ROOT / "scripts"))
+import eval_matrix  # noqa: E402
+
+eval_cases = eval_matrix.load_cases(ROOT)
+eval_routes = eval_matrix.known_routes(ROOT)
+for result in sorted((ROOT / "evals/results").glob("*.tsv")):
+    _, problems = eval_matrix.validate(result.read_text(), str(result.relative_to(ROOT)), eval_cases, eval_routes)
+    errors.extend(problems)
+errors.extend(eval_matrix.self_check(ROOT))
 
 if errors:
     raise SystemExit("\n".join(errors))
