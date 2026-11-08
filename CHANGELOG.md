@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.9.0 — 2026-11-08
 
 - Task size now changes the route and the execution: `ROUTING.md` gains a "Size
   changes the choice" section, every workflow gains a required `## Size` section
