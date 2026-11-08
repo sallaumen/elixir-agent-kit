@@ -232,6 +232,7 @@ outputs block every write before it starts; there is no force switch.
 [Install with an AI agent](docs/INSTALL_WITH_AI.md) ·
 [Português](docs/README.pt-BR.md) ·
 [Architecture](docs/architecture.md) ·
+[Public interface and versioning](docs/versioning.md) ·
 [Compatibility and live evaluation](docs/compatibility.md) ·
 [Provenance](docs/provenance.md) ·
 [Contributing](CONTRIBUTING.md) ·
