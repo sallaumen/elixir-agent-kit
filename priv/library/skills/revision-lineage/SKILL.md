@@ -11,7 +11,7 @@ Default mode: **analyze-and-fix**. Read the [shared contract](../../CONTRACT.md)
 
 Use when "the latest" and "the approved" versions disagree and the product shows the wrong one, when opening an old revision or thumbnail changes what the user has selected, when a generated asset (image, preview, export, render) arrives late and attaches to the wrong variant or revision, or when nobody can say which revision a displayed artifact came from.
 
-This workflow concerns product revisions and the artifacts derived from them. Which build or dependency is running in an environment belongs to [delivery-validation](../delivery-validation/SKILL.md) and [build-dependencies](../build-dependencies/SKILL.md).
+This workflow concerns product revisions and the artifacts derived from them. A stale asynchronous result that overwrites the current selection or state, rather than attaching to the wrong revision, belongs to [async-state](../async-state/SKILL.md). Which build or dependency is running in an environment belongs to [delivery-validation](../delivery-validation/SKILL.md) and [build-dependencies](../build-dependencies/SKILL.md).
 
 ## Size
 
@@ -30,17 +30,17 @@ This workflow concerns product revisions and the artifacts derived from them. Wh
 
 ## Workflow
 
-1. Write the identity model for the selected flow: entity, revision, pointers, derived artifacts, each with the identifier that names it. Mark every place that uses a weaker identity (filename, order, timestamp, "current").
+1. Write the identity model for the selected flow: entity, revision, pointers, derived artifacts, each with the identifier that names it. Mark every place that uses a weaker identity (filename, order, timestamp, "current"). Done when every entity, revision, pointer and derived artifact is named by an identifier and every weak-identity site is marked.
 
-2. Trace one revision from creation through preview, selection, publication and display, and one artifact from its generating job to the screen. Record where the parent revision is attached and where it could be lost.
+2. Trace one revision from creation through preview, selection, publication and display, and one artifact from its generating job to the screen. Record where the parent revision is attached and where it could be lost. Done when the parent-revision attachment point and each point where it could be lost are recorded.
 
-3. Separate viewing from selecting. Browsing an old revision or opening a secondary view must not write a pointer unless the product defines that action explicitly; the pointer changes only on an explicit user action with its own control.
+3. Separate viewing from selecting. Browsing an old revision or opening a secondary view must not write a pointer unless the product defines that action explicitly; the pointer changes only on an explicit user action with its own control. Done when no browse or preview path writes a pointer in a test.
 
-4. Key every late result by the revision and variant that requested it, and drop it when that key no longer matches; a regenerated asset for an older revision never replaces the current one. Give storage keys the revision in their name or path so two generations cannot collide.
+4. Key every late result by the revision and variant that requested it, and drop it when that key no longer matches; a regenerated asset for an older revision never replaces the current one. Give storage keys the revision in their name or path so two generations cannot collide. Done when a late result for a non-current revision or variant is dropped in a test.
 
-5. Represent pending, failed, missing and unverified artifacts as such on the surface; a placeholder is not a result, and an illustration or mockup is labeled differently from a verified catalog image.
+5. Represent pending, failed, missing and unverified artifacts as such on the surface; a placeholder is not a result, and an illustration or mockup is labeled differently from a verified catalog image. Done when pending, failed, missing and unverified are each a distinct rendered state.
 
-6. Exercise the risky orderings: switch revision while a preview is generating, regenerate for an old revision, refresh mid-change, roll a pointer back, and a migration that must preserve historical associations. Verify access control on stored artifacts.
+6. Exercise the risky orderings: switch revision while a preview is generating, regenerate for an old revision, refresh mid-change, roll a pointer back, and a migration that must preserve historical associations. Verify access control on stored artifacts. Done when the risky-orderings tests pass and access control on stored artifacts is verified.
 
 ## Decision points
 

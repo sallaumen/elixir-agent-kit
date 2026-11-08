@@ -29,17 +29,17 @@ The user-visible side of asynchronous work (what the interface shows after recon
 
 ## Workflow
 
-1. Decide whether a process is warranted: it owns state, a lifecycle or a concurrency limit. If it only groups functions, use functions. If several callers each need their own state, use one process per caller or none. Write one line per candidate process (state owned, lifecycle or limit, or none); the step ends when each has a verdict.
+1. Decide whether a process is warranted: it owns state, a lifecycle or a concurrency limit. If it only groups functions, use functions. If several callers each need their own state, use one process per caller or none. Write one line per candidate process (state owned, lifecycle or limit, or none). Done when each candidate has a verdict.
 
-2. Name the owner of each piece of state and the durable source it can be rebuilt from. State that exists only in a process is lost on restart; decide whether that is acceptable and say so.
+2. Name the owner of each piece of state and the durable source it can be rebuilt from. State that exists only in a process is lost on restart; decide whether that is acceptable and say so. Done when each piece of state has an owner and a durable source it can be rebuilt from, or is declared acceptable to lose.
 
-3. Trace one message from source to effect. Mark blocking work in `handle_call`/`handle_info` (external calls, database queries, broadcasts to many subscribers) and move it to `handle_continue/2`, a `Task` under a supervisor, or a separate process, keeping the owner single-writer.
+3. Trace one message from source to effect. Mark blocking work in `handle_call`/`handle_info` (external calls, database queries, broadcasts to many subscribers) and move it to `handle_continue/2`, a `Task` under a supervisor, or a separate process, keeping the owner single-writer. Done when each blocking point is moved off the callback and the owner stays single-writer.
 
-4. Make repeated input idempotent at the process: dedupe by content hash or sequence number before broadcasting, ignore stale monitor or timer messages by reference, and bound the mailbox with backpressure (reply only when capacity allows, drop or coalesce when documented).
+4. Make repeated input idempotent at the process: dedupe by content hash or sequence number before broadcasting, ignore stale monitor or timer messages by reference, and bound the mailbox with backpressure (reply only when capacity allows, drop or coalesce when documented). Done when duplicate and stale messages produce no duplicate effect and the mailbox stays bounded under the expected burst.
 
-5. Choose restart behavior for the failure actually expected: `:transient` for one-shot work, `:permanent` with a rebuild-from-storage `init/1` or `handle_continue` for owners, a max-restart budget that stops a crash loop instead of hiding it, and shutdown timeouts that let in-flight work finish.
+5. Choose restart behavior for the failure actually expected: `:transient` for one-shot work, `:permanent` with a rebuild-from-storage `init/1` or `handle_continue` for owners, a max-restart budget that stops a crash loop instead of hiding it, and shutdown timeouts that let in-flight work finish. Done when each process has a restart strategy for the failure expected and a max-restart budget that stops a crash loop.
 
-6. Test the lifecycle: start under a test supervisor, deliver a duplicate and an out-of-order message, kill the process and assert the rebuilt state, and measure the mailbox under a burst. Then run the project gate.
+6. Test the lifecycle: start under a test supervisor, deliver a duplicate and an out-of-order message, kill the process and assert the rebuilt state, and measure the mailbox under a burst. Then run the project gate. Done when restart, duplicate, out-of-order and a burst pass in a test and the gate is green.
 
 ## Decision points
 
@@ -49,7 +49,7 @@ The user-visible side of asynchronous work (what the interface shows after recon
 - Restart rebuilds from durable truth; a process that cannot be rebuilt is a bug waiting for a deploy.
 - Timers and monitors are matched by reference; a stale `:tick` or `:DOWN` is dropped, not acted on.
 - One module owns every message to a process; a `GenServer.call/3` on its registered name from another module is a finding (scattered process interface). Send the fields a process needs, not a whole conn, socket or large struct, because messages are copied.
-- A periodic process reschedules inside its tick handler and survives a known flaky source (rescue that failure and keep the schedule); otherwise one bad read per tick spends the supervisor's restart budget and takes siblings down with it. Its interval is configuration, stretched in the test environment.
+- A periodic process survives a known flaky source, or one bad read per tick spends the supervisor's restart budget and takes siblings down with it; the scheduling and configuration mechanics are in [OTP processes and supervision](../../elixir/otp.md).
 
 ## Quality criteria
 

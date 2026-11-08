@@ -30,17 +30,17 @@ The question this workflow answers is: who owns each state transition, how is a 
 
 ## Workflow
 
-1. Draw the lifecycle as transitions with an owner: accepted, queued, running, completed, failed, cancelled, unknown. Name the component that may perform each transition and the durable record it writes. If two components can both write "completed", that is the first finding.
+1. Draw the lifecycle as transitions with an owner: accepted, queued, running, completed, failed, cancelled, unknown. Name the component that may perform each transition and the durable record it writes. If two components can both write "completed", that is the first finding. Done when each transition has exactly one owner and no two components write "completed".
 
-2. Trace one real request end to end with its identifiers. Mark every hop where the result is matched to the request by something other than a stable key. A message keyed by "the current task" instead of the task's id is a stale-overwrite bug waiting for a delay.
+2. Trace one real request end to end with its identifiers. Mark every hop where the result is matched to the request by something other than a stable key. A message keyed by "the current task" instead of the task's id is a stale-overwrite bug waiting for a delay. Done when every hop is matched by a stable key and each weaker match is marked.
 
-3. Reproduce the symptom with a controlled ordering: delay the first result until after the second request, deliver a message twice, disconnect between request and result, reload mid-progress. In LiveView, `start_async` and `handle_async` make the ordering explicit; in tests, send the messages yourself.
+3. Reproduce the symptom with a controlled ordering: delay the first result until after the second request, deliver a message twice, disconnect between request and result, reload mid-progress. In LiveView, `start_async` and `handle_async` make the ordering explicit; in tests, send the messages yourself. Done when the symptom appears with a controlled ordering in a test.
 
-4. Fix the owner and the key, not the symptom. Results carry the key they belong to and are dropped when the key no longer matches the current selection; the interface derives its state from the durable record after reconnect instead of trusting the last message; retries are idempotent at the effect, not only unique at the queue.
+4. Fix the owner and the key, not the symptom. Results carry the key they belong to and are dropped when the key no longer matches the current selection; the interface derives its state from the durable record after reconnect instead of trusting the last message; retries are idempotent at the effect, not only unique at the queue. Done when results carry the key they belong to, are dropped when the key no longer matches, and retries are idempotent at the effect.
 
-5. Define cancellation and timeout as transitions with their own races: a cancel that arrives after completion, a timeout that fires while the job is finishing. Decide which wins and write it down.
+5. Define cancellation and timeout as transitions with their own races: a cancel that arrives after completion, a timeout that fires while the job is finishing. Decide which wins and write it down. Done when cancellation and timeout have defined winners in their races with completion.
 
-6. Exercise duplicate, delayed, out-of-order, disconnect and reload on the real flow, then run the focused tests and the project gate.
+6. Exercise duplicate, delayed, out-of-order, disconnect and reload on the real flow, then run the focused tests and the project gate. Done when duplicate, delayed, out-of-order, disconnect and reload pass on the real flow and the gate is green.
 
 ## Decision points
 

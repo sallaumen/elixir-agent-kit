@@ -9,9 +9,9 @@ Default mode: **analyze-and-fix**. Read the [shared contract](../../CONTRACT.md)
 
 ## When to use
 
-Use when a control works with a mouse but not a keyboard, when errors or live updates appear without being announced, when a dialog opens or closes and focus goes nowhere, when contrast or target size is in doubt, or when a feature is declared accessible without evidence. Use it for a new interactive surface as well as for an audit.
+Use when a control works with a mouse but not a keyboard, when errors or live updates appear without being announced, when a dialog opens or closes and focus goes nowhere, when contrast or a WCAG target-size minimum is in doubt, or when a feature is declared accessible without evidence. Use it for a new interactive surface as well as for an audit.
 
-Target WCAG 2.2 level AA unless the project names another level. A scanner result, an `aria-*` attribute or a screenshot is not evidence; a keyboard path through the real task is.
+Target WCAG 2.2 level AA unless the project names another level. A scanner result, an `aria-*` attribute or a screenshot is not evidence; a keyboard path through the real task is. This workflow owns a task or surface as a whole and its audit; one control's keyboard path and feedback belongs to [direct-interactions](../direct-interactions/SKILL.md), a layout, overflow or thumb reach at a width belongs to [responsive-layout](../responsive-layout/SKILL.md), and target size here means the WCAG 2.5.8 minimum independent of device.
 
 ## Size
 
@@ -29,19 +29,19 @@ Target WCAG 2.2 level AA unless the project names another level. A scanner resul
 
 ## Workflow
 
-1. Name the task and the states to cover. Write them down before testing; they are the scope you report against.
+1. Name the task and the states to cover. Write them down before testing; they are the scope you report against. Done when the task and its states are written down before any testing.
 
-2. Walk the task with the keyboard only, in the running application, for each state. Record where focus is after every step, what is announced, and the first point the task cannot continue. Stop and fix that blocker before cosmetic findings.
+2. Walk the task with the keyboard only, in the running application, for each state. Record where focus is after every step, what is announced, and the first point the task cannot continue. Stop and fix that blocker before cosmetic findings. Done when the transcript records focus and announcement at each step and the first non-continuable point is marked.
 
-3. Read the accessibility tree at the problematic states. Compare names, roles and relationships to what a sighted user sees: an icon button needs a name; an error needs to be programmatically tied to its field (`aria-describedby`) and announced (`aria-live` or focus moved to it); a dialog needs a role, a name, trapped focus and a return point on close.
+3. Read the accessibility tree at the problematic states. Compare names, roles and relationships to what a sighted user sees: an icon button needs a name; an error needs to be programmatically tied to its field (`aria-describedby`) and announced (`aria-live` or focus moved to it); a dialog needs a role, a name, trapped focus and a return point on close. Done when each problematic state's names, roles and relationships are compared with what a sighted user sees.
 
-4. Fix at the source of the semantics: a real `<button>`, `<label for>`, native `<dialog>` or the project's dialog component, headings in order. Add ARIA only where no native element expresses the role, and never in a way that contradicts the element.
+4. Fix at the source of the semantics: a real `<button>`, `<label for>`, native `<dialog>` or the project's dialog component, headings in order. Add ARIA only where no native element expresses the role, and never in a way that contradicts the element. Done when each barrier is fixed at a native element or a justified custom widget, with no ARIA that contradicts the element.
 
-5. For asynchronous changes decide what must be announced (a result, an error, a progress end) and what must stay silent (every poll, every stream insert). Put the announcement in a region that the next patch does not replace.
+5. For asynchronous changes decide what must be announced (a result, an error, a progress end) and what must stay silent (every poll, every stream insert). Put the announcement in a region that the next patch does not replace. Done when each asynchronous change is marked announced or silent and the announcement region survives the next patch.
 
-6. Check contrast, zoom and target size on the changed states. Run an automated scanner last, to catch what the manual pass missed; treat its output as candidates to verify, not as the result.
+6. Check contrast, zoom and target size on the changed states. Run an automated scanner last, to catch what the manual pass missed; treat its output as candidates to verify, not as the result. Done when contrast, zoom and target size are checked on the changed states and the scanner output is treated as candidates.
 
-7. Report the states covered, the barriers fixed, the barriers left, and the assistive technologies and devices not exercised.
+7. Report the states covered, the barriers fixed, the barriers left, and the assistive technologies and devices not exercised. Done when the report lists states covered, barriers fixed, barriers left, and the assistive technologies and devices not exercised.
 
 ## Decision points
 

@@ -29,17 +29,17 @@ This workflow governs **interface motion**. Rendered video, motion graphics and 
 
 ## Workflow
 
-1. Inventory the motion that exists. For each animated change, record what triggers it, which property moves, its duration and curve, and what the user learns from it. Mark motion with no job.
+1. Inventory the motion that exists. For each animated change, record what triggers it, which property moves, its duration and curve, and what the user learns from it. Mark motion with no job. Done when every animated change has a row naming its trigger, property, duration, curve and what it teaches, and motion with no job is marked.
 
-2. Choose a register for this surface: technical, editorial, premium, expressive, playful or calm. Keep one dominant register and name the single moment allowed to break it. Pick curves per property from the [motion reference](MOTION.md); do not reach for `ease`, `ease-in-out` or a library default as the answer.
+2. Choose a register for this surface: technical, editorial, premium, expressive, playful or calm. Keep one dominant register and name the single moment allowed to break it. Pick curves per property from the [motion reference](MOTION.md); do not reach for `ease`, `ease-in-out` or a library default as the answer. Done when one dominant register is named and every curve is chosen per property from the reference.
 
-3. Decide what each change **is** before how it eases. A new surface may arrive; a value that changes should update in place; a row that is added should appear without replaying the page's entrance; a state the user caused should answer immediately. Most text and static content cuts on. Reserve a crafted entrance for the element that carries the new context.
+3. Decide what each change **is** before how it eases. A new surface may arrive; a value that changes should update in place; a row that is added should appear without replaying the page's entrance; a state the user caused should answer immediately. Most text and static content cuts on. Reserve a crafted entrance for the element that carries the new context. Done when each change is classified as arrive, update in place, appear or answer before its easing is chosen.
 
-4. Derive timing instead of copying it. Duration follows distance and weight; exits run shorter and accelerate; a group has a lead and uneven reactions instead of an even stagger. Keep input feedback fast enough to feel connected, and never delay an action to finish an animation. The reference gives a formula and starting values.
+4. Derive timing instead of copying it. Duration follows distance and weight; exits run shorter and accelerate; a group has a lead and uneven reactions instead of an even stagger. Keep input feedback fast enough to feel connected, and never delay an action to finish an animation. The reference gives a formula and starting values. Done when durations follow distance and weight, exits are shorter than entrances, and no action is delayed to finish an animation.
 
-5. Implement with tokens, not scattered numbers: name the curves and durations once, keep them beside the existing design tokens, and reuse them. Use transform and opacity for movement; use the browser's View Transitions API or a FLIP technique when an element keeps its identity across layouts. Do not animate on every broadcast; animate the change that a person caused or that a person must notice.
+5. Implement with tokens, not scattered numbers: name the curves and durations once, keep them beside the existing design tokens, and reuse them. Use transform and opacity for movement; use the browser's View Transitions API or a FLIP technique when an element keeps its identity across layouts. Do not animate on every broadcast; animate the change that a person caused or that a person must notice. Done when curves and durations live in tokens and no `transition: all` or library default remains.
 
-6. Validate in the running interface: step through an entrance, an exit, a reorder and a failed update; emulate reduced motion; check rapid input, reconnect and slow network. Remove motion that queues, blocks, replays or contradicts state.
+6. Validate in the running interface: step through an entrance, an exit, a reorder and a failed update; emulate reduced motion; check rapid input, reconnect and slow network. Remove motion that queues, blocks, replays or contradicts state. Done when entrance, exit, reorder and failed-update are stepped through with reduced motion emulated and motion that queues, blocks, replays or contradicts state is removed.
 
 ## Decision points
 

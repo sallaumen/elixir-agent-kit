@@ -23,7 +23,7 @@ This workflow answers "who owns this field and does every layer agree with the o
 
 - Start at: the field named in the report or in the failing test, then `grep -rn "field_name" lib/ test/` to list every module that reads or writes it.
 - The Ecto schema and every changeset that casts or validates the field, and the migration that created the column with its constraints and default. See [Ecto and migrations](../../elixir/ecto.md).
-- The context functions that write it and the `Ecto.Multi` or `Repo.transaction/2` around them, including what runs after commit.
+- The context functions that write it and the `Ecto.Multi` or `Repo.transact/2` around them, including what runs after commit.
 - The LiveView assigns, form and `handle_event` clauses that pass the value in and out, and what the view shows when the value is missing. See [Phoenix and LiveView](../../elixir/phoenix-liveview.md).
 - Derived copies: denormalized columns, ETS or assign caches, PubSub payloads, Oban job args and outward API responses that carry the same value. See [Oban](../../elixir/oban.md).
 - Tests that touch the field, and which layer each one exercises; note whether any test feeds form params through to the row.
@@ -36,7 +36,7 @@ This workflow answers "who owns this field and does every layer agree with the o
 
 3. Reproduce one mismatch with a failing test at the owning boundary, not in the view: feed form params through the context to the row and assert what was persisted. Done when the test fails for the stated reason.
 
-4. Move the rule to its owner: validation in the owning changeset, a database constraint behind it when concurrent writers can race, presentation guesses removed from persisted writes, and each derived copy given an explicit refresh or recompute path. Related local writes go in one `Ecto.Multi`; external effects run after commit or are idempotent. Done when the rule exists once and the test from step 3 passes.
+4. Move the rule to its owner: validation in the owning changeset, a database constraint behind it when concurrent writers can race, presentation guesses removed from persisted writes, and each derived copy given an explicit refresh or recompute path. Keep related writes in the atomic unit and the external-effect ordering the decision point defines. Done when the rule exists once and the test from step 3 passes.
 
 5. Update the consumers listed in the table: assigns, payloads, job args, cache keys and responses. Done when every consumer reads the owner's value or a copy whose origin and version are recorded.
 

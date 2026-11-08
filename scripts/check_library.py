@@ -105,6 +105,10 @@ for skill_id, mode, description, area in rows:
     order = [size_body.find(f"**{size}**") for size in ["Small", "Medium", "Large"]]
     if any(pos == -1 for pos in order) or not (order[0] < order[1] < order[2]):
         errors.append(f"Size section must state Small, Medium, Large in order: {skill_id}")
+    if "mix xref callers" in text:
+        errors.append(f"Obsolete command 'mix xref callers' (use 'mix xref graph --sink'): {skill_id}")
+    if "Repo.transaction" in text:
+        errors.append(f"Obsolete 'Repo.transaction' (use Repo.transact/2 or Ecto.Multi; they treat {{:error, _}} differently): {skill_id}")
 
 cases = json.loads((ROOT / "evals/routing.json").read_text())["cases"]
 case_ids = [case["id"] for case in cases]

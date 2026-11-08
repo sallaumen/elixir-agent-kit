@@ -22,7 +22,7 @@ This workflow owns history, URLs, overlays that act as navigation, back behavior
 ## Inputs to inspect
 
 - Start at: the router (`router.ex`): the `live_session` groups, the routes of the journey and the LiveView and action each maps to; then that LiveView's `handle_params/3` for what it reads from the URL.
-- How each transition is made: `push_patch` (same process, URL changes), `push_navigate` (remount), `redirect` (leaves LiveView), plain links, and JS commands that show or hide overlays without touching the URL. See [Phoenix and LiveView](../../elixir/phoenix-liveview.md).
+- How each transition is made: `push_patch`, `push_navigate`, `redirect`, plain links, and JS commands that show or hide overlays without touching the URL. See [Phoenix and LiveView](../../elixir/phoenix-liveview.md).
 - Which state lives in the URL (path and query params), which in socket assigns, which in the session or database, and therefore what survives reload, back and a shared link.
 - The overlays in the journey (dialogs, drawers, sheets, inline panels) and whether each represents a place (a detail, a step) or a transient local choice.
 - The user's primary goal, the detours they legitimately take (compare two items, go back a step), the recovery path after an error, and the permissions of the account used to test.
@@ -35,7 +35,7 @@ This workflow owns history, URLs, overlays that act as navigation, back behavior
 
 3. Classify each overlay: a place gets a URL and a history entry (`push_patch` with its params) and back closes it to the underlying context; a transient choice gets no history entry and closes on `Escape` or its own control. Done when every overlay in the map has one classification and the code matches it.
 
-4. Move the state that must survive to where it survives: filters and selection into URL params read in `handle_params/3`, wizard progress into the database or session keyed by the task, unsaved work preserved according to the product rule. Done when reload and a deep link reconstruct the step from the map's state column alone.
+4. Move the state that must survive to where it survives: filters and selection into URL params read in `handle_params/3`, wizard progress into the database or session keyed by the task, unsaved work preserved according to the product rule. Moving wizard progress into the database may need a schema change, which is a persisted-data change: stop and ask before writing the migration. Done when reload and a deep link reconstruct the step from the map's state column alone.
 
 5. Remove steps that do not inform a decision and keep confirmations whose consequence is destructive, paid or hard to reverse; make the next action and the way back visible on each step. Done when no row in the map is crossed without a decision and every row names its exit.
 

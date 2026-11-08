@@ -15,7 +15,7 @@ This workflow divides and sequences; it does not validate the result or design t
 
 ## Size
 
-- **Small**: sequence one conflicting pair of slices or files in one delivery-table row; skip the full table.
+- **Small**: sequence one conflicting pair by giving the shared file a single owning row and ordering the two slices; skip the full table.
 - **Medium**: run the workflow as written for one change: the delivery table with owners and order, and each slice integrated against the base.
 - **Large**: a product consolidation or several deliveries across owners; run the full table, and each slice follows the domain workflow for its own risk; checking the integrated result is delivery-validation.
 
