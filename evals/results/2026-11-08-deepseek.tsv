@@ -1,0 +1,3 @@
+run	case	client	model	kit	routed	size_stated	plan	outcome	turns	tokens	notes
+E64-r1	E64	deepseek	deepseek-v4-pro	0.10.0	readable-code	medium	none	finished			forrozin_page; PR https://github.com/sallaumen/forrozin_page/pull/1967; same-agent
+E64-r2	E64	deepseek	deepseek-v4-pro	0.10.0	readable-code	medium	none	finished			forrozin_page; PR https://github.com/sallaumen/forrozin_page/pull/1974; same-agent
