@@ -13,6 +13,12 @@ Use when a reviewer must hold four nested `case` and `if` levels in mind to foll
 
 The separating rule among the code workflows: working, tested code that is hard to read inside its function bodies is this workflow; a module's name, location or public API is [module-design](../module-design/SKILL.md); hidden inputs and effects interleaved across a module are [functional-refactoring](../functional-refactoring/SKILL.md), which runs first when both symptoms appear; one function mixing a decision with effects is [abstraction-layers](../abstraction-layers/SKILL.md); drift from a pattern the project already chose is [house-patterns](../house-patterns/SKILL.md). Code whose behavior no test pins gets those tests first, as step 2 says.
 
+## Size
+
+- **Small**: resolve one reading obstacle in one function (one vague name or one nested level) and compare against the lint baseline; skip the full reading notes.
+- **Medium**: run the workflow as written for one module: the reading notes, the pinned baseline and the renamed and reshaped functions.
+- **Large**: several modules; slice per module, and hand a public name to module-design or hidden inputs and effects to functional-refactoring as later slices.
+
 ## Inputs to inspect
 
 - Start at: the module named in the request and `mix credo --strict <path>` for it (or the project's lint command), whose complexity, nesting and naming findings seed the reading notes.

@@ -13,6 +13,12 @@ Use when the settings page shows a green "connected" badge but the first real op
 
 This workflow owns readiness: the ordered prerequisites of an integration and the evidence that each one holds. Whether the provider supports this exact product variant and destination at all belongs to [commercial-eligibility](../commercial-eligibility/SKILL.md); the single outbound request, its budget and its audit row belong to [provider-calls](../provider-calls/SKILL.md); a bot that is ready but drops or duplicates messages belongs to [notifications](../notifications/SKILL.md).
 
+## Size
+
+- **Small**: add one missing readiness row and its cheapest live verification for one step; skip the full checklist.
+- **Medium**: run the workflow as written for one integration: the readiness checklist, the single contract and the incomplete, revoked, unreachable and ready tests.
+- **Large**: several integrations or a shared readiness contract; slice per integration, and route whether the variant is supported to commercial-eligibility or the request itself to provider-calls as later slices.
+
 ## Inputs to inspect
 
 - Start at: the settings or connection module for the integration (`grep -rn "connected\|configured\|ready" lib/`) and the operation that failed or is in doubt.

@@ -98,6 +98,9 @@ defmodule ElixirAgentKit.InstallerTest do
     assert start =~ "name its size (small, medium or large)"
     assert start =~ "../deps/elixir_agent_kit/priv/library/templates/task-plan.md"
     assert start =~ "../deps/elixir_agent_kit/priv/library/CONTRACT.md#plan-in-proportion-to-size"
+    assert start =~ "let the size from step 1 change"
+    assert start =~ "uses its `Size` section to slice it"
+    assert start =~ "several deliveries across owners"
 
     for skill <- ElixirAgentKit.catalog() do
       assert start =~ "../deps/elixir_agent_kit/priv/library/skills/#{skill.id}/SKILL.md"

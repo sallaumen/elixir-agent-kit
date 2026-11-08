@@ -9,6 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 LIBRARY = ROOT / "priv/library"
 HEADINGS = [
     "## When to use",
+    "## Size",
     "## Inputs to inspect",
     "## Workflow",
     "## Decision points",
@@ -89,6 +90,10 @@ for skill_id, mode, description, area in rows:
         errors.append(f"Em dash in workflow text: {skill_id}")
     if re.search(r"/Users/|playwright|\bmcp\b", text, re.I):
         errors.append(f"Operator environment named in workflow text: {skill_id}")
+    size_body = text.split("## Size", 1)[1].split("\n## ", 1)[0] if "## Size" in text else ""
+    for size in ["Small", "Medium", "Large"]:
+        if f"**{size}**" not in size_body:
+            errors.append(f"Size section lacks {size}: {skill_id}")
 
 cases = json.loads((ROOT / "evals/routing.json").read_text())["cases"]
 case_ids = [case["id"] for case in cases]

@@ -95,10 +95,13 @@ is opened:
 
 1. It names the task's primary risk in one line, from the request alone: here,
    process state. It also names the size: here, medium.
-2. It picks one workflow from the tables in `START.md`, the narrowest that fits:
-   [`async-state`](priv/library/skills/async-state/SKILL.md). Only when two
-   neighbors fit does it open the [routing guide](priv/library/ROUTING.md) to
-   separate them; a bounded, fully specified edit picks NONE.
+2. It picks one workflow from the tables in `START.md`, the narrowest that fits,
+   and lets the size change the choice: a small, fully specified edit picks NONE;
+   a medium task picks the narrowest workflow for its one risk; a large task picks
+   the workflow for its primary risk and slices it with that workflow's `Size`
+   section, or `delivery-coordination` when the work is several deliveries across
+   owners. Only when two neighbors fit does it open the
+   [routing guide](priv/library/ROUTING.md) to separate them.
 3. It reads that workflow's `SKILL.md` from the dependency together with the
    [shared contract](priv/library/CONTRACT.md), copying neither into the project.
    The workflow tells it what to inspect (event and job lifecycle, stable IDs,
@@ -108,7 +111,8 @@ is opened:
    (duplicate, delayed and out-of-order delivery exercised on the real flow).
 4. It states the workflow ID, or NONE, and the size in its reply with the reason
    in one line,
-   opens the workflow's `Start at` input before anything else and produces the
+   opens the workflow's `Start at` input before anything else, applies the
+   workflow's `Size` section for the stated size and produces the
    artifact the workflow's first step asks for; then it investigates the way the
    workflow says and reports with the [handoff template](priv/library/HANDOFF.md):
    outcome, workflow and version used, checks actually run, limits.
@@ -120,7 +124,7 @@ is opened:
    scope, changes persisted data or a public contract, or has an irreversible step;
    authority rules, the mode and the workflow's own stop conditions still apply.
 
-The routing cases in [`evals/`](evals/README.md) hold 66 requests like that one,
+The routing cases in [`evals/`](evals/README.md) hold 87 requests like that one,
 with the expected workflow and the signals of a good or bad answer. They stay out
 of the installed payload so an agent never sees the answer key.
 

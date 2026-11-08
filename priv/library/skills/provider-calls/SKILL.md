@@ -13,6 +13,12 @@ Use when adding or changing a call to a model API, a speech or image service, a 
 
 This workflow governs the single outbound call and its record. Capacity and queue accounting across many calls belong to [ai-orchestration](../ai-orchestration/SKILL.md); setup and readiness of the integration belong to [integration-setup](../integration-setup/SKILL.md); message transport belongs to [notifications](../notifications/SKILL.md); a flow that fans out many such calls (a batch, a queue consumer) is [data-pipelines](../data-pipelines/SKILL.md) for its bounds and delivery, with this workflow for each call.
 
+## Size
+
+- **Small**: fix one call site (its audit row, its retry or its typed failure) and one controlled-response test; skip the full call map for the other sites.
+- **Medium**: run the workflow as written for one provider: the call map, the budget gate, the audit row and the controlled-response tests.
+- **Large**: many call sites or providers, or a shared client for all of them; slice per provider or call, and route capacity across workers to ai-orchestration and the cost dashboard to metrics-costs as later slices.
+
 ## Inputs to inspect
 
 - Start at: the shared client module for the provider and `grep -rn "Req\.\|Finch\.\|HTTPoison\.\|Tesla\." lib/` for every call site, then the place where the request is built: which inputs reach the provider, whether user content is included, and how the prompt or payload is chosen.

@@ -91,10 +91,13 @@ abrir qualquer arquivo-fonte:
 
 1. Nomeia em uma linha o risco principal da tarefa, só a partir do pedido: aqui,
    estado de processo. Também nomeia o tamanho: aqui, médio.
-2. Escolhe um workflow nas tabelas do `START.md`, o mais estreito que sirva:
-   [`async-state`](../priv/library/skills/async-state/SKILL.md). Só quando dois
-   vizinhos servem é que abre o [guia de seleção](../priv/library/ROUTING.md)
-   para separá-los; uma edição delimitada e totalmente especificada escolhe NONE.
+2. Escolhe um workflow nas tabelas do `START.md`, o mais estreito que sirva, e
+   deixa o tamanho mudar a escolha: uma edição pequena e totalmente especificada
+   escolhe NONE; uma tarefa média escolhe o workflow mais estreito para o seu
+   risco; uma tarefa grande escolhe o workflow do risco principal e a fatia com a
+   seção `Size` dele, ou `delivery-coordination` quando o trabalho é várias
+   entregas com donos. Só quando dois vizinhos servem é que abre o
+   [guia de seleção](../priv/library/ROUTING.md) para separá-los.
 3. Lê o `SKILL.md` desse workflow na dependência junto com o
    [contrato compartilhado](../priv/library/CONTRACT.md), sem copiar nenhum dos
    dois para o projeto. O workflow diz o que inspecionar (ciclo de vida de eventos
@@ -105,7 +108,8 @@ abrir qualquer arquivo-fonte:
    (entrega duplicada, atrasada e fora de ordem exercitada no fluxo real).
 4. Declara o ID do workflow, ou NONE, e o tamanho na sua resposta com o motivo em
    uma linha, abre
-   a entrada `Start at` do workflow antes de qualquer outra coisa e produz o
+   a entrada `Start at` do workflow antes de qualquer outra coisa, aplica a seção
+   `Size` do workflow para o tamanho declarado e produz o
    artefato que o primeiro passo do workflow pede; depois investiga do jeito que o
    workflow diz e entrega com o [template de handoff](../priv/library/HANDOFF.md):
    resultado, workflow e versão usados, checks de fato executados, limites.
@@ -118,7 +122,7 @@ abrir qualquer arquivo-fonte:
    de autoridade, o modo e as condições de parada do workflow continuam valendo.
 
 Os casos de seleção em [`evals/`](https://github.com/sallaumen/elixir-agent-kit/blob/main/evals/README.md)
-guardam 66 pedidos como esse, com o workflow esperado e os sinais de uma resposta
+guardam 87 pedidos como esse, com o workflow esperado e os sinais de uma resposta
 boa ou ruim. Ficam fora do payload instalado para que um agente nunca veja o
 gabarito.
 

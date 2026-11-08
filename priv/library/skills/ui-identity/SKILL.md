@@ -13,6 +13,12 @@ Use when a LiveView page works but every element carries the same weight, so the
 
 This workflow owns one screen's hierarchy and product identity. Spacing, alignment and density inside a screen whose hierarchy is already right belong to [layout-density](../layout-density/SKILL.md). Tokens, shared components and rules that must hold across screens belong to [design-system](../design-system/SKILL.md): fix the screen here, promote the rule there. A layout that fails at a width goes to [responsive-layout](../responsive-layout/SKILL.md); one control's affordance goes to [direct-interactions](../direct-interactions/SKILL.md); motion goes to [motion-design](../motion-design/SKILL.md).
 
+## Size
+
+- **Small**: promote one block on the named screen with the incumbent identity; skip the full hierarchy table and reuse the project's tokens and components as they are.
+- **Medium**: run the workflow as written for one screen: the hierarchy table, the identity source and every state rendered with real data.
+- **Large**: several screens share the direction, or the identity itself is unstated; slice per screen and promote the shared rules to design-system as a later slice of the same plan.
+
 ## Inputs to inspect
 
 - Start at: the project's design guidance (DESIGN.md or the file the project instructions name) and the one route the user named, rendered in the running application with real data.

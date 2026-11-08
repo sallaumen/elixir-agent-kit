@@ -13,6 +13,12 @@ Use when a process is the suspect: a poller that broadcasts the same thing twice
 
 The user-visible side of asynchronous work (what the interface shows after reconnect, stale results) belongs to [async-state](../async-state/SKILL.md); this workflow is about the BEAM runtime: ownership, supervision, backpressure and restart. A flow of many items (an import, a stream, a queue consumer) and its delivery guarantees is [data-pipelines](../data-pipelines/SKILL.md).
 
+## Size
+
+- **Small**: fix one blocking callback or one duplicate in one process with one test; skip the full tree review.
+- **Medium**: run the workflow as written for one suspect process: the reason, the owner, the rebuild path and the restart, duplicate and burst tests.
+- **Large**: many processes in the tree; slice per process, and route the interface's view of async to async-state or a flow of many items to data-pipelines as later slices.
+
 ## Inputs to inspect
 
 - Start at: the suspect GenServer (or Task, poller) module and its place in the supervision tree: `Application.start/2`, child specs, restart strategies, and which processes are started on demand (`DynamicSupervisor`, `Task.Supervisor`).

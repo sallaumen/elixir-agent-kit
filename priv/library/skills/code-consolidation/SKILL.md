@@ -13,6 +13,12 @@ Use when two `send_invitation` implementations exist, one in a context and one i
 
 The separating rule among the code workflows: a path that nothing reaches, or two paths doing the same job, is this workflow; one function mixing a decision with effects is [abstraction-layers](../abstraction-layers/SKILL.md); a module with the right content and the wrong name or location is [module-design](../module-design/SKILL.md); ownership unclear across many modules is [architecture-review](../architecture-review/SKILL.md); code that works but drifts from a pattern the project already chose is [house-patterns](../house-patterns/SKILL.md). Duplicated tests that protect nothing distinct are [test-strategy](../test-strategy/SKILL.md); a dead path left by a finished expand and contract sequence arrives here from [migration-compatibility](../migration-compatibility/SKILL.md). Restructuring or cleaning up the one implementation that stays is [functional-refactoring](../functional-refactoring/SKILL.md) or [readable-code](../readable-code/SKILL.md).
 
+## Size
+
+- **Small**: remove one dead path after filling its evidence row and compile clean; skip the full evidence table for the other candidates.
+- **Medium**: run the workflow as written for one candidate: the evidence table, the disposition and one bounded cleanup.
+- **Large**: several competing or abandoned paths; slice per candidate, and hand a persisted name to migration-compatibility or naming the survivor to module-design as later slices.
+
 ## Inputs to inspect
 
 - Start at: the candidate named in the request, then `grep -rn "CandidateModule\|candidate_function" lib/ test/ config/ priv/` and `mix xref graph --sink lib/<path>.ex --only-nodes` for static references.

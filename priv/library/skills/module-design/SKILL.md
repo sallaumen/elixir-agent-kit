@@ -13,6 +13,12 @@ Use when `Accounts.Helpers` holds the invoice arithmetic that belongs under `Bil
 
 The separating rule among the code workflows: one module whose name, location or public API misleads while its responsibility is already understood is this workflow; when the responsibility itself is contested, or the change spans many modules with cycles, go to [architecture-review](../architecture-review/SKILL.md) first and come back with its ownership map; one function mixing a decision with effects is [abstraction-layers](../abstraction-layers/SKILL.md); two modules doing the same thing is [code-consolidation](../code-consolidation/SKILL.md); several modules that drift from a convention the project already chose is [house-patterns](../house-patterns/SKILL.md). A rename that touches a persisted worker name, serialized module or external payload is [migration-compatibility](../migration-compatibility/SKILL.md) work before it is a rename. Reading obstacles inside function bodies, including private names, are [readable-code](../readable-code/SKILL.md); public names stay here.
 
+## Size
+
+- **Small**: rename one misleading function or make one test-only public function private, update its callers, and compile clean; skip the full rename map.
+- **Medium**: run the workflow as written for one module: the rename map with every caller kind, the move and one exercised public operation.
+- **Large**: many modules or persisted and dynamic references; slice per module, hand a persisted name to migration-compatibility, and settle contested ownership in architecture-review first.
+
 ## Inputs to inspect
 
 - Start at: the module named in the request, then `mix xref graph --sink lib/<path>.ex --only-nodes` for its static callers and `grep -rn "ModuleName" lib/ test/ config/ priv/` for aliases, strings and configuration.

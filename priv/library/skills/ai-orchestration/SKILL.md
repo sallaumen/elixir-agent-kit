@@ -13,6 +13,12 @@ Use when the operations screen shows "8 agents running" while the provider conso
 
 This workflow owns capacity and accounting across many jobs, queues, workers and providers. The single outbound call, its budget gate and its audit row belong to [provider-calls](../provider-calls/SKILL.md); the state of one worker process (init, timeout, crash, restart) belongs to [process-lifecycle](../process-lifecycle/SKILL.md); whether a stuck queue should page someone belongs to [operational-alerts](../operational-alerts/SKILL.md); a flow of items that loses, duplicates or stalls them, apart from model capacity, belongs to [data-pipelines](../data-pipelines/SKILL.md).
 
+## Size
+
+- **Small**: fix one reservation or release point so the counter returns to zero, with one saturation test; skip the full capacity table.
+- **Medium**: run the workflow as written for one queue and provider: the capacity table, the reservation point and the saturation, cancellation and crash tests.
+- **Large**: capacity across many queues, workers and providers; slice per provider or queue, and route the single call to provider-calls or the cost rollup to metrics-costs as later slices.
+
 ## Inputs to inspect
 
 - Start at: the Oban configuration (`config :app, Oban, queues: ...`) and `grep -rn "queue:" lib/` for every worker, then the one screen or log line where the capacity number looked wrong.

@@ -13,6 +13,12 @@ Use when the interface says "done" before the work finished, when a spinner neve
 
 The question this workflow answers is: who owns each state transition, how is a result matched to the request that caused it, and what does every observer see after a disconnect, a duplicate or an out-of-order message.
 
+## Size
+
+- **Small**: fix one transition's owner or key (one stale overwrite or one missing dedupe) with one ordering test; skip the full lifecycle.
+- **Medium**: run the workflow as written for one flow: the lifecycle with its owners, the trace and the duplicate, delayed and out-of-order tests.
+- **Large**: a whole flow across process, persisted state and interface, or several transitions; slice per transition, and route process ownership to process-lifecycle or the stored data to data-contracts as later slices.
+
 ## Inputs to inspect
 
 - Start at: the LiveView or process whose assign or state is overwritten, and its `handle_async`, `handle_info` and `handle_event` clauses that write it.

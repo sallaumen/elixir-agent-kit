@@ -13,6 +13,12 @@ Use when a pull request or branch diff is ready and someone asks whether it is s
 
 This workflow reads a bounded diff and reports findings; it does not edit, comment or approve. When the question is whether an integrated revision meets its acceptance criteria rather than whether a diff is correct, use [delivery-validation](../delivery-validation/SKILL.md). When the question is which tests the project should have rather than whether this diff is covered, use [test-strategy](../test-strategy/SKILL.md). When a finding needs a root cause the diff alone cannot show, hand it to [debugging](../debugging/SKILL.md) instead of investigating inside the review.
 
+## Size
+
+- **Small**: review one changed function's behavior with one failure scenario, read-only; skip the full hunk table for the rest of the diff.
+- **Medium**: run the workflow as written for one diff: the behavior table, the ranked findings and the covering-test checks.
+- **Large**: a large diff across contexts; slice the review per changed behavior or area, and hand a root cause the diff cannot show to debugging or a coverage gap to test-strategy.
+
 ## Inputs to inspect
 
 - Start at: the mandate (base, head, and what the change claims to do), then `git diff <base>...<head> --stat` to bound the files before reading any of them.

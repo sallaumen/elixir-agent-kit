@@ -13,6 +13,12 @@ Use when one feature change touches two contexts that call each other in both di
 
 The separating rule among the code workflows: many modules, cycles or unclear ownership is this workflow; one module whose name, location or public API is wrong while its responsibility is already understood is [module-design](../module-design/SKILL.md); one function that mixes a business decision with transport, persistence or effects is [abstraction-layers](../abstraction-layers/SKILL.md); two implementations of the same thing, or a path nothing reaches, is [code-consolidation](../code-consolidation/SKILL.md). This workflow produces the ownership decision those three assume, and the convention [house-patterns](../house-patterns/SKILL.md) later brings older code to.
 
+## Size
+
+- **Small**: trace one dependency edge or one duplicated rule between two modules and apply one bounded correction; skip the full ownership map.
+- **Medium**: run the workflow as written for one change: the ownership map, one traced operation and one bounded correction or an ordered proposal.
+- **Large**: ownership across many modules or contexts; slice per boundary or correction, and hand the resulting renames to module-design or conforming older code to house-patterns as later slices.
+
 ## Inputs to inspect
 
 - Start at: the requested change (diff, issue or failing test), then `mix xref graph --format cycles --label compile-connected` (cycles that force recompilation; since Elixir 1.19 each strongly connected group is reported once), `mix xref graph --format cycles` for runtime cycles, and `mix xref graph --sink <file> --only-nodes` for each touched module to see who depends on it; `mix xref trace <file>` explains why one file depends on another.

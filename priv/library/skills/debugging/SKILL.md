@@ -13,6 +13,12 @@ Use when a test fails with an exception or a wrong value and nobody has shown wh
 
 This workflow applies only when no area workflow names the symptom. A stale or duplicated asynchronous result that overwrites current state is [async-state](../async-state/SKILL.md). A GenServer, Task or poller that leaks, blocks callers or behaves differently after a restart is [process-lifecycle](../process-lifecycle/SKILL.md). A build or test run that differs by environment, OTP version or cache is [build-dependencies](../build-dependencies/SKILL.md). A measured slow path with a correct result is [performance](../performance/SKILL.md). Route there first; come back here when the symptom survives the routing.
 
+## Size
+
+- **Small**: reproduce one failing test, confirm one hypothesis and fix at the owner with one regression test; skip the full hypothesis table.
+- **Medium**: run the workflow as written for one intermittent failure: the reproduction, the hypothesis table and the fix at the owner.
+- **Large**: a failure across a whole path or several environments; slice per boundary, and route an environment difference to build-dependencies or a stale async result to async-state.
+
 ## Inputs to inspect
 
 - Start at: the failing test, log line or reproduction, then `mix test path:line` (add `--seed N` from the failing run, `--trace` if it hangs). See [ExUnit and diagnostics](../../elixir/exunit.md).

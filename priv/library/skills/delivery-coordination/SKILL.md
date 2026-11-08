@@ -13,6 +13,12 @@ Use when an authorized change spans a migration, a context, a LiveView and an Ob
 
 This workflow divides and sequences; it does not validate the result or design the gate. Whether an integrated delivery meets its criteria is [delivery-validation](../delivery-validation/SKILL.md). Which commands gate a delivery and how they run locally and in CI is [pipeline-design](../pipeline-design/SKILL.md). How a change is shaped so that pieces have clean boundaries is [architecture-review](../architecture-review/SKILL.md). Which revision of an artifact is current across pieces is [revision-lineage](../revision-lineage/SKILL.md).
 
+## Size
+
+- **Small**: sequence one conflicting pair of slices or files in one delivery-table row; skip the full table.
+- **Medium**: run the workflow as written for one change: the delivery table with owners and order, and each slice integrated against the base.
+- **Large**: a product consolidation or several deliveries across owners; run the full table, and each slice follows the domain workflow for its own risk; checking the integrated result is delivery-validation.
+
 ## Inputs to inspect
 
 - Start at: the authorization (what was approved, by whom, and whether delegation and parallel work are included), then `git status` and `git branch -a` for the integration baseline and the work already in progress.

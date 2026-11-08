@@ -13,6 +13,12 @@ Use when a Phoenix project has three button styles because each LiveView restyle
 
 This workflow owns tokens, shared components, the rules that hold across screens and the guidance that names them. One screen's hierarchy and identity belong to [ui-identity](../ui-identity/SKILL.md): fix the screen there, promote the rule here. Spacing within one screen belongs to [layout-density](../layout-density/SKILL.md); a shared component's keyboard and announcement contract is checked with [accessibility](../accessibility/SKILL.md); its motion with [motion-design](../motion-design/SKILL.md); duplicated behavior beyond the interface with [code-consolidation](../code-consolidation/SKILL.md).
 
+## Size
+
+- **Small**: consolidate one repeated divergence (one raw value or one flag) onto its canonical source and render the affected consumers; skip the full inventory.
+- **Medium**: run the workflow as written for the three representative pages and the component module: the inventory, one canonical source per rule and the consumer renders.
+- **Large**: a system-wide consolidation across many components and tokens, or a guidance rewrite; slice per component or token, and fix one screen's composition in ui-identity before promoting its rule here.
+
 ## Inputs to inspect
 
 - Start at: the project's design guidance and the component module (`core_components.ex` or the project's equivalent), then a grep across `lib/*_web` for the component names and for the raw utility classes they are meant to replace.

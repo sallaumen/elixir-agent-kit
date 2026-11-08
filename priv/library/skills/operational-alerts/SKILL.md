@@ -13,6 +13,12 @@ Use when the operator receives a new alert every minute for one failing job inst
 
 This workflow owns the incident lifecycle: detection, acknowledgement, escalation, resolution and recurrence as persisted state with a dedup window and resolution evidence. The rule that separates it from [notifications](../notifications/SKILL.md): if the question is "why does this alert repeat, look current when it is historical, or appear resolved on acknowledgement", it is lifecycle and belongs here; if the question is "why did this message fail, repeat or multiply in the channel", it is transport and belongs there. The stuck job itself belongs to [async-state](../async-state/SKILL.md) or [process-lifecycle](../process-lifecycle/SKILL.md).
 
+## Size
+
+- **Small**: separate one attention field from resolved_at so acknowledgement leaves the episode open, with one test; skip the full lifecycle table.
+- **Medium**: run the workflow as written for one alert type: the lifecycle table, the condition key and the open, repeat, acknowledge, recover and recur tests.
+- **Large**: several alert types or detectors; slice per alert type, and route message delivery to notifications or the stuck job to async-state or process-lifecycle as later slices.
+
 ## Inputs to inspect
 
 - Start at: the module that creates or updates the alert record (`grep -rln "alert\|incident" lib/`) and the status screen or channel where the wrong state was seen.
