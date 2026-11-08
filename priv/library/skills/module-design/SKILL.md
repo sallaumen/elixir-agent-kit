@@ -45,7 +45,7 @@ The separating rule among the code workflows: one module whose name, location or
 
 - If the responsibility is unclear, stop and use [architecture-review](../architecture-review/SKILL.md); naming cannot fix an ownership dispute.
 - A public function with no consumer outside tests becomes private, and the test moves to the public operation that uses it.
-- A name describes the behavior and domain concept, never the caller, the page or the moment it was written (`_v2`, `_new`). Follow the naming conventions in [Module and function shape](../../elixir/code-shape.md#naming).
+- A name describes the behavior and domain concept, never the caller, the page or the moment it was written (`_v2`, `_new`). Follow the naming conventions in [Module and function shape](../../elixir/code-shape.md).
 - One name, one behavior: clauses that do unrelated things become separately named functions, and every message to a process goes through the one module that owns it.
 - A package defines modules only under its own namespace; a module that reopens another library's namespace is moved, except protocol implementations, `Mix.Tasks.*` modules and modules the namespace's owner invites.
 - A text search is not proof that dynamic or persisted references are absent; each kind in the map is checked by its own search.
