@@ -30,17 +30,17 @@ Browser history, back-button behavior and overlays that act as navigation belong
 
 ## Workflow
 
-1. Declare the viewport matrix for this task: at least one phone width, one notebook width and the widest the product supports, with real data. Write it down; it is the scope you report against.
+1. Declare the viewport matrix for this task: at least one phone width, one notebook width and the widest the product supports, with real data. Write it down; it is the scope you report against. Done when the matrix names at least one phone, one notebook and the widest supported width with real data.
 
-2. Exercise the task at each width with the keyboard and with pointer input. Record overflow, truncation, unreachable or hidden controls, hover-only affordances, and anything the sticky elements or the keyboard cover.
+2. Exercise the task at each width with the keyboard and with pointer input. Record overflow, truncation, unreachable or hidden controls, hover-only affordances, and anything the sticky elements or the keyboard cover. Done when every width in the matrix has a recorded result for overflow, truncation, reach and cover.
 
-3. Choose breakpoints where the content or the controls stop working, not from device names. Change composition only where a width needs it; reuse the project's spacing scale, grid and components rather than new arbitrary values.
+3. Choose breakpoints where the content or the controls stop working, not from device names. Change composition only where a width needs it; reuse the project's spacing scale, grid and components rather than new arbitrary values. Done when each breakpoint is tied to a width where the composition stops working and no new arbitrary value was introduced.
 
-4. Keep primary controls reachable and named on touch: visible labels or accessible names, targets large enough for a thumb, no action that only hover reveals.
+4. Keep primary controls reachable and named on touch: visible labels or accessible names, targets large enough for a thumb, no action that only hover reveals. Done when every primary control has a visible or accessible name and a thumb-sized target at the phone widths.
 
-5. On wide screens use the space for comparison and task context while keeping a readable measure; do not force an ultrawide into a single narrow column without a reason, and do not stretch controls to fill it.
+5. On wide screens use the space for comparison and task context while keeping a readable measure; do not force an ultrawide into a single narrow column without a reason, and do not stretch controls to fill it. Done when wide screens show more context, not larger chrome, and line length stays readable.
 
-6. Re-run the matrix after the change, including a long or empty state and zoom, and name what was emulated versus observed on a physical device.
+6. Re-run the matrix after the change, including a long or empty state and zoom, and name what was emulated versus observed on a physical device. Done when the post-change matrix shows no new defect and each width is labeled emulated or physical device.
 
 ## Decision points
 

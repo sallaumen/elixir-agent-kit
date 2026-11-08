@@ -29,17 +29,17 @@ The output is a short list of risks, each with the cheapest test that can observ
 
 ## Workflow
 
-1. List the behaviors that can break, one line each: trigger, wrong outcome, who notices. Rank by consequence and likelihood using real incidents and the code paths that exist, not a generic checklist.
+1. List the behaviors that can break, one line each: trigger, wrong outcome, who notices. Rank by consequence and likelihood using real incidents and the code paths that exist, not a generic checklist. Done when every behavior that can break is one line with trigger, wrong outcome and who notices, ranked by consequence and likelihood.
 
-2. For each risk choose the smallest seam that can observe the failure: a pure function for a calculation, the context function for a rule, the persistence boundary for constraints and races, the LiveView or controller for authorization and rendering, an integration test only where mocks would hide a contract mismatch.
+2. For each risk choose the smallest seam that can observe the failure: a pure function for a calculation, the context function for a rule, the persistence boundary for constraints and races, the LiveView or controller for authorization and rendering, an integration test only where mocks would hide a contract mismatch. Done when each risk has the cheapest seam that can observe its failure.
 
-3. Write each test from an independent oracle: a known-good literal, a worked example, the spec, a stored fixture. If the expected value is computed the way the code computes it, the test cannot disagree with the code; rewrite it.
+3. Write each test from an independent oracle: a known-good literal, a worked example, the spec, a stored fixture. If the expected value is computed the way the code computes it, the test cannot disagree with the code; rewrite it. Done when each expected value comes from an independent oracle, not from the code under test.
 
-4. Control what makes failures intermittent: time (inject the clock), concurrency (send the messages yourself, assert with `assert_receive` and a bounded timeout), persistence (sandbox per test), external responses (a behaviour with `Mox`, plus one real contract check where authorized), global configuration (save and restore application env in `on_exit/1`; `async: false` only for the module that changes it) and background processes (stretch their interval in the test config and call the tick yourself). See [ExUnit and diagnostics](../../elixir/exunit.md).
+4. Control what makes failures intermittent: time (inject the clock), concurrency (send the messages yourself, assert with `assert_receive` and a bounded timeout), persistence (sandbox per test), external responses (a behaviour with `Mox`, plus one real contract check where authorized), global configuration (save and restore application env in `on_exit/1`; `async: false` only for the module that changes it) and background processes (stretch their interval in the test config and call the tick yourself). See [ExUnit and diagnostics](../../elixir/exunit.md). Done when each intermittent cause is controlled by its mechanism without a sleep.
 
-5. Prove that a regression test reaches the behavior: run it against the unfixed code, or against a one-line mutation of the contract, and watch it fail. Record that run. If it cannot be made to fail, it protects nothing; replace it.
+5. Prove that a regression test reaches the behavior: run it against the unfixed code, or against a one-line mutation of the contract, and watch it fail. Record that run. If it cannot be made to fail, it protects nothing; replace it. Done when each regression test has been seen failing on the unfixed code or a one-line mutation, and that run is recorded.
 
-6. Run the focused tests, then the project gate. Report the risks covered, the tests added, and the risks left uncovered with the reason.
+6. Run the focused tests, then the project gate. Report the risks covered, the tests added, and the risks left uncovered with the reason. Done when the focused tests and the gate pass and the uncovered risks are named with the reason.
 
 ## Decision points
 
@@ -66,7 +66,7 @@ The output is a short list of risks, each with the cheapest test that can observ
 
 ## Removing duplicates
 
-The risk list also shows which existing tests protect nothing distinct. Remove or merge one duplicate at a time, only where two tests detect the same regression at the same seam; keep separate coverage for distinct paths, roles, retries or failure mechanisms even when the fixtures look alike. The surviving test states its oracle and still fails when the contract breaks: when that is in doubt, make a one-line mutation and watch it fail. Run the focused suite and record any coverage dropped on purpose and why the remaining tests still catch the regression.
+The risk list also shows which existing tests protect nothing distinct. Remove or merge one duplicate at a time, only where two tests detect the same regression at the same seam; keep separate coverage for distinct paths, roles, retries or failure mechanisms even when the fixtures look alike. The surviving test states its oracle and still fails when the contract breaks: when that is in doubt, make a one-line mutation and watch it fail. Run the focused suite and record any coverage dropped on purpose and why the remaining tests still catch the regression. Done when each removed duplicate is replaced by a surviving test that still fails when the contract breaks and the dropped coverage is recorded with its reason.
 
 ## Avoid
 

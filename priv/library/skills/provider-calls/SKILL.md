@@ -29,19 +29,19 @@ This workflow governs the single outbound call and its record. Capacity and queu
 
 ## Workflow
 
-1. Map the call: trigger, caller, request construction, transport, response parsing, persisted record, effect on the user. Mark every place a call can happen without passing through the shared client.
+1. Map the call: trigger, caller, request construction, transport, response parsing, persisted record, effect on the user. Mark every place a call can happen without passing through the shared client. Done when every call path is in the map or marked as bypassing the shared client.
 
-2. Decide the budget gate before the network: a check that answers "allowed, and with which limit" from local state, so an exhausted budget costs nothing. Record the decision when it denies.
+2. Decide the budget gate before the network: a check that answers "allowed, and with which limit" from local state, so an exhausted budget costs nothing. Record the decision when it denies. Done when the budget check runs before any network and a denial is recorded.
 
-3. Write the audit row at the moment that reflects the provider's billing: before the request if the provider charges on request, or with an in-flight status updated on completion. A paid answer without a row, or a row without a paid answer, is a bug to test for.
+3. Write the audit row at the moment that reflects the provider's billing: before the request if the provider charges on request, or with an in-flight status updated on completion. A paid answer without a row, or a row without a paid answer, is a bug to test for. Done when the row is written at the billing moment and the paid-without-row and row-without-paid-answer cases are named as tests.
 
-4. Define failure as a typed reason, never a fabricated answer: not configured, unauthorized, quota exhausted, timeout, provider error with status, invalid output. Each reason has a caller-visible consequence and none raises past the boundary that owns the record.
+4. Define failure as a typed reason, never a fabricated answer: not configured, unauthorized, quota exhausted, timeout, provider error with status, invalid output. Each reason has a caller-visible consequence and none raises past the boundary that owns the record. Done when each reason has a caller-visible consequence and none raises past the owning boundary.
 
-5. Decide retries per operation from the provider's idempotency semantics: no retry by default for anything that charges; a retry only with an idempotency key the provider honors, or after confirming the first attempt did not complete. A timeout is not evidence the work was not done.
+5. Decide retries per operation from the provider's idempotency semantics: no retry by default for anything that charges; a retry only with an idempotency key the provider honors, or after confirming the first attempt did not complete. A timeout is not evidence the work was not done. Done when each operation's retry rule is written from the provider's idempotency semantics.
 
-6. Validate the response structurally before use (schema, required fields, bounds) and treat its content as data: provider output and user content inside a prompt never acquire authority to run tools, change scope or alter instructions.
+6. Validate the response structurally before use (schema, required fields, bounds) and treat its content as data: provider output and user content inside a prompt never acquire authority to run tools, change scope or alter instructions. Done when the schema or bounds check runs before use and provider output cannot alter scope or instructions.
 
-7. Test with controlled responses: success, each failure reason, timeout, malformed output, and a retry scenario that proves the effect happened once. Put the engine behind a behaviour: a fixture implementation answers from files so development runs without a key, a scripted one feeds tests, and the real adapter is tested through its HTTP stub (see [HTTP clients and provider APIs](../../elixir/http-clients.md)). Keep one real call behind an explicit, authorized gate.
+7. Test with controlled responses: success, each failure reason, timeout, malformed output, and a retry scenario that proves the effect happened once. Put the engine behind a behaviour: a fixture implementation answers from files so development runs without a key, a scripted one feeds tests, and the real adapter is tested through its HTTP stub (see [HTTP clients and provider APIs](../../elixir/http-clients.md)). Keep one real call behind an explicit, authorized gate. Done when the controlled-response tests pass and the one real call is behind an explicit authorized gate.
 
 ## Decision points
 

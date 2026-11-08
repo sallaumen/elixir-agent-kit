@@ -36,7 +36,7 @@ This workflow moves a persisted representation from one shape to another with bo
 
 3. Plan an expand, migrate, contract sequence per row that answered no: expand (add the column or enum value, keep the old worker module as an alias that delegates), migrate (batched backfill, dual write, read both), contract (drop the old path once no reader remains). Done when the sequence is written with its own migration file per step, the rollback boundary of each step, and a named condition for contract.
 
-4. Assess each migration before running it: `concurrently: true` with the DDL transaction and migration lock disabled for indexes, a `lock_timeout` for `ALTER TABLE` on busy tables, batch size for the backfill, duplicate processing if the backfill is retried, and which step is irreversible. Done when destructive or irreversible steps are flagged for separate authorization and the rest have their options chosen.
+4. Assess each migration before running it: choose the index and `ALTER TABLE` options the Ecto reference lists (see [Ecto and migrations](../../elixir/ecto.md)), the backfill batch size, duplicate handling if the backfill is retried, and which step is irreversible. Done when destructive or irreversible steps are flagged for separate authorization and the rest have their options chosen.
 
 5. Implement the expand and migrate steps with a test that inserts a legacy-shaped row (raw SQL or the old struct) and reads it with the new code, and, when the window requires it, a test that the new writer still produces what the old reader expects. Done when `mix ecto.migrate` and `mix ecto.rollback` succeed on representative data.
 

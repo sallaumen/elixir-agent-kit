@@ -23,7 +23,7 @@ This workflow checks and reports; it does not fix, merge, publish or deploy. A d
 
 - Start at: the original request and its acceptance criteria (the issue, the PR description, the handoff), then the exact integrated revision: `git log -1` on the merged branch or tag, and `git diff <base>...<revision> --stat`.
 - The repository's required gates and their last run on that revision, with the real check state from the hosting service when one exists.
-- The user-facing flows the change claims, and how to exercise each on the integrated build: a test, a request, a headless browser run, a job enqueued and observed.
+- The user-facing flows the change claims, and how to exercise each on the integrated build: a test, a request, a headless browser run, a job enqueued and observed. See [Phoenix and LiveView](../../elixir/phoenix-liveview.md) and [Oban](../../elixir/oban.md).
 - Artifacts beyond code: documentation, generated catalogs or indexes, migrations and their rollback, version pins in consumers, release packages.
 - Downstream consumers and the reference they install from. See [ExUnit and diagnostics](../../elixir/exunit.md) and [Build, dependencies and releases](../../elixir/build-releases.md).
 

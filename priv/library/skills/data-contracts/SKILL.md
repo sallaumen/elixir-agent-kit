@@ -36,7 +36,7 @@ This workflow answers "who owns this field and does every layer agree with the o
 
 3. Reproduce one mismatch with a failing test at the owning boundary, not in the view: feed form params through the context to the row and assert what was persisted. Done when the test fails for the stated reason.
 
-4. Move the rule to its owner: validation in the owning changeset, a database constraint behind it when concurrent writers can race, presentation guesses removed from persisted writes, and each derived copy given an explicit refresh or recompute path. Related local writes go in one `Ecto.Multi`; external effects run after commit or are idempotent. Done when the rule exists once and the test from step 3 passes.
+4. Move the rule to its owner: validation in the owning changeset, a database constraint behind it when concurrent writers can race, presentation guesses removed from persisted writes, and each derived copy given an explicit refresh or recompute path. Keep related writes in the atomic unit and the external-effect ordering the decision point defines. Done when the rule exists once and the test from step 3 passes.
 
 5. Update the consumers listed in the table: assigns, payloads, job args, cache keys and responses. Done when every consumer reads the owner's value or a copy whose origin and version are recorded.
 
