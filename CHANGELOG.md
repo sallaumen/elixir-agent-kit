@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.10.0 — 2026-11-08
+
+- Quality review of all 38 workflows: every numbered step now ends in an
+  observable "Done when" (revision-lineage, provider-calls, responsive-layout,
+  accessibility, motion-design, test-strategy, async-state and process-lifecycle
+  gained theirs), `check_library.py` flags the obsolete `mix xref callers` and
+  `Repo.transaction` in workflow bodies, and `data-contracts` uses `Repo.transact/2`.
+- Trigger and separating-rule fixes: `architecture-review` names
+  `functional-refactoring` and `readable-code` and stresses ownership over
+  duplication; `accessibility` carves out one control's keyboard path and
+  separates WCAG target size from width and reach; `revision-lineage` carves out
+  stale asynchronous results. Mechanics that drift are pointed at the `elixir/`
+  references instead of restated, and `navigation-ux` and `performance` stop and
+  ask before a schema change.
+
 ## 0.9.0 — 2026-11-08
 
 - Task size now changes the route and the execution: `ROUTING.md` gains a "Size
