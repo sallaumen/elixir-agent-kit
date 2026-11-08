@@ -11,6 +11,36 @@ package revision, actual selected files, actions and results. Include negative,
 neighboring-workflow and insufficient-input cases. Never infer model compliance
 from structural validation. No paid/model evaluations run automatically.
 
+## Running a size round
+
+`python3 scripts/eval_matrix.py` prints the coverage matrix: the code and backend
+workflows in rows, small, medium and large in columns, and the case IDs in each
+cell. A live round fills that matrix with observed runs:
+
+1. Install the kit at a fixed version in a disposable worktree of a real consumer
+   and run `mix agent_kit.check`.
+2. Start one fresh client session per run with the case request, one sentence of
+   project context, and a closing request to list the files read and the workflow
+   chosen. Reset the worktree between runs.
+3. Record one row per run in `evals/results/YYYY-MM-DD-<client>.tsv` from the
+   transcript, which is the evidence. The header is
+   `run case client model kit routed size_stated plan outcome turns tokens notes`
+   (tab-separated). `size_stated` is `small`, `medium`, `large` or `none`; `plan` is
+   `before_edit`, `after_edit`, `none`, or `review` for a plan written in a mode that
+   does not edit; `outcome` is `finished`, `turn_cap` or `error`; `turns` and
+   `tokens` are integers or empty.
+4. Have an independent evaluator judge each run against the case's success and
+   failure signals, and note the verdict in `notes`.
+5. Run `python3 scripts/eval_matrix.py evals/results/<file>.tsv` for the outcome
+   matrix (runs, routed, size, plan and finished per cell; large passes the plan
+   rule with `before_edit` or `review`, small and medium with `none`) and commit
+   the `.tsv` with a short Markdown summary beside it.
+
+`scripts/check_library.py` validates every committed `.tsv`, so a malformed row
+fails CI. Runs are manual and paid; nothing here calls a model.
+
+## Case notes
+
 E25 removes private product names. E27 corrects a contradictory legacy criterion:
 its user explicitly authorizes merge/deployment, so requesting the same authority
 again is not success. Required checks and any independently applicable boundaries
