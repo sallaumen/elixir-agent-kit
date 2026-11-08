@@ -58,6 +58,17 @@ if len(ids) != len(set(ids)):
 actual_ids = {p.parent.name for p in (LIBRARY / "skills").glob("*/SKILL.md")}
 if set(ids) != actual_ids:
     errors.append("Catalog and workflow directories disagree")
+versioning = (ROOT / "docs/versioning.md").read_text()
+if "## Stable workflow IDs" not in versioning:
+    errors.append("docs/versioning.md lacks the 'Stable workflow IDs' section")
+else:
+    stable_block = versioning.split("## Stable workflow IDs", 1)[1].split("```", 2)[1]
+    stable_ids = [line.strip() for line in stable_block.split("\n")[1:] if line.strip()]
+    if sorted(stable_ids) != sorted(ids):
+        errors.append(
+            f"docs/versioning.md workflow IDs drift from catalog.tsv "
+            f"(missing {sorted(set(ids) - set(stable_ids))}, extra {sorted(set(stable_ids) - set(ids))})"
+        )
 catalog_md = (LIBRARY / "CATALOG.md").read_text()
 readme = (ROOT / "README.md").read_text()
 provenance = (ROOT / "docs/provenance.md").read_text()
