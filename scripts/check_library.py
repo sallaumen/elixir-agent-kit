@@ -2,6 +2,7 @@
 """Check workflow metadata, structure, routing coverage, provenance and local Markdown links."""
 import json
 import re
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -157,6 +158,16 @@ for path in paths:
             errors.append(f"Missing anchor: {path.relative_to(ROOT)} -> {target}")
     if re.search(r'/Users/|gh[pousr]_[A-Za-z0-9]{20,}|sk-[A-Za-z0-9]{24,}', text):
         errors.append(f"Possible private path or credential: {path.relative_to(ROOT)}")
+
+sys.path.insert(0, str(ROOT / "scripts"))
+import eval_matrix  # noqa: E402
+
+eval_cases = eval_matrix.load_cases(ROOT)
+eval_routes = eval_matrix.known_routes(ROOT)
+for result in sorted((ROOT / "evals/results").glob("*.tsv")):
+    _, problems = eval_matrix.validate(result.read_text(), str(result.relative_to(ROOT)), eval_cases, eval_routes)
+    errors.extend(problems)
+errors.extend(eval_matrix.self_check(ROOT))
 
 if errors:
     raise SystemExit("\n".join(errors))
