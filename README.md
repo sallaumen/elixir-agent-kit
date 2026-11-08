@@ -42,7 +42,7 @@ tags, **not Hex**; no token is needed.
 ```elixir
 {:elixir_agent_kit,
  git: "https://github.com/sallaumen/elixir-agent-kit.git",
- tag: "v0.10.0",
+ tag: "v1.0.0",
  only: [:dev, :test],
  runtime: false}
 ```
