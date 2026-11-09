@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Documentation recommends Ponytail as an optional companion: per-client setup
+  in `docs/compatibility.md`, a pointer in both READMEs, and live evaluation runs
+  record the Ponytail level in `notes`. The installer and library are unchanged.
+
 ## 1.0.0 — 2026-11-08
 
 - First stable release. The 0.x fronts are complete and published: size-guided

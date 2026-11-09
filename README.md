@@ -128,6 +128,12 @@ The routing cases in [`evals/`](evals/README.md) hold 87 requests like that one,
 with the expected workflow and the signals of a good or bad answer. They stay out
 of the installed payload so an agent never sees the answer key.
 
+We recommend pairing the kit with [Ponytail](https://github.com/DietrichGebert/ponytail),
+a separate ruleset that keeps the agent to the least new code that solves the
+task. The kit picks the workflow and the evidence; Ponytail keeps the code small.
+The kit never installs it; per-client setup is in
+[compatibility](docs/compatibility.md#recommended-companion-ponytail).
+
 ## The catalog at a glance
 
 Pick the area, then the narrowest trigger. Every entry links to the full workflow;

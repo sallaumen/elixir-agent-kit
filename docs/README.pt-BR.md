@@ -126,6 +126,12 @@ guardam 87 pedidos como esse, com o workflow esperado e os sinais de uma respost
 boa ou ruim. Ficam fora do payload instalado para que um agente nunca veja o
 gabarito.
 
+Recomendamos usar o kit junto com o [Ponytail](https://github.com/DietrichGebert/ponytail),
+um conjunto de regras separado que mantém o agente no mínimo de código novo que
+resolve a tarefa. O kit escolhe o workflow e a evidência; o Ponytail mantém o
+código pequeno. O kit nunca o instala; a configuração por cliente está em
+[compatibilidade](compatibility.md#recommended-companion-ponytail).
+
 ## O catálogo de relance
 
 Escolha a área, depois o gatilho mais estreito. Cada entrada aponta para o
