@@ -28,7 +28,10 @@ cell. A live round fills that matrix with observed runs:
    (tab-separated). `size_stated` is `small`, `medium`, `large` or `none`; `plan` is
    `before_edit`, `after_edit`, `none`, or `review` for a plan written in a mode that
    does not edit; `outcome` is `finished`, `turn_cap` or `error`; `turns` and
-   `tokens` are integers or empty.
+   `tokens` are integers or empty. Start `notes` with the
+   [Ponytail](../docs/compatibility.md#recommended-companion-ponytail) level the
+   client ran with (`ponytail=full`, `ponytail=off`), because it changes how much
+   code and text a run produces; compare runs only at the same level.
 4. Have an independent evaluator judge each run against the case's success and
    failure signals, and note the verdict in `notes`.
 5. Run `python3 scripts/eval_matrix.py evals/results/<file>.tsv` for the outcome
