@@ -141,7 +141,7 @@ versioning. The installed artifact is guidance plus a small installer, so the
 meaning of a bump is stated in terms of what an agent reads and what a consumer
 must do:
 
-- **Pre-1.0 (current).** A minor release may add a workflow, change a workflow
+- **Pre-1.0 (historical).** A minor release may add a workflow, change a workflow
   body, add an installer-owned file, or change the generated `START.md`. A patch
   release changes no agent-facing guidance: a bug fix in the installer or CLI, a
   documentation correction, or a check that does not alter what a workflow says.

@@ -23,4 +23,33 @@ Both distinguished the 779 → 646 change in size of a compile-connected group f
 
 One explanation needs qualification. B's shortest illustrated path included an export dependency. The edge exists, but a comment does not change the exported API, so the illustration alone does not explain invalidation. The evaluator verified a parallel path from the adapter through a query module to a schema and then the utility, with all three edges labeled runtime. The proposed priority stands on the controlled interventions, not on the shortest graph path. Nor does “adapter dispatch at runtime” by itself guarantee 19 fewer rebuilds: compile consumers must stop reaching the concrete implementation through the catalog.
 
-**Decision:** keep the workflow unchanged. It prioritized the higher-impact investigation in both runs; one imperfect causal explanation is a useful grading case, not enough to justify changing the default review. A production candidate would need to preserve catalog validation, questionnaire behavior and a single source for area metadata, then repeat the warm measurement against that candidate. The remaining 27 files and wall-clock impact are separate questions.
+## Production follow-up
+
+| Warm comment edit | Before | After | Change |
+|---|---:|---:|---:|
+| Earlier diagnostic: disable the adapter | 46 | 27 | 19 fewer |
+| Production correction: keep the adapter enabled | 45 | 26 | 19 fewer |
+
+The later baseline already included the independent one-file display fix.
+The shipped change kept a single catalog for area metadata and port selection.
+Build configuration supplies the concrete adapter module; consumers that compile
+against the catalog no longer take a dependency on its implementation. The
+questionnaire still blocked admission for missing or stale answers, accepted a
+fresh answer and was skipped only where the catalog declared no port.
+
+The original and corrected warm no-ops rebuilt nothing. Inserting and restoring
+the same comment reproduced each file set. Comparing lists removed the registry,
+12 discovery sources and six UI consumers, with no new files. After the base
+advanced, the integration tree reproduced the same 19-file difference. These
+are counts of compiled sources, not wall-clock measurements.
+
+The application suite passed 18,255 tests (89.7% coverage) on the original
+candidate base; 193 affected tests passed on the final integration tree.
+The deployed image passed its machine check and the public health endpoint.
+Private application code, identifiers and transcripts stay out of this report.
+
+**Pilot closed.** Keep the corrected xref explanation. Both unnamed-consumer
+reviews prioritized the higher-impact boundary; the production result confirmed
+their prediction without disabling behavior. This case does not establish a
+general ranking accuracy or explain the remaining 26 recompilations. No new
+mandatory step or Cyclops dependency is warranted.

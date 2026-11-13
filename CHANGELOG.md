@@ -2,17 +2,22 @@
 
 ## Unreleased
 
-- Correct the architecture review’s description of unfiltered Mix xref cycles: the report includes all dependency labels.
+## 1.1.0 — 2026-11-13
 
-- Code reviews can use a changed branch, caller or previous fix to pick which
-  failure scenario to check first. Small reviews skip this step. No analyzer
-  is needed, and the review still covers the requested diff.
+- Minor release: code reviews can now use a changed branch, caller or previous
+  fix to prioritize a failure scenario. Small reviews skip this step. The
+  existing workflow IDs, installer, configuration and dependencies are unchanged.
+- Architecture review now describes unfiltered Mix xref cycles as groups across
+  all dependency labels. The [closed pilot](evals/results/2026-11-13-architecture-prioritization.md#production-follow-up)
+  confirmed 19 fewer recompiled sources with the real adapter still enabled.
+  No analyzer or additional review step is required.
+
+## 1.0.0 — 2026-11-08
 
 - Documentation recommends Ponytail as an optional companion: per-client setup
   in `docs/compatibility.md`, a pointer in both READMEs, and live evaluation runs
-  record the Ponytail level in `notes`. The installer and library are unchanged.
-
-## 1.0.0 — 2026-11-08
+  record the Ponytail level in `notes`. This recommendation was already in the
+  published 1.0.0 tag.
 
 - First stable release. The 0.x fronts are complete and published: size-guided
   routing with a per-workflow `## Size` section (0.9.0), the quality review of
