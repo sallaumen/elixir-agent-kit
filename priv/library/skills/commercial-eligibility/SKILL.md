@@ -43,6 +43,7 @@ This workflow owns the evidence that an exact variant and destination are suppor
 
 ## Decision points
 
+- Trace what one purchase actually delivers: one chosen alternative, or all required components of a bundle. For a bundle, verify the parent and every included component against its own seller, route and destination. Keep a sibling that is outside the purchase as a control. Distinguish what the code currently permits from what that fulfillment contract requires.
 - A supported parent product does not make any color, size, artwork or country supported; evidence is per exact combination.
 - Supported, unsupported, unknown and stale are four states; the UI shows unknown and stale and never promotes them to available.
 - One rule in the domain decides; catalog, publication and order consume it, or consume a derivation that is documented and tested against it.

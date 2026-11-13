@@ -45,6 +45,7 @@ This workflow concerns product revisions and the artifacts derived from them. A 
 ## Decision points
 
 - Immutable identifiers over words: "latest", "current" and "main" each name a different thing; make the pointer explicit in storage and on screen.
+- Derive the meaning of restore from the product: moving a pointer and making a new editable copy preserve different things. Inspect the closest existing copy or adoption operation. If recovery creates a new candidate, preserve the source ID, give mutable artifacts independent ownership, and test editing the copy leaves the source intact without regeneration.
 - Viewing is read-only with respect to pointers; selection and publication are explicit writes with their own authority.
 - The primary image or artifact shown for a decision is chosen by a rule (variant, orientation, approval state), not by whichever job finished last.
 - A derived artifact without a recorded parent revision is unverified, however convincing it looks.

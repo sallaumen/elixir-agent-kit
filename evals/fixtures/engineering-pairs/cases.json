@@ -1,0 +1,132 @@
+{
+  "data-contracts": {
+    "brief": "The batch-request changeset has an internal count limit of 4 in Limits.max/0; Batch.submit/1 uses this module and returns :accepted or {:error, :too_many}. A view currently repeats the number in wording; views may depend on Batch only. Deliver all three small modules Limits, Batch and View. The public view function View.hint/0 returns \"Up to 4 entries\" today. The product still promises four, but maintaining the number in two places caused a regression. Accept any list of entries, including an empty list.",
+    "oracle": "Unique numeric owner; facade accessor consumed by the hint; actual boundary +/-1 plus changing owner must move both consumers.",
+    "checks": "assert Batch.submit([]) == :accepted\nassert Batch.submit([1,2,3,4]) == :accepted\nassert Batch.submit([1,2,3,4,5]) == {:error,:too_many}\nassert View.hint() == \"Up to 4 entries\"",
+    "answer_sha256": {
+      "a": "d49a32939dc82430d3a4e8688ba6b0a2447c1e90a9f60e0375c8125d20a94aa8",
+      "b": "b0c5b49bcca82491b18beb7d71ffe3f1dc3e4f92dbdfe953b534090a1c200174"
+    },
+    "returned_modules": {
+      "a": "defmodule Limits do\n  def max, do: 4\nend\n\ndefmodule Batch do\n  def max_entries, do: Limits.max()\n\n  def submit(entries) when is_list(entries) do\n    if length(entries) <= max_entries() do\n      :accepted\n    else\n      {:error, :too_many}\n    end\n  end\nend\n\ndefmodule View do\n  def hint, do: \"Up to #{Batch.max_entries()} entries\"\nend\n",
+      "b": "defmodule Limits do\n  def max, do: 4\nend\n\ndefmodule Batch do\n  def max_entries, do: Limits.max()\n\n  def submit(entries) when is_list(entries) do\n    if length(entries) <= max_entries() do\n      :accepted\n    else\n      {:error, :too_many}\n    end\n  end\nend\n\ndefmodule View do\n  def hint do\n    \"Up to #{Batch.max_entries()} entries\"\n  end\nend\n"
+    }
+  },
+  "migration-compatibility": {
+    "brief": "We are midway through introducing a stable reference into a snapshot. Old readers require the :label field. New readers use :ref when available, otherwise can obtain an optional reference from the linked source. Some old rows have lost their source; some are supported platform records for which a ref does not exist by design. A runner must survive mixed data and restarts, and cannot discard snapshot fields from the previous version. Implement Upgrade.row(snapshot, linked_ref, kind) -> {outcome, snapshot} for :ordinary or :platform records; outcomes are :updated, :unchanged or :unresolved. Write a brief deployment/rollback decision for whether the dual reader can be retired today. No production inventory or rollout evidence is supplied.",
+    "oracle": "Preserve unknown/legacy fields; idempotent no overwrite; unresolved orphan not fabricated, platform exempt; require writer rollout/backfill reconciliation with unresolved handled before destructive cutoff.",
+    "checks": "assert Upgrade.row(%{label: \"old\", other: 5},7,:ordinary) == {:updated,%{label: \"old\", other: 5,ref: 7}}\nassert Upgrade.row(%{ref: 9,label: \"v\"},7,:ordinary) == {:unchanged,%{ref: 9,label: \"v\"}}\nassert Upgrade.row(%{label: \"x\"},nil,:ordinary) == {:unresolved,%{label: \"x\"}}\nassert Upgrade.row(%{label: \"x\"},nil,:platform) == {:unchanged,%{label: \"x\"}}\nassert Upgrade.row(%{ref: nil},7,:ordinary) == {:updated,%{ref: 7}}",
+    "answer_sha256": {
+      "a": "0f9a45ffb76e56774e03394c8a0e311290c95097a2f3db09c12b793bdaf63419",
+      "b": "1f78d8a9b79f1a7dc122f322764c9eed09d024bce44121640811868202e3af90"
+    },
+    "returned_modules": {
+      "a": "defmodule Upgrade do\n  @moduledoc false\n\n  @type outcome :: :updated | :unchanged | :unresolved\n  @type kind :: :ordinary | :platform\n\n  @spec row(map(), term(), kind()) :: {outcome(), map()}\n  def row(snapshot, linked_ref, kind)\n      when is_map(snapshot) and kind in [:ordinary, :platform] do\n    case {Map.get(snapshot, :ref), kind, linked_ref} do\n      {nil, :ordinary, nil} ->\n        {:unresolved, snapshot}\n\n      {nil, :ordinary, ref} ->\n        {:updated, Map.put(snapshot, :ref, ref)}\n\n      _ ->\n        {:unchanged, snapshot}\n    end\n  end\nend\n",
+      "b": "defmodule Upgrade do\n  @type kind :: :ordinary | :platform\n  @type outcome :: :updated | :unchanged | :unresolved\n\n  @spec row(map(), term() | nil, kind()) :: {outcome(), map()}\n  def row(snapshot, linked_ref, kind)\n      when is_map(snapshot) and kind in [:ordinary, :platform] do\n    cond do\n      Map.get(snapshot, :ref) != nil ->\n        {:unchanged, snapshot}\n\n      kind == :platform ->\n        {:unchanged, snapshot}\n\n      is_nil(linked_ref) ->\n        {:unresolved, snapshot}\n\n      true ->\n        {:updated, Map.put(snapshot, :ref, linked_ref)}\n    end\n  end\nend\n"
+    }
+  },
+  "provider-calls": {
+    "brief": "A mail relay sometimes rejects the connection for hours. Three tries within one minute lose messages. Status calls can establish a pre-delivery failure, a permanent refusal, confirmed delivery, or an ambiguous result after submission. This provider has no deduplication API. Re-granting a resource to the same person later is a legitimate new event, even when the audit key (recipient plus resource) repeats. The approved outage budget is five total attempts; delay after each of the first four attempts is 1, 10, 60 or 360 minutes. Deliver Relay.next(status, attempt, seen_audit_key?) as a policy for an existing job, returning {:retry_in, seconds}, :complete, :failed or :reconcile. Status is :temporary_before_send, :permanent, :delivered, or :unknown_after_send. Indicate what the worker must store or do with ambiguous results.",
+    "oracle": "Transient schedule seconds and finite stop; no uncertain resend; repeats of audit keys cannot blanket suppress a new event; permanent/confirmed are terminal.",
+    "checks": "for seen <- [true,false] do\n assert Enum.map(1..4, &Relay.next(:temporary_before_send,&1,seen)) == [{:retry_in,60},{:retry_in,600},{:retry_in,3600},{:retry_in,21600}]\n assert Relay.next(:temporary_before_send,5,seen) == :failed\n assert Relay.next(:permanent,1,seen) == :failed\n assert Relay.next(:delivered,1,seen) == :complete\n assert Relay.next(:unknown_after_send,2,seen) == :reconcile\nend",
+    "answer_sha256": {
+      "a": "6f4b0cc6e6ca9d75719371f93737696b07e570ba8e8558c383fda7b1754e1cc9",
+      "b": "2c1d853437f56b6c9d989b365b7fa927ef8d62936d1cc326cc68d0f4db5b68ec"
+    },
+    "returned_modules": {
+      "a": "defmodule Relay do\n  @retry_delays {60, 600, 3_600, 21_600}\n\n  @type status ::\n          :temporary_before_send\n          | :permanent\n          | :delivered\n          | :unknown_after_send\n\n  @spec next(status(), 1..5, boolean()) ::\n          {:retry_in, pos_integer()} | :complete | :failed | :reconcile\n  def next(status, attempt, _seen_audit_key?)\n      when is_integer(attempt) and attempt >= 1 and attempt <= 5 do\n    case status do\n      :temporary_before_send when attempt < 5 ->\n        {:retry_in, elem(@retry_delays, attempt - 1)}\n\n      :temporary_before_send ->\n        :failed\n\n      :permanent ->\n        :failed\n\n      :delivered ->\n        :complete\n\n      :unknown_after_send ->\n        :reconcile\n    end\n  end\nend\n",
+      "b": "defmodule Relay do\n  @type status ::\n          :temporary_before_send | :permanent | :delivered | :unknown_after_send\n\n  @type decision :: {:retry_in, pos_integer()} | :complete | :failed | :reconcile\n\n  @retry_delays_seconds {60, 600, 3_600, 21_600}\n\n  @spec next(status(), 1..5, boolean()) :: decision()\n  def next(status, attempt, seen_audit_key?)\n      when status in [\n             :temporary_before_send,\n             :permanent,\n             :delivered,\n             :unknown_after_send\n           ] and\n             is_integer(attempt) and attempt >= 1 and attempt <= 5 and\n             is_boolean(seen_audit_key?) do\n    case status do\n      :delivered ->\n        :complete\n\n      :permanent ->\n        :failed\n\n      :unknown_after_send ->\n        :reconcile\n\n      :temporary_before_send when attempt < 5 ->\n        {:retry_in, elem(@retry_delays_seconds, attempt - 1)}\n\n      :temporary_before_send ->\n        :failed\n    end\n  end\nend\n"
+    }
+  },
+  "data-pipelines": {
+    "brief": "An old batch conversion walks records sorted by strictly increasing integer id. Convert a manually marked :settled item into :waived only when the ledger has no recorded transfer, even a refunded one. Bank-marked items must stay settled even if the charge link vanished. A retained item still matches the current read predicate, so a worker asking only for the first N qualifying records can loop. Implement Walk.page(rows, after_id, limit) yielding {ids_to_convert, next_cursor}; rows are {id, status, manual?, evidence}, evidence one of :none, :settled, :refunded, :legacy. Fetch the next limit manually marked settled candidates by id (the query applies both predicates); on a nonempty page return the highest examined candidate ID even if no IDs may be converted, else :done. State the update condition that avoids overwriting another actor after paging and how a restarting worker makes progress.",
+    "oracle": "Page includes retained rows; monotonic progression on all-retained page, bounded sorted window, protects bank/ledger provenance; apply guarded updates and advance checkpoint only after durable success.",
+    "checks": "rows=[{7,:settled,true,:none},{2,:settled,true,:legacy},{1,:settled,false,:none},{5,:settled,true,:refunded},{4,:settled,true,:settled},{6,:waived,true,:none}]\nrows=Enum.sort_by(rows,&elem(&1,0))\nassert Walk.page(rows,0,2) == {[],4}\nassert Walk.page(rows,4,2) == {[7],7}\nassert Walk.page(rows,7,2) == {[],:done}\nassert Walk.page([{1,:settled,true,:none},{2,:settled,true,:none},{3,:settled,true,:none}],0,2) == {[1,2],2}",
+    "answer_sha256": {
+      "a": "3ffdd03fd1d4e8b71c86cd19bc769bed2eb7c7f1d351928f73276fd7cb0da54b",
+      "b": "525a806241b5fd89652f93c79cc4d103d602049644e2c8eaaeb1da8b575dd497"
+    },
+    "returned_modules": {
+      "a": "defmodule Walk do\n  @type evidence :: :none | :settled | :refunded | :legacy\n  @type row :: {integer(), atom(), boolean(), evidence()}\n\n  @spec page([row()], integer(), pos_integer()) ::\n          {[integer()], integer() | :done}\n  def page(rows, after_id, limit)\n      when is_integer(after_id) and is_integer(limit) and limit > 0 do\n    candidates =\n      rows\n      |> Stream.filter(fn\n        {id, :settled, true, _evidence} -> id > after_id\n        _ -> false\n      end)\n      |> Enum.take(limit)\n\n    case candidates do\n      [] ->\n        {[], :done}\n\n      _ ->\n        {reversed_ids, cursor} =\n          Enum.reduce(candidates, {[], after_id}, fn\n            {id, :settled, true, :none}, {ids, _cursor} ->\n              {[id | ids], id}\n\n            {id, :settled, true, _evidence}, {ids, _cursor} ->\n              {ids, id}\n          end)\n\n        {Enum.reverse(reversed_ids), cursor}\n    end\n  end\nend\n",
+      "b": "defmodule Walk do\n  @type evidence :: :none | :settled | :refunded | :legacy\n  @type row :: {integer(), atom(), boolean(), evidence()}\n\n  @spec page(Enumerable.t(), integer() | nil, pos_integer()) ::\n          {[integer()], integer() | :done}\n  def page(rows, after_id, limit)\n      when (is_nil(after_id) or is_integer(after_id)) and\n             is_integer(limit) and limit > 0 do\n    {reversed_ids, cursor} =\n      rows\n      |> Stream.filter(fn {id, status, manual?, _evidence} ->\n        (is_nil(after_id) or id > after_id) and\n          status == :settled and manual? == true\n      end)\n      |> Stream.take(limit)\n      |> Enum.reduce({[], :done}, fn {id, :settled, true, evidence},\n                                    {ids, _cursor} ->\n        ids = if evidence == :none, do: [id | ids], else: ids\n        {ids, id}\n      end)\n\n    {Enum.reverse(reversed_ids), cursor}\n  end\nend\n"
+    }
+  },
+  "abstraction-layers": {
+    "brief": "Simplify a single toggle operation that mixes a decision about an existing connection, saving it, and post-success effects. A minimal harness injects callbacks through a map. Preserve Link.toggle(a,b,ops): ops.lookup.(a,b) yields nil or a record. If nil, ops.insert.(a,b) returns {:ok,row} or {:error,reason}; only on success call ops.notice.(a,b) then ops.broadcast.(a,b), and return {:ok,:on}. Otherwise call ops.delete.(record) once and return {:ok,:off}; the existing delete path ignores its return value, and performs no notifications. Keep this to one module; make the top-level operation easier to read without changing its contract.",
+    "oracle": "Separate decision from lower-level persistence/announcement; unchanged result and ordered effects on successful create, error create and failed delete.",
+    "checks": "for {record,insert,answer,trace} <- [{nil,{:ok,:new},{:ok,:on},[:lookup,:insert,:notice,:broadcast]},{nil,{:error,:collision},{:error,:collision},[:lookup,:insert]},{:old,:unused,{:ok,:off},[:lookup,:delete]}] do\n Process.put(:events,[])\n f=fn k -> Process.put(:events,Process.get(:events)++[k]) end\n ops=%{lookup: fn :a,:b -> f.(:lookup); record end,insert: fn :a,:b -> f.(:insert); insert end,notice: fn :a,:b -> f.(:notice) end,broadcast: fn :a,:b -> f.(:broadcast) end,delete: fn :old -> f.(:delete); {:error,:stale} end}\n assert Link.toggle(:a,:b,ops) == answer\n assert Process.get(:events) == trace\nend",
+    "answer_sha256": {
+      "a": "b3ad142cb77d8f8b2c5da732bb17da10c30c679c58daf47fa7d3a1265cfe4793",
+      "b": "7c4787bc22a24cb7a036976c41269eba63955ada98a02491f1092987a87acf60"
+    },
+    "returned_modules": {
+      "a": "defmodule Link do\n  def toggle(a, b, ops) do\n    case ops.lookup.(a, b) do\n      nil ->\n        turn_on(a, b, ops)\n\n      record ->\n        ops.delete.(record)\n        {:ok, :off}\n    end\n  end\n\n  defp turn_on(a, b, ops) do\n    case ops.insert.(a, b) do\n      {:ok, _row} ->\n        ops.notice.(a, b)\n        ops.broadcast.(a, b)\n        {:ok, :on}\n\n      {:error, reason} ->\n        {:error, reason}\n    end\n  end\nend\n",
+      "b": "defmodule Link do\n  def toggle(a, b, ops) do\n    case ops.lookup.(a, b) do\n      nil -> turn_on(a, b, ops)\n      record -> turn_off(record, ops)\n    end\n  end\n\n  defp turn_on(a, b, ops) do\n    case ops.insert.(a, b) do\n      {:ok, _row} ->\n        ops.notice.(a, b)\n        ops.broadcast.(a, b)\n        {:ok, :on}\n\n      {:error, reason} ->\n        {:error, reason}\n    end\n  end\n\n  defp turn_off(record, ops) do\n    ops.delete.(record)\n    {:ok, :off}\n  end\nend\n"
+    }
+  },
+  "module-design": {
+    "brief": "A storage adapter imports CatalogTile just to build the existing disk key, yet the catalogue already needs the adapter for public URLs. The codebase has a downward dependency rule: Storage must not depend on CatalogTile. There are no external callers of the historical key/subdirectory helpers. Deliver minimal replacements for both modules. The facade contracts that must survive are CatalogTile.url(%{slug: \"a\"}) -> \"/assets/tiles/a.svg\", and Storage.upload(\"a\", writer) -> whatever writer.(\"tiles/a.svg\") returns. Existence checks and seed jobs need one canonical key derived from a plain slug at Storage.key/1. The adapter's public_url/1 simply prefixes \"/assets/\".",
+    "oracle": "Storage owns key; catalog reads simple key without reverse dependency or duplicate builder; existing read and write paths use identical stored key and pass through writer result.",
+    "checks": "for s <- [\"a\",\"z-9\"] do\n k=\"tiles/\"<>s<>\".svg\"\n assert Storage.key(s)==k\n assert CatalogTile.url(%{slug: s})==\"/assets/\"<>k\n assert Storage.upload(s,fn key -> {:saved,key} end)=={:saved,k}\nend",
+    "answer_sha256": {
+      "a": "c5a77e94100ebb7bf330943986285695e4465d714ec68a983e4c7f9da99fbba3",
+      "b": "a0fbf015c3d49a6d63c9925495eaeef3c86e654c14417845cd031dd29d21079c"
+    },
+    "returned_modules": {
+      "a": "defmodule Storage do\n  def key(slug), do: \"tiles/#{slug}.svg\"\n\n  def upload(slug, writer), do: writer.(key(slug))\n\n  def public_url(key), do: \"/assets/\" <> key\nend\n\ndefmodule CatalogTile do\n  def url(%{slug: slug}) do\n    slug\n    |> Storage.key()\n    |> Storage.public_url()\n  end\nend\n",
+      "b": "defmodule Storage do\n  def key(slug) when is_binary(slug), do: \"tiles/\" <> slug <> \".svg\"\n\n  def upload(slug, writer), do: writer.(key(slug))\n\n  def public_url(key), do: \"/assets/\" <> key\nend\n\ndefmodule CatalogTile do\n  def url(%{slug: slug}) do\n    slug\n    |> Storage.key()\n    |> Storage.public_url()\n  end\nend\n"
+    }
+  },
+  "code-consolidation": {
+    "brief": "Three entry points have local copies of the normalization of a person's display name. Registration.clean/1 and Profile.clean/1 return a value; Account.change/1 accepts a map of changes and must touch :name only if present; account changes also include unrelated :title which explicitly retains surrounding blanks. PersonLabel already owns the validation of display names. Deliver the four small modules (include only relevant functions). Consolidate normalization there, preserving nil, all internal spacing and the spelling of a name. Leading/trailing whitespace is not intentional.",
+    "oracle": "One named domain owner, all three callers, nil, original internal spaces, no insertion of missing change and no alteration of unrelated fields.",
+    "checks": "for v <- [nil,\"  L  N\t\",\"\t\",\"One\"] do\n w=if is_nil(v), do: nil, else: String.trim(v)\n assert Registration.clean(v)==w\n assert Profile.clean(v)==w\n assert Account.change(%{name: v,title: \"  X \"})==%{name: w,title: \"  X \"}\nend\nassert Account.change(%{title: \" x \"})==%{title: \" x \"}",
+    "answer_sha256": {
+      "a": "906440bb502dbd87080982eaa646a95e38684469ee521197f3f8b9f99f2268fc",
+      "b": "c0d2c9ac93e469b0dd0a34ac55d213c88c827eff6b54e3b476e817204a2df6d1"
+    },
+    "returned_modules": {
+      "a": "defmodule PersonLabel do\n  def normalize(nil), do: nil\n  def normalize(name) when is_binary(name), do: String.trim(name)\nend\n\ndefmodule Registration do\n  def clean(name), do: PersonLabel.normalize(name)\nend\n\ndefmodule Profile do\n  def clean(name), do: PersonLabel.normalize(name)\nend\n\ndefmodule Account do\n  def change(changes) when is_map(changes) do\n    case changes do\n      %{name: name} -> %{changes | name: PersonLabel.normalize(name)}\n      _ -> changes\n    end\n  end\nend\n",
+      "b": "defmodule PersonLabel do\n  def normalize(nil), do: nil\n  def normalize(name) when is_binary(name), do: String.trim(name)\nend\n\ndefmodule Registration do\n  def clean(name), do: PersonLabel.normalize(name)\nend\n\ndefmodule Profile do\n  def clean(name), do: PersonLabel.normalize(name)\nend\n\ndefmodule Account do\n  def change(changes) when is_map(changes) do\n    case Map.fetch(changes, :name) do\n      {:ok, name} -> Map.put(changes, :name, PersonLabel.normalize(name))\n      :error -> changes\n    end\n  end\nend\n"
+    }
+  },
+  "house-patterns": {
+    "brief": "A narrow style guard rejected Panel.refresh/4. The written local rule is one pipeline stage per line and a raw value at the start; a pipeline may be kept across multiple dependent transformations. Existing modules follow this. Current intended behavior: if requested == state.current, return state; otherwise start with state, then call put_current(requested), then invoke load.(updated_state). The injected put_current/2 helper sets :current using Map.put/3; it is passed as the third argument, and load as the fourth. Write the corrected Panel.refresh(state, requested, put_current, load) and keep the guard's pattern visible. No other style changes are necessary.",
+    "oracle": "One pipe per physical line, raw start, unchanged no-op, assign before one reload, no architecture detour.",
+    "checks": "ops=fn key -> fn _ -> send(self(),key) end end\nassert Panel.refresh(%{current: 2},2,fn _,_ -> raise \"called put\" end,ops.(:reload))==%{current: 2}\nassert Panel.refresh(%{current: 1},2,fn s,k -> send(self(),:put); Map.put(s,:current,k) end,fn s -> send(self(),:reload); {:done,s} end)=={:done,%{current: 2}}\nassert_receive :put\nassert_receive :reload\nrefute_receive _, 0",
+    "answer_sha256": {
+      "a": "f01ea675feab339e64ede7b7a4268837498c31bd0fbf0fd3732ca2b93d1bfd16",
+      "b": "b0e23f7eaae3cb114ae9531568125c830aebe60bc390c5819b1d8365245620f5"
+    },
+    "returned_modules": {
+      "a": "defmodule Panel do\n  def refresh(state, requested, put_current, load) do\n    if requested == state.current do\n      state\n    else\n      state\n      |> put_current.(requested)\n      |> load.()\n    end\n  end\nend\n",
+      "b": "defmodule Panel do\n  def refresh(state, requested, put_current, load) do\n    if requested == state.current do\n      state\n    else\n      state\n      |> put_current.(requested)\n      |> load.()\n    end\n  end\nend\n"
+    }
+  },
+  "functional-refactoring": {
+    "brief": "Public CalendarFacade.over?(month, local_today) takes a Date plus a zero-arity function reading today's local date; Withdraw.deadline/1 should return a UTC DateTime exactly three hours before the supplied one or nil. In the real module other operations read records; the calendar-only rules need isolated tests and currently share the effects module. Preserve these public signatures, keep the local clock read at its edge once, and move date calculations into a pure Period module. For a monthly record the entire final local calendar day is still active. Include additional pure helper Period.month_of(local_date) returning the first day of its month. Only submit these three small modules.",
+    "oracle": "Current month still active on final day; previous month over on first local day; edge clock read once; pure helper and nil, UTC deadline, no DB/clock in calculations.",
+    "checks": "assert Period.month_of(~D[2024-02-29])==~D[2024-02-01]\nfor {today,expected} <- [{~D[2024-02-29],false},{~D[2024-03-01],true}] do\n assert CalendarFacade.over?(~D[2024-02-07],fn -> send(self(),:clock); today end)==expected\n assert_receive :clock\n refute_receive :clock,0\nend\nassert Withdraw.deadline(nil)==nil\nassert DateTime.compare(Withdraw.deadline(~U[2024-03-01 01:00:00Z]),~U[2024-02-29 22:00:00Z])==:eq",
+    "answer_sha256": {
+      "a": "405190bb535f0cf5aeaa445151a9d2851600433142e2591281acf4a08834ee2a",
+      "b": "ece0cbf35a5646599d0d022e9dd6303953868d8965a3de678ab07212f6754bb5"
+    },
+    "returned_modules": {
+      "a": "defmodule Period do\n  @spec month_of(Date.t()) :: Date.t()\n  def month_of(%Date{} = local_date) do\n    Date.beginning_of_month(local_date)\n  end\n\n  @spec over?(Date.t(), Date.t()) :: boolean()\n  def over?(%Date{} = month, %Date{} = local_today) do\n    Date.compare(local_today, Date.end_of_month(month)) == :gt\n  end\nend\n\ndefmodule CalendarFacade do\n  @spec over?(Date.t(), (() -> Date.t())) :: boolean()\n  def over?(%Date{} = month, local_today) when is_function(local_today, 0) do\n    today = local_today.()\n    Period.over?(month, today)\n  end\nend\n\ndefmodule Withdraw do\n  @spec deadline(DateTime.t() | nil) :: DateTime.t() | nil\n  def deadline(nil), do: nil\n\n  def deadline(%DateTime{} = supplied) do\n    supplied\n    |> DateTime.shift_zone!(\"Etc/UTC\")\n    |> DateTime.add(-10_800, :second)\n  end\nend\n",
+      "b": "defmodule Period do\n  @spec over?(Date.t(), Date.t()) :: boolean()\n  def over?(%Date{} = month, %Date{} = local_today) do\n    Date.compare(local_today, Date.end_of_month(month)) == :gt\n  end\n\n  @spec month_of(Date.t()) :: Date.t()\n  def month_of(%Date{} = local_date), do: %{local_date | day: 1}\n\n  @spec deadline(DateTime.t() | nil) :: DateTime.t() | nil\n  def deadline(nil), do: nil\n\n  def deadline(%DateTime{} = datetime) do\n    datetime\n    |> DateTime.add(-10_800, :second)\n    |> DateTime.shift_zone!(\"Etc/UTC\")\n  end\nend\n\ndefmodule CalendarFacade do\n  @spec over?(Date.t(), (-> Date.t())) :: boolean()\n  def over?(%Date{} = month, local_today) when is_function(local_today, 0) do\n    today = local_today.()\n    Period.over?(month, today)\n  end\nend\n\ndefmodule Withdraw do\n  @spec deadline(DateTime.t() | nil) :: DateTime.t() | nil\n  def deadline(datetime), do: Period.deadline(datetime)\nend\n"
+    }
+  },
+  "readable-code": {
+    "brief": "A nested lookup followed by integer parsing makes a public metadata counter hard to read. Keep Meta.count(key, lookup) where lookup is a single-argument function returning nil or a binary; absence or nonnumeric content maps to zero. Existing persisted text may start with a signed integer followed by a suffix, and that numeric prefix counts as the value. Simplify without changing public results, number of lookups or the lookup exception contract. Submit only the module and explain how the reading obstacle was removed.",
+    "oracle": "Extract private meaning or equivalent flat flow; preserves nil/unparsable/prefix/signed/leading space behavior and exceptions; exactly one lookup.",
+    "checks": "for {s,n} <- [{nil,0},{\"bad\",0},{\"-2x\",-2},{\"+17z\",17},{\" 7\",0},{\"\",0},{\"9\",9}] do\n assert Meta.count(:key,fn :key -> send(self(),:lookup); s end)==n\n assert_receive :lookup\n refute_receive :lookup,0\nend\nassert_raise RuntimeError,fn -> Meta.count(:key,fn _ -> raise \"down\" end) end",
+    "answer_sha256": {
+      "a": "b40dba12c6e917083e1676e0593ec6a1974b3b8070159552c4117b28e7a33fe6",
+      "b": "8b41463e571db791f5c22e41b85659c29aa4acdd1763c4e3803f2a1c4910442e"
+    },
+    "returned_modules": {
+      "a": "defmodule Meta do\n  def count(key, lookup) do\n    key\n    |> lookup.()\n    |> parse_count()\n  end\n\n  defp parse_count(nil), do: 0\n\n  defp parse_count(text) when is_binary(text) do\n    case Integer.parse(text) do\n      {value, _suffix} -> value\n      :error -> 0\n    end\n  end\nend\n",
+      "b": "defmodule Meta do\n  def count(key, lookup) do\n    key\n    |> lookup.()\n    |> parse_count()\n  end\n\n  defp parse_count(nil), do: 0\n\n  defp parse_count(text) when is_binary(text) do\n    case Integer.parse(text) do\n      {count, _suffix} -> count\n      :error -> 0\n    end\n  end\nend\n"
+    }
+  }
+}

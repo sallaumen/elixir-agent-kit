@@ -46,6 +46,7 @@ The separating rule: the flow of many items and its delivery guarantees is this 
 
 - At-least-once is the default assumption for any queue or retrying source; idempotency at the effect is the only defense against duplicates.
 - A failure path that redelivers without limit is a stall, not a retry policy.
+- Keep discovery separate from eligibility to write. In a paged repair, record which rows the existing query counts as examined and what any public progress count means before changing filters. Test a complete page that produces no writes followed by an eligible item: the cursor must advance, and counts of pages, rows examined and rows changed must retain their own meanings.
 - Work that originates in the application's own database and must survive restarts is an Oban job; Broadway is for external queues; `Task.async_stream` is for bounded in-memory fan-out within one request or job.
 - Bounds come from the downstream capacity (pool size, provider rate limit), not from the number of schedulers alone.
 - GenStage stages model runtime concerns (buffering, concurrency), never one stage per business step.

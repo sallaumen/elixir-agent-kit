@@ -45,6 +45,8 @@ Target WCAG 2.2 level AA unless the project names another level. A scanner resul
 
 ## Decision points
 
+- For a composed field, trace the calling markup and the rendered component together. Count the native labels and follow each description or error ID to its actual node. If a repair is needed, preserve the submitted field contract and trace every existing validation source through rejection and recovery; leave correct relationships alone.
+
 - A barrier that stops the task outranks any number of cosmetic findings; fix it first and say so.
 - Native semantics first; a custom widget is acceptable only when the native element cannot do the job, and then its full keyboard contract (focus, arrows, Escape, Home/End where expected) is part of the work.
 - Announce results and errors; do not announce refreshes. If a region is replaced by every patch, move the announcement out of it.
