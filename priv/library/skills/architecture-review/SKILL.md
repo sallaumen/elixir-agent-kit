@@ -21,7 +21,7 @@ The separating rule among the code workflows: many modules, cycles or unclear ow
 
 ## Inputs to inspect
 
-- Start at: the requested change (diff, issue or failing test), then `mix xref graph --format cycles --label compile-connected` (cycles that force recompilation; since Elixir 1.19 each strongly connected group is reported once), `mix xref graph --format cycles` for runtime cycles, and `mix xref graph --sink <file> --only-nodes` for each touched module to see who depends on it; `mix xref trace <file>` explains why one file depends on another.
+- Start at: the requested change (diff, issue or failing test), then `mix xref graph --format cycles --label compile-connected` (cycles that force recompilation; since Elixir 1.19 each strongly connected group is reported once), `mix xref graph --format cycles` for cycles across all dependency labels (these file groups are not runtime call traces), and `mix xref graph --sink <file> --only-nodes` for each touched module to see who depends on it; `mix xref trace <file>` explains why one file depends on another.
 - The `lib/` layout: contexts, web modules, workers and their namespaces, compared with the boundaries the README or docs claim.
 - Each schema in the change, the table it maps, and every module outside its context that inserts or updates it. See [Ecto and migrations](../../elixir/ecto.md).
 - The entry points of one representative operation: router or `live_session`, controller or LiveView, context, job, PubSub broadcast, and the processes it starts. See [Phoenix and LiveView](../../elixir/phoenix-liveview.md) and [OTP processes and supervision](../../elixir/otp.md).

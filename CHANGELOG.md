@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Correct the architecture review’s description of unfiltered Mix xref cycles: the report includes all dependency labels.
+
 - Code reviews can use a changed branch, caller or previous fix to pick which
   failure scenario to check first. Small reviews skip this step. No analyzer
   is needed, and the review still covers the requested diff.

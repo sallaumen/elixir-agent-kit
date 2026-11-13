@@ -1,0 +1,8 @@
+--- a/priv/library/skills/architecture-review/SKILL.md
++++ b/priv/library/skills/architecture-review/SKILL.md
+@@ -24 +24 @@
+-- Start at: the requested change (diff, issue or failing test), then `mix xref graph --format cycles --label compile-connected` (cycles that force recompilation; since Elixir 1.19 each strongly connected group is reported once), `mix xref graph --format cycles` for runtime cycles, and `mix xref graph --sink <file> --only-nodes` for each touched module to see who depends on it; `mix xref trace <file>` explains why one file depends on another.
++- Start at: the requested change. Compare `mix xref graph --format cycles` (all dependency labels) with `mix xref graph --format cycles --label compile-connected`. These are groups of source files; neither report is a runtime call trace. Use `mix xref trace <file>` to identify the call site and label before deciding which dependency to cut. Use `mix xref graph --sink <file> --only-nodes` to inspect affected files.
+@@ -64 +64 @@
+-- Minimum: the ownership map and the `mix xref graph --format cycles --label compile-connected` output before and after (with its exit status under `--fail-above 0` when the project gates on it), plus the trace of one real operation from entry point to effect naming each module crossed.
++- Minimum: the ownership map and the `mix xref graph --format cycles --label compile-connected` baseline (repeat after an implemented change; for a proposal, state the expected change and how to test it) (with its exit status under `--fail-above 0` when the project gates on it), plus the trace of one real operation from entry point to effect naming each module crossed.

@@ -1,0 +1,54 @@
+[
+  {
+    "id": "08586a58",
+    "arm": "old",
+    "shell_calls": 19,
+    "usage": {
+      "input_tokens": 168151,
+      "cached_input_tokens": 125568,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 3368,
+      "reasoning_output_tokens": 1764
+    },
+    "final": "**No.** Moving the jump-table functions into a new module immediately above `Jason.Codegen` in [lib/codegen.ex](lib/codegen.ex:1) leaves them in the same source file. The reported dependency cycle is between **files**, so redirecting `Jason.Encode` to that new module would still leave its compile-time dependency on `lib/codegen.ex`.\n\nThe two saved reports\u2014[all cycles](observed/all-cycles.txt) and [compile-connected cycles](observed/compile-connected.txt)\u2014both report one three-file cyclic group containing one compile edge. They do **not** establish that all three edges are compile-time dependencies. The saved traces identify the crossing: [lib/encode.ex](lib/encode.ex:284) calls `Codegen.jump_table` three times while defining escape functions; [lib/codegen.ex](lib/codegen.ex:106) calls `Encode.key` for generated map encoding at runtime; and [lib/encoder.ex](lib/encoder.ex:77) links the deriving path back to Codegen. The reports are a baseline, not a measured result of either proposal.\n\nI would move `jump_table/2`, `jump_table/3`, and their private support into a **separate source file** with no dependency on encoding. `Jason.Encode` and `Jason.Codegen.bytecase` would call that helper; the key validation and generated value encoding would stay with the existing encoding code. This is a bounded file-boundary change aimed at the compile-connected cycle. A runtime cycle may remain, and I would report it separately rather than claim that this move removes every cycle.\n\nAfter implementation, I would verify a clean compile with warnings as errors, rerun both cycle commands and the relevant `mix xref trace` commands, and check the cycle gate\u2019s exit status. I would then run the existing escape-mode, invalid-byte, derived-encoder, and `Jason.Helpers` tests, including the compile-time invalid-key path. Those checks would establish whether the **actual** changed graph is free of compile-connected cycles while preserving encoding output and errors. No implementation or post-change checks were performed in this read-only review."
+  },
+  {
+    "id": "2302975f",
+    "arm": "candidate",
+    "shell_calls": 12,
+    "usage": {
+      "input_tokens": 168561,
+      "cached_input_tokens": 127360,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 2912,
+      "reasoning_output_tokens": 1311
+    },
+    "final": "**Review (architecture-review, medium; read-only):** The maintainer\u2019s same-file move is insufficient. Mix xref reports dependencies between **source files**, so putting a new jump-table module above `Jason.Codegen` in [lib/codegen.ex](lib/codegen.ex:1) would leave `lib/encode.ex` compile-dependent on that file.\n\nThe recorded [all-cycles report](observed/all-cycles.txt) and [compile-connected report](observed/compile-connected.txt) show the **same one three-file cycle**, not two separate cycles. The [traces](observed/encode-trace.txt) identify its compile edge: [Encode\u2019s three module-body jump-table calls](lib/encode.ex:284). The other edges are runtime-labelled: `Codegen` calls `Encode.key/2`, and `Encoder` calls `Codegen.build_kv_iodata/2` while `Encode` dispatches to `Encoder`. These reports establish dependency labels, not a runtime call trace or a measured recompilation cost.\n\nI would put the pure jump-table builder in **its own source file**, redirect the three `Encode` calls and `Codegen.bytecase` to it, and leave encoding-specific `build_kv_iodata` with its current owner. That targets the compile edge without changing the generated escape tables or the derive and helper encoding path. A runtime-labelled cycle may remain; removing compile-connected cycles is the requested boundary.\n\nAfter an implementation, I would compare generated encoding and failure behavior through the existing escape-mode, derived-struct, and helper tests in [test/encode_test.exs](test/encode_test.exs:22) and [test/helpers_test.exs](test/helpers_test.exs:9). I would then run `mix compile --warnings-as-errors`, trace the redirected edge, and rerun both xref cycle reports, including `--label compile-connected --fail-above 0`. **None of those proposed results has been measured here.** No tracked files were changed."
+  },
+  {
+    "id": "235d52a1",
+    "arm": "candidate",
+    "shell_calls": 12,
+    "usage": {
+      "input_tokens": 158832,
+      "cached_input_tokens": 120320,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 2405,
+      "reasoning_output_tokens": 911
+    },
+    "final": "**No.** `mix xref` reports cycles between **source files**. Defining a new module immediately above `Jason.Codegen` in [lib/codegen.ex](lib/codegen.ex:1) leaves the jump-table code in the same file. Redirecting [the three module-body calls](lib/encode.ex:288) to that module would therefore leave the file-level compile edge in place.\n\nThe two supplied reports each show **one three-file cycle with one compile dependency**: `codegen.ex \u2192 encode.ex \u2192 encoder.ex \u2192 codegen.ex`. The all-cycles report establishes that the cycle exists; the compile-connected report establishes that it includes compile coupling. Neither is a runtime call trace, and neither says every edge is compile-time. The supplied traces locate the compile edge at `Jason.Encode`\u2019s jump-table calls; they identify runtime links from `Jason.Codegen` to `Jason.Encode` and from `Jason.Encode` to `Jason.Encoder`.\n\nI would put the pure jump-table generator and its private helpers in a **separate source file**, with no dependency back into encoding, and redirect the three `Jason.Encode` calls there. `Jason.Codegen.bytecase` also uses that generator, so its calls must follow the move. Keep `Jason.Codegen.build_kv_iodata/2` and its literal-key validation behavior intact: the derived encoder and `Jason.Helpers` use it to build encoding code at compile time. The expected result is removal of the **compile-connected** cycle; a runtime-only cycle may still appear in the all-cycles report. That result is a proposal, not a measurement.\n\nAfter an implementation, I would compare fresh `mix xref trace` output with the supplied traces, run `mix xref graph --format cycles --label compile-connected --fail-above 0` and record its exit status, then run `mix compile --warnings-as-errors`. The relevant behavior checks are the existing escape-mode, derived encoder, and invalid literal-key tests in [test/encode_test.exs](test/encode_test.exs:22) and [test/helpers_test.exs](test/helpers_test.exs:18). I made no edits and did not run post-change checks."
+  },
+  {
+    "id": "6f9717a4",
+    "arm": "old",
+    "shell_calls": 23,
+    "usage": {
+      "input_tokens": 211875,
+      "cached_input_tokens": 170112,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 2885,
+      "reasoning_output_tokens": 1240
+    },
+    "final": "**The maintainer\u2019s placement is insufficient.** Both saved reports show the same three-file cycle, with one compile dependency; they do not establish two separate cycles. The traces identify that dependency as the three module-body calls from [Jason.Encode](lib/encode.ex:284) to `Jason.Codegen.jump_table`. `Codegen` calls `Encode.key/2`, while `Encode` and the protocol in `encoder.ex` call each other; the deriving code also calls `Codegen`. See the [compile-connected report](observed/compile-connected.txt) and [all-cycles report](observed/all-cycles.txt).\n\nMix reports dependencies **by file**. Defining another module above `Jason.Codegen` in [lib/codegen.ex](lib/codegen.ex:1) and redirecting calls would still make `encode.ex` depend at compile time on `codegen.ex`.\n\nI would put the pure jump-table functions and their private support in a **separate source file**, then redirect the three `Encode` call sites and `Codegen.bytecase` to that module. Keep `build_kv_iodata`, its key validation, and the generated encoding expressions intact. This is a small boundary change; the existing runtime calls among the encoding files need not be removed to meet the stated compile-cycle goal. The reports do not measure the proposed result.\n\nAfter implementation, verify `mix xref trace` shows the compile calls going to the new file, then run both cycle reports and `mix xref graph --format cycles --label compile-connected --fail-above 0`, recording its exit status. Run `mix compile --warnings-as-errors` and the encoding, helper, and decoder tests. Check escaping modes, derived structs, helper key errors, and generated decoder cases: all consume the table or code-generation paths being touched. This was a read-only review; no implementation or post-change result was measured."
+  }
+]
