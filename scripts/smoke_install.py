@@ -12,7 +12,7 @@ from urllib.parse import unquote
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--git-url", help="Fetch a real published Git dependency instead of the local package")
-parser.add_argument("--ref", default="v1.0.0")
+parser.add_argument("--ref", default="v1.1.0")
 parser.add_argument("--deps-path", default="deps", help="Consumer dependency directory, relative to its root")
 args = parser.parse_args()
 if Path(args.deps_path).is_absolute() or ".." in Path(args.deps_path).parts:
