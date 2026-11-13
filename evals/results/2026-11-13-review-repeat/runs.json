@@ -1,0 +1,502 @@
+[
+  {
+    "id": "383a2bb2",
+    "case": "stock",
+    "repeat": 1,
+    "arm": "old",
+    "usage": {
+      "input_tokens": 181360,
+      "cached_input_tokens": 157184,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 1763,
+      "reasoning_output_tokens": 456
+    },
+    "calls": [
+      {
+        "command": "zsh -lc \"pwd && rg --files -g 'BRIEF' -g 'CONTRACT.md' -g 'SKILL.md' -g 'AGENTS.md' && git status --short && git tag --list\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'cat BRIEF guide/skills/code-review/SKILL.md guide/CONTRACT.md'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'git diff base candidate --stat && git diff --name-status base candidate && git log --oneline --decorate -4 candidate'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"git diff --unified=80 base candidate -- lib/stock.ex test/stock_test.exs && rg -n 'Stock|stock|available|reserve' lib test mix.exs README* 2>/dev/null\"",
+        "exit_code": 1
+      },
+      {
+        "command": "zsh -lc \"rg --files -g '\"'!guide/**'\"' && rg -n 'Stock\\\\.(totals|period)|defmodule Stock|receipt|closed date range' . -g '\"'!guide/**'\"' -g '\"'!BRIEF'\"' && cat mix.exs && nl -ba lib/stock.ex && nl -ba test/stock_test.exs && git status --short\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'elixir --version && MIX_BUILD_PATH=/tmp/stock-review-build mix test test/stock_test.exs'",
+        "exit_code": 1
+      },
+      {
+        "command": "zsh -lc \"elixir -r lib/stock.ex -e 'ExUnit.start(); Code.require_file(\\\"test/stock_test.exs\\\")' \"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"elixir -r lib/stock.ex -e 'a = %{depot: :west, receipt: 4, units: 6, date: ~D[2026-01-31]}; b = %{depot: :east, receipt: 4, units: 9, date: ~D[2026-01-31]}; IO.inspect(Stock.totals([a,b]), label: \\\"totals\\\"); IO.inspect(Stock.period([a], ~D[2026-01-01], ~D[2026-01-31]), label: \\\"period\\\")' \"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'git status --short && git diff --check base candidate'",
+        "exit_code": 0
+      }
+    ],
+    "final": "**Review result: two demonstrated defects** in `base` \u2192 `candidate`.\n\n| Changed behavior | Location | Covering test |\n|---|---|---|\n| Deduplicate retried receipts before totaling | [stock.ex](lib/stock.ex:7) | The new redelivery test covers a repeated row, but not receipt numbers shared by depots. |\n| Filter a closed date range | [stock.ex](lib/stock.ex:21) | The existing test uses a date inside the range; it does not cover the final day. |\n\n1. **Legitimate stock is dropped across depots.** Each depot assigns its own receipt numbers, but `Enum.uniq_by(& &1.receipt)` treats a matching number from another depot as a retry. With west receipt 4 for 6 units and east receipt 4 for 9 units, `Stock.totals/1` returns only `%{west: 6}`. Deduplication needs to include the depot.\n\n2. **The final day of a closed range is excluded.** `Date.before?(date, last)` is false when the dates are equal. A receipt dated January 31 returns `[]` for a January 1\u201331 period, contrary to `period/3`\u2019s documented contract.\n\n**Checks and limits:** Both defects were reproduced with plain Elixir. The two existing ExUnit tests passed when run through Elixir directly. `mix test` could not start because Mix PubSub was denied a local TCP socket. I inspected all changed files and searched this checkout for callers; only the tests call these functions here. `git diff --check` passed. No tracked files were changed.",
+    "grade": {
+      "targets": [
+        "receipt_scope",
+        "last_date"
+      ],
+      "other_confirmed": [],
+      "unsupported": [],
+      "reason": "Reported the omitted east delivery and January 31 loss; named which cases the passing tests exclude. No additional defect claimed."
+    }
+  },
+  {
+    "id": "2087159d",
+    "case": "stock",
+    "repeat": 1,
+    "arm": "pilot",
+    "usage": {
+      "input_tokens": 122211,
+      "cached_input_tokens": 108032,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 1818,
+      "reasoning_output_tokens": 467
+    },
+    "calls": [
+      {
+        "command": "zsh -lc \"pwd && rg --files -g 'BRIEF' -g 'SKILL.md' -g 'CONTRACT.md' -g 'AGENTS.md' | sort\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'git status --short && git tag --list && git log -1 --oneline'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'cat guide/CONTRACT.md'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'cat BRIEF'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'cat guide/skills/code-review/SKILL.md'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'git diff --stat base..candidate && git diff --name-status base..candidate'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'git diff base candidate -- lib/stock.ex test/stock_test.exs'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"rg --files -g 'AGENTS.md' -g 'mix.exs' -g '*.ex' -g '*.exs' -g 'README*' | sort\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'cat lib/stock.ex && cat test/stock_test.exs && cat mix.exs'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'git log --oneline --decorate --all -8 && git rev-parse base candidate HEAD'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"rg -n 'Stock\\\\.(totals|period)|\\\\b(totals|period)\\\\(' . --glob '\"'!guide/**'\"' --glob '\"'!BRIEF'\"'\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'git show base:lib/stock.ex && git show base:test/stock_test.exs'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'nl -ba lib/stock.ex && nl -ba test/stock_test.exs && cat test/test_helper.exs'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'elixir --version'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'git status --short'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"elixir -r lib/stock.ex -e 'rows = [%{depot: :east, receipt: 78, units: 12}, %{depot: :west, receipt: 78, units: 6}]; IO.inspect(Stock.totals(rows), label: \\\"cross-depot totals\\\"); row = %{date: ~D[2026-01-31]}; IO.inspect(Stock.period([row], ~D[2026-01-01], ~D[2026-01-31]), label: \\\"last-day receipts\\\")'\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'elixir -r lib/stock.ex -r test/test_helper.exs test/stock_test.exs'",
+        "exit_code": 0
+      }
+    ],
+    "final": "## Review findings\n\n| Severity | Location | Finding |\n|---|---|---|\n| High | [lib/stock.ex:7](lib/stock.ex:7) | `Enum.uniq_by(& &1.receipt)` deduplicates across depots, although each depot assigns its own receipt numbers. An east and a west receipt numbered `78` produce `%{east: 12}` instead of `%{east: 12, west: 6}`. **Demonstrated** with a focused Elixir run. |\n| High | [lib/stock.ex:21](lib/stock.ex:21) | `Date.before?(date, last)` excludes receipts dated exactly `last`, breaking the documented closed range. A receipt on January 31 returns `[]` for a January 1\u201331 period. **Demonstrated** with a focused Elixir run. |\n\n| Changed behavior | Covering test |\n|---|---|\n| Count a retried receipt once | New test covers two identical rows; it does not cover receipt numbers reused by different depots. |\n| Filter through the end date | Existing test covers an interior date only. |\n| New redelivery assertion | Passes, but does not detect either finding. |\n\n**Checks:** The two existing tests passed. I read the complete `base` \u2192 `candidate` diff, searched all checkout callers, and ran the two focused reproductions. This review used only this checkout; no tracked files were changed.",
+    "grade": {
+      "targets": [
+        "receipt_scope",
+        "last_date"
+      ],
+      "other_confirmed": [],
+      "unsupported": [],
+      "reason": "Reported both exact wrong outputs and both coverage gaps. Direct ExUnit and probes support the claims, not a production impact rating."
+    }
+  },
+  {
+    "id": "a326b4d6",
+    "case": "stock",
+    "repeat": 2,
+    "arm": "old",
+    "usage": {
+      "input_tokens": 188757,
+      "cached_input_tokens": 174080,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 1990,
+      "reasoning_output_tokens": 631
+    },
+    "calls": [
+      {
+        "command": "zsh -lc \"pwd && rg --files -g 'BRIEF' -g 'SKILL.md' -g 'CONTRACT.md' -g 'AGENTS.md' -g 'mix.exs' | head -80 && git status --short && git tag --list\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'cat BRIEF guide/skills/code-review/SKILL.md guide/CONTRACT.md'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'git diff base...candidate --stat && git diff --name-status base candidate && git log -1 --oneline base && git log -1 --oneline candidate && cat guide/ELIXIR.md'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"git diff --find-renames base candidate -- lib/stock.ex test/stock_test.exs && cat mix.exs && cat lib/stock.ex && cat test/stock_test.exs && rg -n 'Stock\\\\.|reserve|release|available|stock' lib test README* 2>/dev/null\"",
+        "exit_code": 1
+      },
+      {
+        "command": "zsh -lc \"rg --files -g '\"'!guide/**'\"' -g '\"'!BRIEF'\"' && git grep -n -E 'Stock\\\\.(totals|period)|receipt|closed date range' candidate -- ':\"'!lib/stock.ex'\"' && elixir --version && mix test test/stock_test.exs\"",
+        "exit_code": 1
+      },
+      {
+        "command": "zsh -lc \"elixir -r lib/stock.ex -r test/test_helper.exs test/stock_test.exs && elixir -r lib/stock.ex -e 'rows = [%{depot: :east, receipt: 78, units: 12, date: ~D[2026-03-18]}, %{depot: :west, receipt: 78, units: 6, date: ~D[2026-03-18]}]; IO.inspect(Stock.totals(rows), label: \\\"same receipt number in two depots\\\"); IO.inspect(Stock.period(rows, ~D[2026-03-01], ~D[2026-03-18]), label: \\\"receipt on last day\\\")' && git status --short && nl -ba lib/stock.ex && nl -ba test/stock_test.exs\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'git rev-parse --short HEAD candidate base && git diff --exit-code candidate -- lib/stock.ex test/stock_test.exs && git status --porcelain=v1'",
+        "exit_code": 128
+      },
+      {
+        "command": "zsh -lc \"git log -1 --format='%h %s' HEAD && git diff --exit-code candidate -- lib/stock.ex test/stock_test.exs && git status --porcelain=v1\"",
+        "exit_code": 0
+      }
+    ],
+    "final": "## Review findings\n\n| Priority | Finding | Evidence |\n|---|---|---|\n| High | [stock.ex](lib/stock.ex:7) deduplicates by receipt number alone, although each depot assigns its own numbers. When east and west both submit receipt `78`, `totals/1` drops the second depot\u2019s delivery. A direct call returned `%{east: 12}` instead of including west\u2019s 6 units. | Demonstrated |\n| High | [stock.ex](lib/stock.ex:21) uses `Date.before?/2` for the last day of a documented closed range. A receipt dated exactly `last` is excluded; a direct call returned `[]`. | Demonstrated |\n\n| Changed behavior | Covering test |\n|---|---|\n| Repeated identical receipt counts once in `totals/1` | New test at [stock_test.exs](test/stock_test.exs:8) |\n| Receipt identity across depots | None |\n| Closed range filtering in `period/3` | Existing test checks an interior date only; no last-day test |\n\nI reviewed the full two-file `base` \u2192 `candidate` diff and its callers in this checkout. Both existing tests passed with plain `elixir`. `mix test` could not start because Mix\u2019s local PubSub socket was denied. I used no external tools or checkouts and changed no tracked files.",
+    "grade": {
+      "targets": [
+        "receipt_scope",
+        "last_date"
+      ],
+      "other_confirmed": [],
+      "unsupported": [],
+      "reason": "Identified the discarded west delivery and missing last day with direct reproduction; separated covered retry from uncovered identity. High severity is not independently established."
+    }
+  },
+  {
+    "id": "24595d4b",
+    "case": "stock",
+    "repeat": 2,
+    "arm": "pilot",
+    "usage": {
+      "input_tokens": 140492,
+      "cached_input_tokens": 109696,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 2096,
+      "reasoning_output_tokens": 577
+    },
+    "calls": [
+      {
+        "command": "zsh -lc \"pwd && rg --files -g 'BRIEF' -g 'CONTRACT.md' -g 'SKILL.md' -g 'AGENTS.md' -g 'mix.exs' | sort && git status --short && git tag --list\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'cat BRIEF guide/skills/code-review/SKILL.md guide/CONTRACT.md'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'git diff base...candidate --stat && git diff --name-status base...candidate && git log -1 --oneline base && git log -1 --oneline candidate && cat mix.exs'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"git diff --find-renames base...candidate -- lib/stock.ex test/stock_test.exs && rg --files && cat lib/stock.ex && cat test/stock_test.exs && rg -n 'Stock\\\\.|reserve|release|stock|inventory' . --glob '\"'!guide/**'\"' --glob '\"'!BRIEF'\"'\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"elixir --version && MIX_BUILD_PATH=/private/tmp/stock-review-build mix test test/stock_test.exs && elixir -r lib/stock.ex -e 'a = %{depot: :east, receipt: 78, units: 12, date: ~D[2026-03-18]}; b = %{depot: :west, receipt: 78, units: 7, date: ~D[2026-03-18]}; IO.inspect(Stock.totals([a, b]), label: \\\"same receipt number across depots\\\"); IO.inspect(Stock.period([a], ~D[2026-03-01], ~D[2026-03-18]), label: \\\"row on last day\\\")'\"",
+        "exit_code": 1
+      },
+      {
+        "command": "zsh -lc 'nl -ba lib/stock.ex && nl -ba test/stock_test.exs && git status --short'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"elixir -r lib/stock.ex -e 'a = %{depot: :east, receipt: 78, units: 12, date: ~D[2026-03-18]}; b = %{depot: :west, receipt: 78, units: 7, date: ~D[2026-03-18]}; IO.inspect(Stock.totals([a, b]), label: \\\"same receipt number across depots\\\"); IO.inspect(Stock.period([a], ~D[2026-03-01], ~D[2026-03-18]), label: \\\"row on last day\\\")'\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'elixir -r lib/stock.ex -r test/test_helper.exs test/stock_test.exs'",
+        "exit_code": 0
+      }
+    ],
+    "final": "## Review findings\n\n| Priority | Finding | Trigger and consequence |\n|---|---|---|\n| P1 | [Deduplication uses only the receipt number](lib/stock.ex:7) | Each depot assigns its own numbers. When east and west both send receipt `78`, `Enum.uniq_by` drops one depot\u2019s delivery. A direct check returned `%{east: 12}` for rows that should total `%{east: 12, west: 7}`. |\n| P1 | [The closed period excludes its last day](lib/stock.ex:21) | `Date.before?(date, last)` is false when the dates are equal. A row dated on `last` returned `[]`, although the function promises a closed range. |\n\n## Behavior and coverage\n\n| Changed behavior | Location | Covering test |\n|---|---|---|\n| Count a retried row once | [stock.ex:4](lib/stock.ex:4) | [New test](test/stock_test.exs:8) covers an identical retry; no test covers equal receipt numbers across depots. |\n| Filter a closed date range | [stock.ex:14](lib/stock.ex:14) | [Existing test](test/stock_test.exs:3) uses an interior date; no test covers the last day. |\n\n**Checks and limits:** I reviewed the full `base...candidate` diff and all callers in this checkout. Both defects were demonstrated with direct Elixir calls. The two repository tests passed when run directly through ExUnit. `mix test` could not start because the sandbox denied Mix.PubSub a TCP socket. No tracked files were changed.",
+    "grade": {
+      "targets": [
+        "receipt_scope",
+        "last_date"
+      ],
+      "other_confirmed": [],
+      "unsupported": [],
+      "reason": "Gave a reachable two-depot example and a last-day example. Both checks executed. Two P1 labels are not calibrated against production impact."
+    }
+  },
+  {
+    "id": "245020fa",
+    "case": "version",
+    "repeat": 1,
+    "arm": "old",
+    "usage": {
+      "input_tokens": 136223,
+      "cached_input_tokens": 123904,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 1471,
+      "reasoning_output_tokens": 326
+    },
+    "calls": [
+      {
+        "command": "zsh -lc \"pwd && rg --files -g 'BRIEF' -g 'SKILL.md' -g 'CONTRACT.md' -g 'AGENTS.md' && git status --short && git tag --list\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'cat BRIEF guide/skills/code-review/SKILL.md guide/CONTRACT.md'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"git diff base...candidate --stat && git diff base candidate -- && git rev-parse base candidate HEAD && rg --files -g 'AGENTS.md' -g 'mix.exs' -g 'mix.lock' -g '*test*'\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"cat mix.exs && rg -n '0\\\\.10\\\\.0|1\\\\.0\\\\.0|version:|project\\\\(' . --glob '\"'!guide/**'\"' --glob '\"'!BRIEF'\"'\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"mix --version && mix run -e 'IO.puts(Mix.Project.config()[:version])'\"",
+        "exit_code": 1
+      },
+      {
+        "command": "zsh -lc \"elixir -e 'Mix.start(); Code.require_file(\\\"mix.exs\\\"); IO.puts(Mix.Project.config()[:version])'\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"git status --short && git diff base candidate --check && git ls-tree -r --name-only candidate | rg '(\"'^test/|_test'\"\\\\.exs\"'$|''^AGENTS'\"\\\\.md\"'$)'\"'\"",
+        "exit_code": 1
+      }
+    ],
+    "final": "**Yes.** In the candidate snapshot, [mix.exs](mix.exs:7) sets the project version to `1.0.0`; the base tag sets it to `0.10.0`.\n\n| Changed behavior | Covering test | Check |\n|---|---|---|\n| Mix project version reports `1.0.0` | None found | Direct evaluation of `Mix.Project.config()[:version]` printed `1.0.0`. |\n\n**Findings:** None in the scoped hunk. I reviewed `git diff base candidate` and found no other changed behavior. `git diff --check` passed. `mix run` could not complete because this sandbox denied Mix\u2019s PubSub socket, so the Mix CLI path remains unverified. No tracked files were changed.",
+    "grade": {
+      "targets": [],
+      "other_confirmed": [],
+      "unsupported": [],
+      "reason": "Confirmed the scoped version via direct config evaluation; correctly qualified the blocked CLI. No structural investigation."
+    }
+  },
+  {
+    "id": "0976e292",
+    "case": "version",
+    "repeat": 1,
+    "arm": "pilot",
+    "usage": {
+      "input_tokens": 181028,
+      "cached_input_tokens": 167808,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 1629,
+      "reasoning_output_tokens": 714
+    },
+    "calls": [
+      {
+        "command": "zsh -lc \"pwd && rg --files -g 'BRIEF' -g 'SKILL.md' -g 'CONTRACT.md' -g 'AGENTS.md' | head -80 && git status --short && git tag --list\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'cat BRIEF guide/skills/code-review/SKILL.md guide/CONTRACT.md'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"git diff base...candidate --stat && git diff base candidate -- && git show candidate:mix.exs | sed -n '1,100p' && git status --short\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"git rev-parse HEAD base candidate && git status --porcelain=v1 && command -v mix && mix --version && rg -n 'version:|Mix\\\\.Project\\\\.config|project\\\\(' mix.exs test lib 2>/dev/null | head -100\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"mix run --no-compile --no-start -e 'IO.puts(Mix.Project.config()[:version])' && git status --porcelain=v1\"",
+        "exit_code": 1
+      },
+      {
+        "command": "zsh -lc \"elixir -e 'Code.require_file(\\\"mix.exs\\\"); IO.puts(ElixirAgentKit.MixProject.project()[:version])'\"",
+        "exit_code": 1
+      },
+      {
+        "command": "zsh -lc \"elixir -e 'Mix.start(); Code.require_file(\\\"mix.exs\\\"); IO.puts(Mix.Project.config()[:version])'\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"git status --porcelain=v1 && git diff --exit-code base candidate -- mix.exs >/dev/null; git show candidate:mix.exs | nl -ba | sed -n '1,13p'\"",
+        "exit_code": 0
+      }
+    ],
+    "final": "**Yes.** In the candidate snapshot, [mix.exs](mix.exs:7) changes the sole version value from `0.10.0` to `1.0.0`. Loading the project with Elixir and reading `Mix.Project.config()[:version]` returned `1.0.0`.\n\n| Changed behavior | Covering test |\n|---|---|\n| Mix project version reports `1.0.0` | None in the diff; confirmed by direct evaluation |\n\n**Findings:** none in the requested hunk. A normal `mix run` check could not complete because this sandbox denied Mix.PubSub a TCP socket, so CLI output was not verified. The review covered only `git diff base candidate`; no tracked files were changed.",
+    "grade": {
+      "targets": [],
+      "other_confirmed": [],
+      "unsupported": [],
+      "reason": "Confirmed via Mix project config; CLI socket failure disclosed. No structural investigation."
+    }
+  },
+  {
+    "id": "57aceef2",
+    "case": "version",
+    "repeat": 2,
+    "arm": "old",
+    "usage": {
+      "input_tokens": 141032,
+      "cached_input_tokens": 127616,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 1531,
+      "reasoning_output_tokens": 538
+    },
+    "calls": [
+      {
+        "command": "zsh -lc \"pwd && rg --files -g 'BRIEF' -g 'SKILL.md' -g 'CONTRACT.md' -g 'AGENTS.md' | head -80\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'git status --short && git tag --list && git rev-parse --show-toplevel'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'cat guide/skills/code-review/SKILL.md'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'cat BRIEF'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'cat guide/CONTRACT.md'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'git diff --stat base..candidate && git log --oneline --decorate base..candidate'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"rg -n 'version|def project|MixProject|mix version' mix.exs test .github 2>/dev/null\"",
+        "exit_code": 2
+      },
+      {
+        "command": "zsh -lc 'git diff --no-ext-diff --unified=80 base candidate -- mix.exs'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'git ls-tree -r --name-only candidate | head -100 && git status --short && command -v mix && mix --version'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"mix run --no-compile --no-start -e 'IO.puts(Mix.Project.config()[:version])'\"",
+        "exit_code": 1
+      },
+      {
+        "command": "zsh -lc \"elixir -e 'Mix.start(); Code.require_file(\\\"mix.exs\\\"); IO.puts(Mix.Project.config()[:version])'\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'nl -ba mix.exs | head -18 && git show base:mix.exs | head -12'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'git status --short && git diff --check base candidate && git diff --name-status base candidate'",
+        "exit_code": 0
+      }
+    ],
+    "final": "**Yes.** The sole hunk changes the project version in [mix.exs](mix.exs:7) from `0.10.0` to `1.0.0`. Loading `mix.exs` with Elixir and reading `Mix.Project.config()[:version]` returned `1.0.0`.\n\n| Changed behavior | Covering test | Review finding |\n|---|---|---|\n| Mix project version becomes `1.0.0` | None in this one-file snapshot | None; no failure scenario found |\n\n`git diff --check base candidate` passed. A direct `mix run` check could not complete because the sandbox denied Mix a local TCP socket, so the result is verified through Mix\u2019s project configuration, not a completed Mix task. No tracked files were changed.",
+    "grade": {
+      "targets": [],
+      "other_confirmed": [],
+      "unsupported": [],
+      "reason": "Correct version with direct config evidence. Multiple setup/ref checks, no risk ranking."
+    }
+  },
+  {
+    "id": "dbe11b14",
+    "case": "version",
+    "repeat": 2,
+    "arm": "pilot",
+    "usage": {
+      "input_tokens": 181276,
+      "cached_input_tokens": 168064,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 1604,
+      "reasoning_output_tokens": 735
+    },
+    "calls": [
+      {
+        "command": "zsh -lc \"pwd && rg --files -g 'BRIEF' -g 'SKILL.md' -g 'CONTRACT.md' -g 'AGENTS.md' && git status --short && git tag --list\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'cat BRIEF guide/skills/code-review/SKILL.md guide/CONTRACT.md'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"git diff base...candidate --stat && git diff base...candidate -- && git status --short && git log -1 --format='%h %s' candidate\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"git rev-parse HEAD base candidate && git show candidate:mix.exs && rg -n '0\\\\.10\\\\.0|1\\\\.0\\\\.0|Mix\\\\.Project\\\\.config|project\\\\(' --glob '\"'!guide/**'\"' --glob '\"'!BRIEF'\"' . && command -v mix && mix --version\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"MIX_BUILD_PATH=/private/tmp/elixir-agent-kit-review-build mix eval --no-compile 'IO.puts(Mix.Project.config()[:version])'\"",
+        "exit_code": 1
+      },
+      {
+        "command": "zsh -lc \"elixir -e 'Code.require_file(\\\"mix.exs\\\"); IO.puts(ElixirAgentKit.MixProject.project()[:version])'\"",
+        "exit_code": 1
+      },
+      {
+        "command": "zsh -lc \"elixir -e 'Mix.start(); Code.require_file(\\\"mix.exs\\\"); IO.puts(Mix.Project.config()[:version])'\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'git diff --check base...candidate && git status --short && rg --files test | head -40'",
+        "exit_code": 0
+      }
+    ],
+    "final": "**Yes.** The `base` \u2192 `candidate` diff changes `mix.exs:7` from `0.10.0` to `1.0.0`, and loading the candidate project with Elixir returned `1.0.0`.\n\n| Changed behavior | Location | Covering test |\n|---|---|---|\n| Mix project version reports `1.0.0` | `mix.exs:7` | None found |\n\n**Findings:** None. `git diff --check` passed. A direct `mix eval` check could not run because the sandbox denied Mix\u2019s local PubSub socket; the Elixir project-config check succeeded. The checkout was not changed.",
+    "grade": {
+      "targets": [],
+      "other_confirmed": [],
+      "unsupported": [],
+      "reason": "Correct version from project config; checked for tests on a one-file snapshot but did not rank risks."
+    }
+  }
+]

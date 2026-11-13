@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Code reviews can use a changed branch, caller or previous fix to pick which
+  failure scenario to check first. Small reviews skip this step. No analyzer
+  is needed, and the review still covers the requested diff.
+
 - Documentation recommends Ponytail as an optional companion: per-client setup
   in `docs/compatibility.md`, a pointer in both READMEs, and live evaluation runs
   record the Ponytail level in `notes`. The installer and library are unchanged.

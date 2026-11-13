@@ -1,0 +1,410 @@
+[
+  {
+    "case": "imports",
+    "skill": "7be0224",
+    "usage": {
+      "input_tokens": 367931,
+      "cached_input_tokens": 321536,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 3631,
+      "reasoning_output_tokens": 1067
+    },
+    "calls": [
+      {
+        "command": "zsh -lc \"pwd && rg --files -g 'BRIEF' -g 'SKILL.md' -g 'CONTRACT.md' -g 'AGENTS.md'\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'git status --short && git branch --list base head && git log --oneline --decorate -4'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'cat BRIEF'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'cat guide/CONTRACT.md'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'cat AGENTS.md'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'cat guide/skills/code-review/SKILL.md'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"rg -n 'ElixirAgentKit.Installer|Installer\\\\.|install\\\\(|uninstall\\\\(' lib test mix.exs\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'git diff base head -- lib/elixir_agent_kit/installer.ex test/installer_test.exs'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'git diff base...head --stat -- lib/elixir_agent_kit/installer.ex test/installer_test.exs'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"nl -ba test/installer_test.exs | sed -n '1,360p'\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"nl -ba lib/elixir_agent_kit/installer.ex | sed -n '1,360p'\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"rg -n 'CLAUDE.md|@AGENTS.md|agents:|claude' README.md CONTRIBUTING.md docs lib test | head -150\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"sed -n '45,72p' README.md && sed -n '1,70p' docs/architecture.md && cat mix.exs\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'git status --short && git diff --check base head -- lib/elixir_agent_kit/installer.ex test/installer_test.exs'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'mix test test/installer_test.exs'",
+        "exit_code": 1
+      },
+      {
+        "command": "zsh -lc 'cat lib/elixir_agent_kit.ex'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"command -v elixir && elixir -e 'IO.puts(System.version())'\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"elixir -r lib/elixir_agent_kit/installer.ex -e '\ndefmodule ElixirAgentKit do\n  def version, do: \\\"0.3.1\\\"\n  def catalog, do: []\nend\nroot = Path.join(System.tmp_dir\"'!(), \"eak-review-#{System.unique_integer([:positive])}\")\nFile.mkdir_p!(root)\ntry do\n  IO.inspect(ElixirAgentKit.Installer.run(:install, root, agents: [:codex, :claude]), label: \"install\")\n  IO.inspect(ElixirAgentKit.Installer.run(:sync, root, agents: [:claude]), label: \"sync\")\n  IO.inspect(File.exists?(Path.join(root, \"AGENTS.md\")), label: \"AGENTS.md exists\")\n  IO.inspect(File.read!(Path.join(root, \"CLAUDE.md\")), label: \"CLAUDE.md\")\n  IO.inspect(ElixirAgentKit.Installer.run(:check, root), label: \"check\")\nafter\n  File.rm_rf!(root)\nend\n'\"'\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'cat test/test_helper.exs && git status --short'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"elixir -e '\ndefmodule ElixirAgentKit do\n  def version, do: \\\"0.3.1\\\"\n  def library_path, do: Path.expand(\\\"priv/library\\\")\n  def catalog do\n    library_path()\n    |> Path.join(\\\"catalog.tsv\\\")\n    |> File.read\"'!()\n    |> String.split(\"'\"\\\\n\\\", trim: true)\n    |> Enum.map(fn line ->\n      [id, mode, description, area] = String.split(line, \\\"\\\\t\\\", parts: 4)\n      %{id: id, mode: mode, description: description, area: area}\n    end)\n  end\nend\nCode.require_file(\\\"lib/elixir_agent_kit/installer.ex\\\")\nCode.require_file(\\\"test/test_helper.exs\\\")\nCode.require_file(\\\"test/installer_test.exs\\\")\n'\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'git status --short && git diff --check base head -- lib/elixir_agent_kit/installer.ex test/installer_test.exs'",
+        "exit_code": 0
+      }
+    ],
+    "final": "## Finding\n\n**P2 \u2014 Syncing from Codex + Claude to Claude only leaves a broken import.** At [installer.ex:107](lib/elixir_agent_kit/installer.ex:107), the Claude block checks whether `AGENTS.md` exists before reconciliation removes it. Starting with a managed `[:codex, :claude]` install and syncing to `[:claude]` therefore deletes `AGENTS.md` but leaves `@AGENTS.md` in `CLAUDE.md`. The next `:check` reports drift for `CLAUDE.md` and `state.tsv`. **Demonstrated** by running that sequence against the changed installer in a temporary directory.\n\n| Changed behavior | Location | Covering test |\n|---|---|---|\n| Build agent specific instruction blocks | [installer.ex:69](lib/elixir_agent_kit/installer.ex:69) | New tests at lines 102, 113, 124 |\n| Import managed or existing `AGENTS.md` from the Claude block | [installer.ex:104](lib/elixir_agent_kit/installer.ex:104) | New tests at lines 102 and 113; **no test for removing managed `AGENTS.md` during sync** |\n| Keep a direct reference when Claude is the only adapter and `AGENTS.md` is absent | [installer.ex:108](lib/elixir_agent_kit/installer.ex:108) | New test at line 124 |\n\n**Checks and limits:** The focused ExUnit file passed directly through Elixir: 24 tests, 0 failures. `git diff --check` passed. `mix test test/installer_test.exs` could not start because Mix\u2019s local TCP socket was denied by the sandbox. The direct run supplied the project module\u2019s version, catalog, and library path functions; it is not a full Mix run. No tracked files were edited or comments published."
+  },
+  {
+    "case": "version",
+    "skill": "d9c9811",
+    "usage": {
+      "input_tokens": 159676,
+      "cached_input_tokens": 146304,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 1284,
+      "reasoning_output_tokens": 414
+    },
+    "calls": [
+      {
+        "command": "zsh -lc \"pwd && rg --files -g 'BRIEF' -g 'SKILL.md' -g 'CONTRACT.md' -g 'AGENTS.md' | head -80 && git status --short && git branch --list\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'cat AGENTS.md BRIEF guide/CONTRACT.md guide/skills/code-review/SKILL.md'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"git show-ref --heads && git diff base head -- mix.exs && git diff --stat base head -- mix.exs && rg -n 'version|@version|project|MixProject' mix.exs\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"git show-ref | rg 'refs/(heads|tags)/(base|head|HEAD)\"'$|refs/heads/master$'\"' && git rev-parse --verify HEAD && git rev-parse base && git rev-parse head && cat mix.exs && mix eval 'IO.puts(Mix.Project.config()[:version])'\"",
+        "exit_code": 1
+      },
+      {
+        "command": "zsh -lc \"elixir -e 'Code.require_file(\\\"mix.exs\\\"); IO.puts(ElixirAgentKit.MixProject.project()[:version])'\"",
+        "exit_code": 1
+      },
+      {
+        "command": "zsh -lc \"elixir -e 'Mix.start(); Code.require_file(\\\"mix.exs\\\"); IO.puts(Mix.Project.config()[:version])'\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'git status --short && git diff --exit-code -- mix.exs && git diff refs/tags/base refs/tags/head -- mix.exs'",
+        "exit_code": 0
+      }
+    ],
+    "final": "**Yes.** The only change between `base` and `head` sets `version: \"1.0.0\"` in [mix.exs](mix.exs:7). Loading the project with Elixir and reading `Mix.Project.config()[:version]` returned `1.0.0`.\n\n| Changed behavior | Covering check |\n|---|---|\n| Project version changes from `0.10.0` to `1.0.0` | Direct Mix project config check returned `1.0.0` |\n\n**Findings:** None in the scoped hunk. I did not run tests. `mix eval` could not start because the sandbox denied a local TCP socket for Mix.PubSub; the direct project config check succeeded. No tracked files were edited."
+  },
+  {
+    "case": "reminders",
+    "skill": "7be0224",
+    "usage": {
+      "input_tokens": 184830,
+      "cached_input_tokens": 152704,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 1740,
+      "reasoning_output_tokens": 355
+    },
+    "calls": [
+      {
+        "command": "zsh -lc \"pwd && rg --files -g 'BRIEF' -g 'SKILL.md' -g 'CONTRACT.md' -g 'AGENTS.md' -g 'mix.exs' | head -80 && git status --short && git branch --list base head\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'cat BRIEF guide/skills/code-review/SKILL.md guide/CONTRACT.md'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'git diff base...head --stat -- lib/reminders.ex test/reminders_test.exs && git diff base head -- lib/reminders.ex test/reminders_test.exs && git status --short && git rev-parse base && git rev-parse head'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"rg -n 'Reminders\\\\.batch|\\\\bbatch\\\\(' lib test && nl -ba lib/reminders.ex && nl -ba test/reminders_test.exs\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'cat mix.exs && rg --files lib test guide | head -100 && git log -1 --oneline refs/heads/base && git log -1 --oneline refs/heads/head'",
+        "exit_code": 128
+      },
+      {
+        "command": "zsh -lc \"git show-ref | rg '(base|head|HEAD)\"'$'\"' && git symbolic-ref -q HEAD && mix test test/reminders_test.exs\"",
+        "exit_code": 1
+      },
+      {
+        "command": "zsh -lc \"elixir -r lib/reminders.ex -e 'rows = for id <- 1..3, do: %{id: id, status: :pending, muted: false}; IO.inspect(Enum.map(Reminders.batch(rows, 2, skip_ids: [1]), & &1.id), label: \\\"actual\\\"); IO.inspect(Enum.map(Reminders.batch(rows, 3, skip_ids: [2]), & &1.id), label: \\\"added test case\\\")'\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'cat guide/ELIXIR.md guide/elixir/exunit.md guide/elixir/code-shape.md'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'elixir -r lib/reminders.ex -r test/test_helper.exs test/reminders_test.exs'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'git status --short && git diff --exit-code && git diff --cached --exit-code'",
+        "exit_code": 0
+      }
+    ],
+    "final": "## Review finding\n\n**P2 \u2014 Excluded reminders can leave the batch underfilled.** In [lib/reminders.ex](lib/reminders.ex:10), `Enum.take(limit)` runs before `Enum.reject`. With eligible IDs `[1, 2, 3]`, `limit: 2`, and `skip_ids: [1]`, `batch/3` returns `[2]` even though `[2, 3]` are available. I demonstrated this with a direct Elixir invocation. Move the exclusion before `Enum.take/2` to meet the new documented behavior.\n\n| Changed behavior | Coverage |\n|---|---|\n| `batch/3` accepts `skip_ids` and promises exclusion before filling the limit | [New test](test/reminders_test.exs:7) covers exclusion, but its limit of 3 does not cover filling after a skipped row |\n| New exclusion test | Passes; it also passes with the underfilling defect |\n\nI found no application callers of `Reminders.batch` in this checkout beyond the two tests. Direct ExUnit execution passed: **2 tests, 0 failures**. `mix test test/reminders_test.exs` could not start because the sandbox denied Mix\u2019s local PubSub TCP socket. I reviewed the two scoped files and their callers; I did not edit tracked files or publish anything."
+  },
+  {
+    "case": "reminders",
+    "skill": "d9c9811",
+    "usage": {
+      "input_tokens": 147174,
+      "cached_input_tokens": 132608,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 2029,
+      "reasoning_output_tokens": 371
+    },
+    "calls": [
+      {
+        "command": "zsh -lc 'cat guide/CONTRACT.md'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'cat guide/skills/code-review/SKILL.md'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'cat BRIEF'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'git status --short && git branch --list && git log --oneline --decorate -5'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'git diff base head --stat -- lib/reminders.ex test/reminders_test.exs'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"rg --files -g 'AGENTS.md' -g 'mix.exs' -g 'README*' -g 'lib/reminders.ex' -g 'test/reminders_test.exs' -g 'guide/elixir/*.md'\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'nl -ba lib/reminders.ex'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'cat mix.exs'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'nl -ba test/reminders_test.exs'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'git diff refs/tags/base refs/tags/head -- lib/reminders.ex test/reminders_test.exs'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'cat guide/elixir/exunit.md'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"rg -n 'Reminders\\\\.batch|batch\\\\(|skip_ids|Reminders' --glob '\"'!guide/**'\"' --glob '\"'!BRIEF'\"' .\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'rg --files lib test'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'git status --short'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"elixir -r lib/reminders.ex -e 'rows = for id <- 1..3, do: %{id: id, status: :pending, muted: false}; IO.inspect(Enum.map(Reminders.batch(rows, 2, skip_ids: [1]), & &1.id))' \"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'mix test test/reminders_test.exs:7'",
+        "exit_code": 1
+      },
+      {
+        "command": "zsh -lc \"elixir -r lib/reminders.ex -e 'rows = for id <- 1..3, do: %{id: id, status: :pending, muted: false}; actual = Enum.map(Reminders.batch(rows, 2, skip_ids: [1]), & &1.id); if actual \"'!= [2, 3], do: raise(\"expected [2, 3], got #{inspect(actual)}\")'\"' \"",
+        "exit_code": 1
+      },
+      {
+        "command": "zsh -lc 'elixir -r lib/reminders.ex -r test/test_helper.exs test/reminders_test.exs'",
+        "exit_code": 0
+      }
+    ],
+    "final": "## Review finding\n\n**The batch can be shorter than the requested limit even when more eligible reminders exist** \u2014 [lib/reminders.ex](lib/reminders.ex:10). `Enum.take(limit)` runs before `skip_ids` is applied. With eligible IDs `[1, 2, 3]`, `limit: 2`, and `skip_ids: [1]`, `batch/3` returns `[2]` instead of filling the batch with `[2, 3]`. **Demonstrated** with a local Elixir reproduction. Apply the exclusion before taking the limit.\n\n| Changed behavior | Location | Covering test |\n|---|---|---|\n| Optional skip IDs and documented batch contract | [lib/reminders.ex](lib/reminders.ex:4) | Exclusion covered; filling after exclusion is not |\n| Exclude IDs from returned rows | [lib/reminders.ex](lib/reminders.ex:11) | [reminders_test.exs](test/reminders_test.exs:7) |\n\nThe added test uses a limit of 3 for 3 rows, so it passes with either ordering and misses the finding. The only repository callers found were the two tests.\n\n**Checks and limits:** Both tests passed when run directly through Elixir and ExUnit. A focused reproduction failed with `expected [2, 3], got [2]`. `mix test test/reminders_test.exs:7` could not start because Mix PubSub was denied a TCP socket (`:eperm`), so no Mix test result is claimed. The review was limited to the requested diff, its module, tests, and caller search. No tracked files were edited."
+  },
+  {
+    "case": "imports",
+    "skill": "d9c9811",
+    "usage": {
+      "input_tokens": 323313,
+      "cached_input_tokens": 295040,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 3366,
+      "reasoning_output_tokens": 1391
+    },
+    "calls": [
+      {
+        "command": "zsh -lc \"pwd && rg --files -g 'BRIEF' -g 'SKILL.md' -g 'CONTRACT.md' -g 'AGENTS.md' | sort && git status --short && git branch --list\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'cat BRIEF AGENTS.md guide/skills/code-review/SKILL.md guide/CONTRACT.md'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'git diff base...head --stat -- lib/elixir_agent_kit/installer.ex test/installer_test.exs && git diff base head -- lib/elixir_agent_kit/installer.ex test/installer_test.exs'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"sed -n '1,360p' lib/elixir_agent_kit/installer.ex\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"sed -n '1,300p' test/installer_test.exs\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'git log -5 --oneline -- lib/elixir_agent_kit/installer.ex'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"rg -n 'Installer|AGENTS.md|CLAUDE.md|agents:' lib test README.md CONTRIBUTING.md docs/architecture.md mix.exs\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"cat CONTRIBUTING.md README.md docs/architecture.md && sed -n '300,380p' test/installer_test.exs && git status --short && git rev-parse base head && git diff --check base head -- lib/elixir_agent_kit/installer.ex test/installer_test.exs\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'mix test test/installer_test.exs'",
+        "exit_code": 1
+      },
+      {
+        "command": "zsh -lc \"sed -n '1,180p' lib/elixir_agent_kit.ex && nl -ba lib/elixir_agent_kit/installer.ex | sed -n '58,130p' && git status --short\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"elixir -r lib/elixir_agent_kit/installer.ex -e 'defmodule ElixirAgentKit do; def catalog, do: [%{id: \\\"debugging\\\"}]; def version, do: \\\"0.3.1\\\"; end; root = Path.join(System.tmp_dir\"'!(), \"eak-review-#{System.unique_integer([:positive])}\"); File.mkdir_p!(root); try do; IO.inspect(ElixirAgentKit.Installer.run(:install, root, agents: [:codex, :claude]), label: \"install\"); IO.inspect(ElixirAgentKit.Installer.run(:sync, root, agents: [:claude]), label: \"sync\"); IO.inspect(File.exists?(Path.join(root, \"AGENTS.md\")), label: \"AGENTS exists\"); IO.inspect(String.contains?(File.read!(Path.join(root, \"CLAUDE.md\")), \"@AGENTS.md\"), label: \"CLAUDE imports AGENTS\"); IO.inspect(ElixirAgentKit.Installer.run(:check, root), label: \"check\"); after; File.rm_rf!(root); end'\"'\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"elixir -e 'defmodule ElixirAgentKit do; def version, do: \\\"0.3.1\\\"; def library_path, do: Path.expand(\\\"priv/library\\\"); def catalog do; library_path() |> Path.join(\\\"catalog.tsv\\\") |> File.read\"'!() |> String.split(\"'\"\\\\n\\\", trim: true) |> Enum.map(fn line -> [id, mode, description, area] = String.split(line, \\\"\\\\t\\\", parts: 4); %{id: id, mode: mode, description: description, area: area} end); end; end; Code.require_file(\\\"lib/elixir_agent_kit/installer.ex\\\"); ExUnit.start(); Code.require_file(\\\"test/installer_test.exs\\\")'\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'git status --short && git diff --check base head -- lib/elixir_agent_kit/installer.ex test/installer_test.exs && git diff --name-only base head -- lib/elixir_agent_kit/installer.ex test/installer_test.exs'",
+        "exit_code": 0
+      }
+    ],
+    "final": "## Finding\n\n**P2 \u2014 A successful sync can leave a broken import and immediate drift.** In [installer.ex](lib/elixir_agent_kit/installer.ex:107), the Claude-only branch checks whether `AGENTS.md` exists *before* reconciliation. When a project installed for Codex+Claude syncs to Claude-only, the installer adds `@AGENTS.md` to `CLAUDE.md` and then deletes the kit-created `AGENTS.md`. An isolated reproduction confirmed that `AGENTS.md` was absent after sync and the next `:check` returned drift for `CLAUDE.md` and `state.tsv`. The new tests do not cover this selection change.\n\n| Changed behavior | Location | Covering test |\n|---|---|---|\n| Choose instruction block by agent and configuration | [installer.ex](lib/elixir_agent_kit/installer.ex:71) | New managed-import test |\n| Import an existing `AGENTS.md` for Claude-only installs | [installer.ex](lib/elixir_agent_kit/installer.ex:104) | New unmanaged-file and later-file tests; **no test for removal during sync** |\n| Share block wrapping and reference text | [installer.ex](lib/elixir_agent_kit/installer.ex:112) | Existing round-trip tests and the new tests |\n\n**Checks and limits:** Direct ExUnit execution of [installer_test.exs](test/installer_test.exs:1) with the local installer source passed: 24 tests, 0 failures. Standard `mix test` could not start because the sandbox denied Mix.PubSub a TCP socket. `git diff --check` passed. This review was limited to the two briefed files and their relevant callers; no tracked files were edited."
+  },
+  {
+    "case": "version",
+    "skill": "7be0224",
+    "usage": {
+      "input_tokens": 166600,
+      "cached_input_tokens": 145408,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 1623,
+      "reasoning_output_tokens": 402
+    },
+    "calls": [
+      {
+        "command": "zsh -lc \"pwd && rg --files -g 'BRIEF' -g 'CONTRACT.md' -g 'SKILL.md' -g 'AGENTS.md'\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'git status --short && git branch --list base head && git log -1 --oneline base && git log -1 --oneline head'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'cat BRIEF && cat guide/CONTRACT.md && cat guide/skills/code-review/SKILL.md'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'cat AGENTS.md && git show-ref --heads && git diff --stat refs/heads/base refs/heads/head && git diff --name-status refs/heads/base refs/heads/head'",
+        "exit_code": 128
+      },
+      {
+        "command": "zsh -lc \"git show base:mix.exs && git show head:mix.exs && rg -n 'version:|def project|@version|1\\\\.0\\\\.0' mix.exs\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'git show-ref && git diff base head -- mix.exs && git diff base head --stat -- mix.exs'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc 'command -v mix && mix --version'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"mix run --no-compile --no-start -e 'IO.puts(Mix.Project.config()[:version])'\"",
+        "exit_code": 1
+      },
+      {
+        "command": "zsh -lc 'git status --short && git diff --check base head -- mix.exs && git diff --unified=0 base head -- mix.exs'",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"elixir -e 'Code.require_file(\\\"mix.exs\\\"); IO.puts(ElixirAgentKit.MixProject.project()[:version])'\"",
+        "exit_code": 1
+      },
+      {
+        "command": "zsh -lc \"elixir -e 'Mix.start(); Code.require_file(\\\"mix.exs\\\"); IO.puts(ElixirAgentKit.MixProject.project()[:version])'\"",
+        "exit_code": 0
+      },
+      {
+        "command": "zsh -lc \"elixir -e 'Mix.start(); Code.require_file(\\\"mix.exs\\\"); IO.puts(Mix.Project.config()[:version])'\"",
+        "exit_code": 0
+      }
+    ],
+    "final": "**Yes.** In the scoped `base` \u2192 `head` hunk, [mix.exs](mix.exs:7) changes the project version from `0.10.0` to `1.0.0`. Loading that project with Mix and reading `Mix.Project.config()[:version]` printed `1.0.0`.\n\n| Changed behavior | Covering test |\n| --- | --- |\n| Project version is `1.0.0` | Direct Mix project configuration check |\n\n**Findings:** None in the reviewed hunk. `git diff --check base head -- mix.exs` passed. A `mix run` check could not start because the sandbox denied a TCP socket; no test suite was run. The review was limited to the requested `mix.exs` hunk, and no tracked files were edited."
+  }
+]

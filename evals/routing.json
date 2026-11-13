@@ -174,11 +174,13 @@
       "allowed_alternatives": [],
       "success_signals": [
         "Revisar diff com evidência e confiança",
+        "Se houver riscos concorrentes sem prioridade clara, usar um sinal do checkout para escolher um cenário e registrar o que o código ou teste mostrou",
         "Preservar arquivos"
       ],
       "failure_signals": [
         "Aplicar correções automaticamente",
-        "Inventar um bug para preencher relatório"
+        "Inventar um bug para preencher relatório",
+        "Exigir analisador externo ou tratar frequência de mudanças como defeito"
       ],
       "expected_size": "medium"
     },
@@ -1176,7 +1178,8 @@
       ],
       "failure_signals": [
         "Corrige o código durante a revisão",
-        "Revisa só parte do diff e declara o PR aprovado"
+        "Revisa só parte do diff e declara o PR aprovado",
+        "Usa a ordem de investigação como substituto para revisar o restante do escopo"
       ]
     },
     {

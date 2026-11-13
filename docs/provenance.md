@@ -41,6 +41,11 @@ Conceptual references: [Agent Skills specification](https://agentskills.io/speci
 
 ## Review lenses and their licenses
 
+The optional investigation step in `code-review` draws on the distinction
+between [file hotspots](https://github.com/killertux/cyclops/blob/80543f35a3e41988dce631af49ee5e9f98e4cc76/specs/metrics/hotspots.md)
+and [symbol dependents](https://github.com/killertux/cyclops/blob/80543f35a3e41988dce631af49ee5e9f98e4cc76/specs/explore/impact.md)
+in Cyclops. The kit ships no Cyclops code, scoring rules or tool integration.
+
 The [source review matrix](source-review.md) names the skills consulted while
 deepening each workflow. None of their sentences is reproduced in this kit; the
 table records where each lens came from and the license stated in the copy that
