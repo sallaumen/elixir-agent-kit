@@ -44,6 +44,11 @@ fails CI. Runs are manual and paid; nothing here calls a model.
 
 ## Case notes
 
+For a paired evaluation of the optional prioritization in `code-review`, use
+the [historical diff and small review control](results/2026-11-13-code-review-pilot.md).
+The recorded checks establish what happens in the fixtures. They are not live
+client runs and do not belong in the outcome matrix.
+
 E25 removes private product names. E27 corrects a contradictory legacy criterion:
 its user explicitly authorizes merge/deployment, so requesting the same authority
 again is not success. Required checks and any independently applicable boundaries

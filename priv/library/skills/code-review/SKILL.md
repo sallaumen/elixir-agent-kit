@@ -31,6 +31,10 @@ This workflow reads a bounded diff and reports findings; it does not edit, comme
 
 1. List the changed behaviors as a table: behavior, file:line where it changes, the test that covers it or "none". Done when every hunk in the diff maps to a row and the uncovered rows are marked.
 
+   If several rows have plausible failure scenarios and it is unclear which to trace first, use one signal from the checkout to choose: a changed branch the tests never enter, a caller that still expects the old result, or a prior fix to the same behavior in Git history. If that signal is inconclusive, continue in diff order. Skip this prioritization for a small review or when the priority is already clear; no analyzer or score is required.
+
+   In the chosen row, note the signal and whether the code path or focused test confirmed the concern, ruled it out or left it open. For example: “Retry now reaches the send branch; the existing test exercises only the first attempt.” Check the other rows as usual. File churn alone says nothing about a particular function, and an empty caller search cannot rule out a configured callback.
+
 2. Follow each changed behavior through its callers and the boundary it crosses (database, socket, job queue, provider). Done when each row names the callers that depend on it and whether they were updated.
 
 3. For each row, ask what input or ordering makes the new code wrong: a nil, a concurrent write, a retried job, a stale assign, a tenant the query does not filter, a migration run against live data. Write the failure scenario or "none found". Done when every row has a scenario or an explicit "none found".
@@ -48,7 +52,7 @@ This workflow reads a bounded diff and reports findings; it does not edit, comme
 - A finding needs a reachable path and a material consequence; a style preference without consequence is a note, not a finding.
 - Severity follows user or data impact, not the size of the hunk.
 - A missing test is a finding only when the uncovered behavior has a failure scenario; otherwise it is a coverage note.
-- When the diff changes a contract (function signature, event name, schema field, job args), every caller that was not updated is a finding.
+- When the diff changes a contract (function signature, event name, schema field, job args), trace any unchanged caller against the new contract. Report which call or behavior can break; an unchanged caller may still be compatible.
 - Uncertainty is stated as such; a hypothesis is never reported as a defect.
 - In Elixir, check the defect classes the compiler and Credo do not catch: a lenient match that hides an impossible shape, a `with` whose `else` cannot tell which step failed, a raise that reaches a LiveView or controller, a server-set field in a `cast/3` list, a new compile-time dependency (`mix xref graph --format cycles --label compile-connected`), a process message sent from outside its owning module, an effect inside a transaction. Cite the anti-pattern name from [Module and function shape](../../elixir/code-shape.md) when one applies.
 
