@@ -60,3 +60,37 @@ bounded case. Keep it unchanged. A useful next control is a different
 historical symptom where the apparent parser error originates in the caller:
 include both layers and observe whether the session follows the evidence to
 the right owner. One run with the parser already isolated cannot answer that.
+
+## Inverse control: a reader given no selection
+
+On a historical monthly desk, opening totals for a past month with no
+reading sent the operator back to the current month. Two fresh sessions got
+the same pre-fix caller, destination and two route declarations, with just
+that symptom. A had no Kit guide; B received the unchanged debugging guide
+at `5f59112`. Both used Codex CLI 0.162.1, GPT-6.1-Sol, medium, read-only.
+Neither received history, an expected owner, a corrected URL or the other's
+output. Before either run, the evaluator required an observed outgoing
+value, an independent control on the reader and a localized diagnosis.
+
+| Observation | A: unaided | B: with guide |
+|---|---|---|
+| Exercise missing-reading path under a fixed November clock | Selected October, returned November | Selected September, returned November |
+| Feed that earlier month directly to the destination | October retained | September retained |
+| Identify first loss and preserve the normal default | Caller navigated without the month; keep the reader's fallback | Same; ruled out parsing and the save path as immediate causes |
+
+Both executed in-memory probes using extracted functions and stand-ins for
+missing dependencies. Both also identified a second missing-reading return
+during refresh. Neither demonstrated that the database *should* have had a
+reading, or claimed a full browser run.
+
+The evaluator independently replayed the actual missing-branch destination
+expression and the historical reader, with September selected and the clock
+fixed in November. Before the field fix, the outgoing URL had no query and
+the reader returned November 1. With the corrected caller and **the same
+reader**, the URL carried the month and bank tab and returned September 1.
+A direct visit without a month still returned November 1. The application
+already contained this fix; no application changes were needed.
+
+**Decision:** both arms passed. Together with the reader-side baseline, this
+supports keeping the current workflow. It does not demonstrate an advantage
+over an unaided reviewer or measure discovery in a whole application.
