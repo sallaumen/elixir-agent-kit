@@ -44,6 +44,8 @@ fails CI. Runs are manual and paid; nothing here calls a model.
 
 ## Case notes
 
+The [Jason architecture review experiment](results/2026-11-13-architecture-review/README.md) compares a same-file and separate-file extraction and records four read-only reviews.
+
 For a paired evaluation of the optional prioritization in `code-review`, use
 the [historical diff and small review control](results/2026-11-13-code-review-pilot.md).
 The recorded checks establish what happens in the fixtures. They are not live
