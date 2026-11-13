@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Test strategy now checks whether an existing assertion catches the requested
+  regression before changing tests. A demonstrated witness can remain unchanged.
+
 ## 1.1.0 — 2026-11-13
 
 - Minor release: code reviews can now use a changed branch, caller or previous

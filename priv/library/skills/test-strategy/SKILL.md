@@ -31,6 +31,8 @@ The output is a short list of risks, each with the cheapest test that can observ
 
 1. List the behaviors that can break, one line each: trigger, wrong outcome, who notices. Rank by consequence and likelihood using real incidents and the code paths that exist, not a generic checklist. Done when every behavior that can break is one line with trigger, wrong outcome and who notices, ranked by consequence and likelihood.
 
+Before editing tests, try a plausible regression in the requested behavior against the existing focused suite. If an existing assertion catches it for the right reason and passes after restoration, keep it unchanged for that risk. Report gaps in unchanged neighboring behavior separately; expand the suite only for a distinct risk in scope.
+
 2. For each risk choose the smallest seam that can observe the failure: a pure function for a calculation, the context function for a rule, the persistence boundary for constraints and races, the LiveView or controller for authorization and rendering, an integration test only where mocks would hide a contract mismatch. Done when each risk has the cheapest seam that can observe its failure.
 
 3. Write each test from an independent oracle: a known-good literal, a worked example, the spec, a stored fixture. If the expected value is computed the way the code computes it, the test cannot disagree with the code; rewrite it. Done when each expected value comes from an independent oracle, not from the code under test.
