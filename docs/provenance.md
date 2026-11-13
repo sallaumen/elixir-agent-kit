@@ -28,7 +28,7 @@ This English community edition adapts 33 workflows developed by Lucas Tavano wit
 | `metrics-costs` | `metricas-e-custos` |
 | `operational-alerts` | `alertas-operacionais` |
 | `simulation-isolation` | `simulacao-e-producao` |
-| `test-strategy` | `estrategia-de-testes` and `testes-redundantes` (merged in 0.5) |
+| `test-strategy` | `estrategia-de-testes` and `testes-redundantes` (merged in 0.5); existing-coverage stopping rule from the [inverse control](../evals/results/2026-11-13-test-strategy-baseline.md#inverse-control-the-fallback-already-has-a-witness) |
 | `code-review` | `code-review` |
 | `debugging` | `investigar-bugs` |
 | `security-boundaries` | `seguranca-e-permissoes` |
