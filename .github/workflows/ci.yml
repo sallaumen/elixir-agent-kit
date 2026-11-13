@@ -15,19 +15,19 @@ jobs:
         include:
           - elixir: '1.15.8'
             otp: '26.2'
-          - elixir: '1.19.5'
-            otp: '27.3'
+          - elixir: '1.20.5'
+            otp: '29.1.2'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
-      - uses: erlef/setup-beam@v1
+      - uses: erlef/setup-beam@54075bcc5e249e4758d363f27d099f55d843f124 # v1.24.1
         with:
           elixir-version: ${{ matrix.elixir }}
           otp-version: ${{ matrix.otp }}
       - run: mix check
       - run: python3 scripts/check_library.py
-      - run: python3 -m pip install --user pyflakes
+      - run: python3 -m pip install --user pyflakes==4.1.0
       - run: python3 -m pyflakes scripts/
       - run: python3 scripts/smoke_install.py
       - name: Git consumer relocation and custom dependency path
