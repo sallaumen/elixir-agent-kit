@@ -56,3 +56,5 @@ from compile to runtime. The rendered HTML was byte-identical and the 27 focused
 application tests passed. This is a measured reduction by one source file,
 not a measured wall-clock speedup or a claim that moving work to request time
 is always beneficial. A broader recompilation problem remains a separate task.
+
+The [unnamed-consumer round](2026-11-13-architecture-prioritization.md) tests the separate question of which dependency to investigate first.
