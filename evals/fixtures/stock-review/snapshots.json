@@ -1,0 +1,12 @@
+{
+  "base": {
+    "mix.exs": "defmodule Stock.MixProject do\n  use Mix.Project\n  def project, do: [app: :stock, version: \"0.1.0\", elixir: \"~> 1.15\", deps: []]\nend\n",
+    "lib/stock.ex": "defmodule Stock do\n  @moduledoc \"Inbound stock feed. Each depot assigns its own receipt numbers.\"\n\n  @doc \"Count all delivered units by depot. The legacy feed sends each receipt once.\"\n  def totals(receipts) do\n    Enum.reduce(receipts, %{}, fn row, acc ->\n      Map.update(acc, row.depot, row.units, &(&1 + row.units))\n    end)\n  end\n\n  @doc \"Return receipts in the closed date range; input order is preserved.\"\n  def period(receipts, first, last) do\n    Enum.filter(receipts, fn row ->\n      Date.compare(row.date, first) != :lt and Date.compare(row.date, last) != :gt\n    end)\n  end\nend\n",
+    "test/test_helper.exs": "ExUnit.start()\n",
+    "test/stock_test.exs": "defmodule StockTest do\n  use ExUnit.Case\n  test \"counts deliveries and filters the reporting period\" do\n    rows = [%{depot: :west, receipt: 4, units: 6, date: ~D[2026-01-15]}]\n    assert Stock.totals(rows) == %{west: 6}\n    assert Stock.period(rows, ~D[2026-01-01], ~D[2026-01-31]) == rows\n  end\nend\n"
+  },
+  "head_replacements": {
+    "lib/stock.ex": "defmodule Stock do\n  @moduledoc \"Inbound stock feed. Each depot assigns its own receipt numbers.\"\n\n  @doc \"Count delivered units by depot, counting a retried receipt only once. Retries repeat the original row.\"\n  def totals(receipts) do\n    receipts\n    |> Enum.uniq_by(& &1.receipt)\n    |> Enum.reduce(%{}, fn row, acc ->\n      Map.update(acc, row.depot, row.units, &(&1 + row.units))\n    end)\n  end\n\n  @doc \"Return receipts in the closed date range; input order is preserved.\"\n  def period(receipts, first, last) do\n    Enum.filter(receipts, fn row ->\n      in_period?(row.date, first, last)\n    end)\n  end\n\n  defp in_period?(date, first, last) do\n    Date.compare(date, first) != :lt and Date.before?(date, last)\n  end\nend\n",
+    "test/stock_test.exs": "defmodule StockTest do\n  use ExUnit.Case\n  test \"counts deliveries and filters the reporting period\" do\n    rows = [%{depot: :west, receipt: 4, units: 6, date: ~D[2026-01-15]}]\n    assert Stock.totals(rows) == %{west: 6}\n    assert Stock.period(rows, ~D[2026-01-01], ~D[2026-01-31]) == rows\n  end\n  test \"redelivery does not inflate a depot total\" do\n    row = %{depot: :east, receipt: 78, units: 12, date: ~D[2026-03-18]}\n    assert Stock.totals([row, row]) == %{east: 12}\n  end\nend\n"
+  }
+}

@@ -102,3 +102,6 @@ the base files and the two head replacements. Before extending the pilot,
 repeat the simple control and test a new diff with **two independent failure
 paths**. Look for additional confirmed findings without losing the second path
 or starting unnecessary investigation on the control.
+
+The [two-defect follow-up](2026-11-13-review-repeat/README.md) ran eight more
+independent sessions, with an executable oracle and two pairs per case.
