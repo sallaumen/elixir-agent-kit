@@ -91,3 +91,28 @@ not a detection-rate estimate or evidence of full application coverage.
 **Decision:** adopt the tested stopping rule. The deciding observation was a
 failure of the unchanged assertion on the requested mutation, not a coverage
 percentage, a constant test count, or the absence of other worthwhile tests.
+
+## Field result: the missing witness shipped
+
+The application merged one assertion on `Color.band/1`; neither production
+code nor the existing fallback test changed. For `#808080`, the 61% mix gives
+4.56:1, below the 4.6:1 minimum. The 62% mix gives 4.63:1, so the expected
+answer is `#413934`. The last mix, `#2E251E`, also clears the minimum (6.15:1).
+Checking contrast alone cannot distinguish those two answers.
+
+| Application check | Result |
+|---|---|
+| Reverse only the search order in a disposable copy; leave the fallback intact | All five original tests passed. |
+| Same copy, with the new assertion | Only the new test failed: expected `#413934`, got `#2E251E`. |
+| Unmodified implementation with the new assertion | All six passed, including the original fallback case. |
+
+The final application PR head passed 18,260 Elixir tests locally (89.7%
+coverage). Hosted CI ran no steps because of a billing restriction. This was
+a test-only merge, with no deploy. The mutation result, not the suite size
+or coverage percentage, establishes what the new assertion detects.
+
+**Pilot closed.** Keep the stopping rule adopted in Kit PR #57: retain a
+witness that already fails for the requested regression; add one when the
+original suite stays green for that regression. The field result confirms
+the missing-witness case. The inverse control above remains an isolated
+evaluation, not a second application change.
