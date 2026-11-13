@@ -44,6 +44,11 @@ fails CI. Runs are manual and paid; nothing here calls a model.
 
 ## Case notes
 
+The [test-strategy pilot](results/2026-11-13-test-strategy-baseline.md) pairs a
+missing assertion that shipped with an inverse control that needed no edit.
+The [debugging baseline](results/2026-11-13-debugging-baseline.md) starts a
+separate pilot with a historical input rejection and a read-only diagnosis.
+
 The [Jason architecture review experiment](results/2026-11-13-architecture-review/README.md) compares a same-file and separate-file extraction and records four read-only reviews.
 
 For a paired evaluation of the optional prioritization in `code-review`, use
