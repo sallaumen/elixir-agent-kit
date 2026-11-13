@@ -69,3 +69,6 @@ the prompt highlighted the file placement, and the sessions received prepared
 traces. This measures interpretation, not whether an agent would independently
 find the right evidence. On another task, test discovery without prepared traces.
 The exact [final answers and client usage](runs.json) are retained for review.
+
+The [follow-up discovery round](../2026-11-13-architecture-discovery.md) supplied
+only a real warm-build symptom and available tools; no xref results were given.
