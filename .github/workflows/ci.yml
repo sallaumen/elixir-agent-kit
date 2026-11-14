@@ -38,4 +38,5 @@ jobs:
           python3 scripts/smoke_install.py --git-url "$GITHUB_WORKSPACE" --ref "$GITHUB_SHA" --deps-path "vendor/deps (shared)"
       - run: python3 scripts/smoke_migration.py
       - run: mix local.hex --force
-      - run: mix hex.build
+      - run: mix hex.build --output "$RUNNER_TEMP/kit.tar"
+      - run: python3 scripts/check_package_links.py "$RUNNER_TEMP/kit.tar"

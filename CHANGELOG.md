@@ -1,12 +1,19 @@
 # Changelog
 
+## 1.2.1 — 2026-11-14
+
+- Patch release: English, Portuguese and agent installation guides distinguish
+  Git tags from published Hex versions. Eight links to evaluation reports now
+  open the versioned GitHub sources from inside the package. The installer and
+  all 38 workflows are unchanged. This release is on GitHub only.
+
 ## 1.2.0 — 2026-11-13
 
 - Minor release: adds decision guidance to existing workflows. Workflow IDs,
   installer behavior, configuration and dependencies remain compatible.
 - UI identity now checks which states a person sees together and whether
   the proposed next action is reachable. The [blind class handover
-  review](evals/results/2026-11-13-ui-identity-handover.md) cleared the release
+  review](https://github.com/sallaumen/elixir-agent-kit/blob/c2ff7e5be2a08fdfab757d101e95036069634396/evals/results/2026-11-13-ui-identity-handover.md) cleared the release
   hold: both candidate runs grounded the recovery action in the supplied
   evidence; both baseline runs assumed a destination.
 
@@ -17,7 +24,7 @@
   existing gesture on stale commands, distinguish examined from changed data,
   verify everything included in a bundle, separate editable recovery from
   publication, and review composed fields, clipped navigation and reduced-motion
-  end states. The [catalog field round](evals/results/2026-11-13-catalog-field-round.md)
+  end states. The [catalog field round](https://github.com/sallaumen/elixir-agent-kit/blob/c2ff7e5be2a08fdfab757d101e95036069634396/evals/results/2026-11-13-catalog-field-round.md)
   records the original evidence and the initial hold on UI identity.
 
 ## 1.1.0 — 2026-11-13
@@ -26,7 +33,7 @@
   fix to prioritize a failure scenario. Small reviews skip this step. The
   existing workflow IDs, installer, configuration and dependencies are unchanged.
 - Architecture review now describes unfiltered Mix xref cycles as groups across
-  all dependency labels. The [closed pilot](evals/results/2026-11-13-architecture-prioritization.md#production-follow-up)
+  all dependency labels. The [closed pilot](https://github.com/sallaumen/elixir-agent-kit/blob/c2ff7e5be2a08fdfab757d101e95036069634396/evals/results/2026-11-13-architecture-prioritization.md#production-follow-up)
   confirmed 19 fewer recompiled sources with the real adapter still enabled.
   No analyzer or additional review step is required.
 

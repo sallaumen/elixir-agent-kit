@@ -136,7 +136,9 @@ delivery-validation
 
 ## Versioning policy
 
-Releases are public Git tags, never Hex. The version number follows semantic
+Each release has an immutable public Git tag. Publication on hex.pm is a separate
+step: a GitHub release does not establish that the package is available there.
+When both are published, the Hex package is built from that same tag. The version number follows semantic
 versioning. The installed artifact is guidance plus a small installer, so the
 meaning of a bump is stated in terms of what an agent reads and what a consumer
 must do:
@@ -178,7 +180,8 @@ No workflow ID is removed without this record, and no published tag is moved.
 
 1. Read the [changelog](../CHANGELOG.md); `mix agent_kit.outdated` tells whether a
    newer tag exists.
-2. Change the tag in `mix.exs` and run `mix deps.update elixir_agent_kit`.
+2. Set the Git tag or exact Hex version in `mix.exs`. For Hex, verify that the version
+   is published on hex.pm; the Git tag check does not query the registry. Run `mix deps.update elixir_agent_kit`.
 3. Run `mix agent_kit.sync --dry-run`, inspect the paths and removals, then
    `mix agent_kit.sync`.
 4. Run `mix agent_kit.check` and the project's own gates; commit the diff.

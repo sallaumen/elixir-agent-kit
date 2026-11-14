@@ -29,17 +29,24 @@ modelo, nada vai para produção.
 
 ## Começo rápido
 
-Requer Elixir 1.15+, Erlang/OTP compatível e Git. As releases são tags públicas do
-Git, **não Hex**; não há token.
+Requer Elixir 1.15+ e Erlang/OTP compatível. Para instalar esta release do
+GitHub, use Git. A tag pública dispensa credenciais.
 
-**1. Adicione a dependência** em `deps/0` no `mix.exs`:
+**1. Escolha uma fonte** em `deps/0` no `mix.exs`. Para Git, fixe a tag:
 
 ```elixir
 {:elixir_agent_kit,
  git: "https://github.com/sallaumen/elixir-agent-kit.git",
- tag: "v1.2.0",
+ tag: "v1.2.1",
  only: [:dev, :test],
  runtime: false}
+```
+
+Para usar o Hex, substitua a entrada Git pelo exemplo abaixo **somente depois
+que a versão 1.2.1 estiver publicada no hex.pm**. Até lá, use a tag acima.
+
+```elixir
+{:elixir_agent_kit, "== 1.2.1", only: [:dev, :test], runtime: false}
 ```
 
 **2. Escolha agentes e workflows** em `project/0`:
@@ -211,7 +218,7 @@ inicia a sua aplicação nem chama um modelo.
 ## Atualizações e uma fonte só
 
 1. Leia o [changelog](../CHANGELOG.md); `mix agent_kit.outdated` diz se existe tag mais nova.
-2. Troque a tag no `mix.exs` e rode `mix deps.update elixir_agent_kit`.
+2. No `mix.exs`, troque a tag Git ou, para Hex, fixe a versão depois de confirmar sua publicação no hex.pm. Rode `mix deps.update elixir_agent_kit`.
 3. Rode `mix agent_kit.sync --dry-run`, inspecione, depois `mix agent_kit.sync`.
 4. Rode `mix agent_kit.check` e os gates do seu projeto; versione o diff.
 

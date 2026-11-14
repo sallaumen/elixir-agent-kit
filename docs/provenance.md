@@ -28,7 +28,7 @@ This English community edition adapts 33 workflows developed by Lucas Tavano wit
 | `metrics-costs` | `metricas-e-custos` |
 | `operational-alerts` | `alertas-operacionais` |
 | `simulation-isolation` | `simulacao-e-producao` |
-| `test-strategy` | `estrategia-de-testes` and `testes-redundantes` (merged in 0.5); existing-coverage stopping rule from the [inverse control](../evals/results/2026-11-13-test-strategy-baseline.md#inverse-control-the-fallback-already-has-a-witness) |
+| `test-strategy` | `estrategia-de-testes` and `testes-redundantes` (merged in 0.5); existing-coverage stopping rule from the [inverse control](https://github.com/sallaumen/elixir-agent-kit/blob/c2ff7e5be2a08fdfab757d101e95036069634396/evals/results/2026-11-13-test-strategy-baseline.md#inverse-control-the-fallback-already-has-a-witness) |
 | `code-review` | `code-review` |
 | `debugging` | `investigar-bugs` |
 | `security-boundaries` | `seguranca-e-permissoes` |
@@ -154,7 +154,7 @@ documentation or source of the version named; no passage is reproduced. The
 review added `pipelines.md`, `architecture.md`, `library-authoring.md` and
 `agent-loop.md`, expanded `code-shape.md` with the anti-pattern vocabulary, and
 added the `data-pipelines` workflow for flows of many items, whose CI namesake
-`pipeline-design` now points to it. A later [paired engineering exercise](../evals/results/2026-11-13-engineering-ab.md) contributed the distinction between records examined and records changed in a paged repair.
+`pipeline-design` now points to it. A later [paired engineering exercise](https://github.com/sallaumen/elixir-agent-kit/blob/c2ff7e5be2a08fdfab757d101e95036069634396/evals/results/2026-11-13-engineering-ab.md) contributed the distinction between records examined and records changed in a paged repair.
 
 ## Refactoring workflows in 0.8
 
@@ -171,6 +171,6 @@ detail, comments that carry information, visible error flow) through the Elixir
 anti-pattern vocabulary in `elixir/code-shape.md`. The book is a concept-only
 reference in the same way: no passage was consulted for wording or reproduced.
 
-The [catalog field round](../evals/results/2026-11-13-catalog-field-round.md) records original, application-derived experiments behind the 2026-11-13 workflow corrections. The application snapshots and the evaluator's answers are not installed as client instructions.
+The [catalog field round](https://github.com/sallaumen/elixir-agent-kit/blob/c2ff7e5be2a08fdfab757d101e95036069634396/evals/results/2026-11-13-catalog-field-round.md) records original, application-derived experiments behind the 2026-11-13 workflow corrections. The application snapshots and the evaluator's answers are not installed as client instructions.
 
-The [class handover holdout](../evals/results/2026-11-13-ui-identity-handover.md) supports the additional UI identity decision points. The installed text is the general candidate tested across screens; no application rule or fixture is shipped.
+The [class handover holdout](https://github.com/sallaumen/elixir-agent-kit/blob/c2ff7e5be2a08fdfab757d101e95036069634396/evals/results/2026-11-13-ui-identity-handover.md) supports the additional UI identity decision points. The installed text is the general candidate tested across screens; no application rule or fixture is shipped.
