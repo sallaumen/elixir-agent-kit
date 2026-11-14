@@ -1,6 +1,14 @@
 # Changelog
 
-## Unreleased
+## 1.2.0 — 2026-11-13
+
+- Minor release: adds decision guidance to existing workflows. Workflow IDs,
+  installer behavior, configuration and dependencies remain compatible.
+- UI identity now checks which states a person sees together and whether
+  the proposed next action is reachable. The [blind class handover
+  review](evals/results/2026-11-13-ui-identity-handover.md) cleared the release
+  hold: both candidate runs grounded the recovery action in the supplied
+  evidence; both baseline runs assumed a destination.
 
 - Test strategy now checks whether an existing assertion catches the requested
   regression before changing tests. A demonstrated witness can remain unchanged.
@@ -10,7 +18,7 @@
   verify everything included in a bundle, separate editable recovery from
   publication, and review composed fields, clipped navigation and reduced-motion
   end states. The [catalog field round](evals/results/2026-11-13-catalog-field-round.md)
-  records the evidence and why UI identity still blocks the next release.
+  records the original evidence and the initial hold on UI identity.
 
 ## 1.1.0 — 2026-11-13
 

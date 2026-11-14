@@ -43,6 +43,10 @@ This workflow owns one screen's hierarchy and product identity. Spacing, alignme
 
 ## Decision points
 
+- Do not assume user states are mutually exclusive. For independently true conditions, inspect the actual combination one person sees, together with the action it invites. Keep useful links, but derive the primary action and wording from whether that person still has a decision or commitment to make.
+
+- When the screen asks for a consequential decision, compare the information and choices from the perspective of each person who can arrive there. Group supporting facts or terms as one decision, distinguish what commits it, and trace each realistic alternative through the same guards and state as the primary action. Keep an existing safe way out; if declining simply returns to the same question, identify the reachable alternative and the evidence for it.
+
 - A visual refinement keeps the incumbent identity; a new direction needs the user's explicit authorization and a written comparison of the old surface against the product's actual purpose, made before the change.
 - When the design guidance and the implementation disagree, follow what the product already ships, name the gap, and route the rule to [design-system](../design-system/SKILL.md); do not silently pick a side.
 - Cards, tables, gradients and illustration are options judged by the user's task; a repeated container that adds no meaning is removed, one that groups a decision stays.

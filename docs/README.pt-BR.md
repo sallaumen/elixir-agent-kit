@@ -37,7 +37,7 @@ Git, **não Hex**; não há token.
 ```elixir
 {:elixir_agent_kit,
  git: "https://github.com/sallaumen/elixir-agent-kit.git",
- tag: "v1.1.0",
+ tag: "v1.2.0",
  only: [:dev, :test],
  runtime: false}
 ```

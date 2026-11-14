@@ -19,7 +19,9 @@ controls vary by case; aggregating scores as an accuracy or improvement rate
 would obscure what was tested. No private application code or records are
 required by the installed guides and no evaluator runs during installation.
 
-**Release decision: hold.** All 38 workflows have paired evidence. On these
+**Updated release decision:** the [preregistered handover holdout](2026-11-13-ui-identity-handover.md) cleared the remaining UI identity gate, with both candidate runs passing all three checks. The original decision and its limits follow.
+
+**Decision at the end of the original round: hold.** All 38 workflows have paired evidence. On these
 cases, 37 have support for keeping the current guide or adopting a tested
 candidate. The exception is `ui-identity`: an addition improved the original
 agreement screen, missed an important combination of states in a second
