@@ -22,7 +22,7 @@ in the test environment. The library check validates metadata, provenance covera
 and local Markdown references. The smoke test builds a disposable consuming Mix
 project, installs from a local path, checks repeatability, and uninstalls. It cleans
 up its temporary project. The migration smoke fetches public v0.1.1 over the
-network and checks migration, conflict refusal and preservation in a disposable project. `mix hex.build` creates a local tarball; it does not publish. Publish with `mix hex.publish package` (the package declares no `ex_doc` dependency, so docs are built only from a local checkout that adds it).
+network and checks migration, conflict refusal and preservation in a disposable project. `mix hex.build` creates a local tarball; it does not publish.
 
 Use branches and pull requests after initial repository bootstrap. Stage only the
 files you changed. Avoid unrelated refactors and preserve other contributors' work.
@@ -69,5 +69,19 @@ record the exact environment and limitation, and do not claim remote validation.
 The maintainer publishes a reviewed version by updating `mix.exs`, `CHANGELOG.md`
 and the installation examples, running all checks, creating an immutable `vX.Y.Z`
 tag and a GitHub release. Validate an actual Git dependency fetch from that tag.
-Do not move a published tag. Hex publication is a separate future release step;
-never imply a GitHub release has been published to Hex.
+Do not move a published tag. Hex publication is a separate step. Build the guides and Mix task reference with
+a current Elixir toolchain (the documentation dependency is only loaded in the
+`docs` environment):
+
+```sh
+MIX_ENV=docs mix deps.get
+MIX_ENV=docs mix docs --warnings-as-errors
+```
+
+Open `doc/index.html` and check both installation guides. Before publishing,
+set `export DOCS_SOURCE_REF=$(git rev-parse HEAD)` in the clean checkout so
+source links point to the exact revision containing those guides. For a new package
+release, use `MIX_ENV=docs mix hex.publish` from the reviewed release checkout.
+To publish or correct **only** the docs for an existing package version, use
+`MIX_ENV=docs mix hex.publish docs` against matching library code. Verify the
+versioned guide on HexDocs; neither command requires editing a consumer project.

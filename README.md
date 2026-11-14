@@ -1,17 +1,47 @@
 # Elixir Agent Kit
 
 [![CI](https://github.com/sallaumen/elixir-agent-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/sallaumen/elixir-agent-kit/actions/workflows/ci.yml)
-[![Release](https://img.shields.io/github/v/tag/sallaumen/elixir-agent-kit?label=release&sort=semver&color=7c3aed)](https://github.com/sallaumen/elixir-agent-kit/releases)
+[![Hex.pm](https://img.shields.io/hexpm/v/elixir_agent_kit.svg)](https://hex.pm/packages/elixir_agent_kit)
+[![HexDocs](https://img.shields.io/badge/HexDocs-documentation-4e2a8e.svg)](https://hexdocs.pm/elixir_agent_kit/)
 [![Elixir 1.15+](https://img.shields.io/badge/elixir-1.15%2B-4e2a8e)](mix.exs)
 [![License: MIT](https://img.shields.io/badge/license-MIT-2ea44f)](LICENSE)
 
 **Shared coding practices for AI agents, versioned with your Elixir project.**
 
-Pin the kit like any Mix dependency. Every agent that touches the project, whether
+Install the kit as a Mix dependency. Every agent that touches the project, whether
 Codex, Claude Code or your own harness, reads the same 38 reviewed workflows from
 `deps/`: what to inspect, which decisions matter, what "done" looks like and how
 to prove it. No copied skill library to drift, no service, no model calls, nothing
 shipped to production.
+
+## Quick start
+
+In an Elixir 1.15+ Mix project, add this entry to the list in `deps/0`:
+
+```elixir
+{:elixir_agent_kit, "~> 1.2", only: [:dev, :test], runtime: false}
+```
+
+For Codex and Claude Code, add this entry to the keyword list in `project/0`:
+
+```elixir
+elixir_agent_kit: [agents: [:codex, :claude, :generic], skills: :all]
+```
+
+From the project root, run:
+
+```sh
+mix deps.get
+mix agent_kit.install
+mix agent_kit.check
+```
+
+When the check reports **no changes needed**, commit `mix.exs`, `mix.lock` and
+the paths printed by the installer. Open a fresh agent session and ask it to
+follow `.elixir-agent-kit/START.md` for a task in your project.
+
+See the [installation guide](docs/installation.md) for Git, upgrades and CI,
+or use the [installation prompt](docs/INSTALL_WITH_AI.md).
 
 <p align="center">
   <img src="docs/assets/how-it-works.svg" alt="How it works: the project pins the kit as a Mix dependency; the installer writes small references; an agent session follows them into the dependency and reads one workflow." width="960">
@@ -20,7 +50,7 @@ shipped to production.
 ## Why a dependency
 
 - **One source, many agents, many projects.** A workflow improves once, in
-  `priv/library/`, ships as a tag, and each application adopts it in a normal
+  `priv/library/`, ships in a release, and each application adopts it in a normal
   dependency PR. Two agents on the same checkout read identical text.
 - **Workflows that say what to do, not how to feel.** Each `SKILL.md` names the
   inputs to inspect, the decision points, quality criteria, the evidence that
@@ -31,64 +61,6 @@ shipped to production.
   or when a library file the links point at is missing.
   Nothing here claims that a model followed the text; that is checked in a fresh
   session, as [compatibility](docs/compatibility.md) describes.
-
-## Quick start
-
-Requires Elixir 1.15+ and a compatible Erlang/OTP. Use Git to install this
-GitHub release; a public tag does not require credentials.
-
-**1. Choose one dependency** for `deps/0` in `mix.exs`. For Git, pin the tag:
-
-```elixir
-{:elixir_agent_kit,
- git: "https://github.com/sallaumen/elixir-agent-kit.git",
- tag: "v1.2.2",
- only: [:dev, :test],
- runtime: false}
-```
-
-For Hex, use the following **instead of** the Git entry only after version
-1.2.2 is published on hex.pm. Until then, use the Git tag above.
-
-```elixir
-{:elixir_agent_kit, "== 1.2.2", only: [:dev, :test], runtime: false}
-```
-
-**2. Choose the agents and workflows** in `project/0`:
-
-```elixir
-elixir_agent_kit: [agents: [:codex, :claude, :generic], skills: :all]
-```
-
-**3. Install** from the Mix project root (check your own aliases first; the kit
-runs no application, database or `mix setup`):
-
-```sh
-mix deps.get
-mix agent_kit.install
-mix agent_kit.check
-```
-
-You will see the paths the installer wrote and the next step:
-
-```text
-Changed 7 paths:
-  .agents/skills/elixir-agent-kit/SKILL.md
-  .claude/skills/elixir-agent-kit/SKILL.md
-  .elixir-agent-kit/START.md
-  .elixir-agent-kit/plans/.gitignore
-  .elixir-agent-kit/state.tsv
-  AGENTS.md
-  CLAUDE.md
-
-Next: run mix agent_kit.check, commit these paths, then ask a fresh agent
-session to follow .elixir-agent-kit/START.md and name the workflow it selects.
-```
-
-Commit `mix.exs`, `mix.lock` and those paths. Do not commit `deps/`. Add
-`mix agent_kit.check` to the gate that runs after `mix deps.get`. Prefer
-`mix agent_kit.install --dry-run` when you want to see the plan first, and the
-[AI installation prompt](docs/INSTALL_WITH_AI.md) when an agent does the setup.
 
 ## What an agent does with it
 
@@ -219,7 +191,7 @@ your application or calls a model.
 ## Upgrades and one shared source
 
 1. Read the [changelog](CHANGELOG.md); `mix agent_kit.outdated` tells you whether a newer tag exists.
-2. For Git, change the tag; for Hex, first confirm the release on hex.pm, then change the version requirement in `mix.exs`. Run `mix deps.update elixir_agent_kit`.
+2. For Hex, keep `~> 1.2` for compatible 1.x releases; for Git, change the tag. Run `mix deps.update elixir_agent_kit`.
 3. Run `mix agent_kit.sync --dry-run`, inspect, then `mix agent_kit.sync`.
 4. Run `mix agent_kit.check` and your project gates; commit the diff.
 

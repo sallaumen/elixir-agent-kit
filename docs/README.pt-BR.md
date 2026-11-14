@@ -1,12 +1,44 @@
 # Elixir Agent Kit
 
+[![Hex.pm](https://img.shields.io/hexpm/v/elixir_agent_kit.svg)](https://hex.pm/packages/elixir_agent_kit)
+[![HexDocs](https://img.shields.io/badge/HexDocs-documenta%C3%A7%C3%A3o-4e2a8e.svg)](https://hexdocs.pm/elixir_agent_kit/)
+
 **Práticas de código compartilhadas para agentes de IA, versionadas junto com o seu projeto Elixir.**
 
-Fixe o kit como qualquer dependência Mix. Todo agente que trabalhar no projeto, seja
+Instale o kit como uma dependência Mix. Todo agente que trabalhar no projeto, seja
 Codex, Claude Code ou o seu próprio harness, lê os mesmos 38 workflows revisados
 direto de `deps/`: o que inspecionar, quais decisões importam, o que é "pronto" e
 como provar. Sem biblioteca copiada que envelhece, sem serviço, sem chamada a
 modelo, nada vai para produção.
+
+## Começo rápido
+
+Em um projeto Mix com Elixir 1.15+, adicione esta entrada à lista em `deps/0`:
+
+```elixir
+{:elixir_agent_kit, "~> 1.2", only: [:dev, :test], runtime: false}
+```
+
+Para usar Codex e Claude Code, adicione esta entrada à lista em `project/0`:
+
+```elixir
+elixir_agent_kit: [agents: [:codex, :claude, :generic], skills: :all]
+```
+
+Na raiz do projeto, rode:
+
+```sh
+mix deps.get
+mix agent_kit.install
+mix agent_kit.check
+```
+
+Quando o check informar **no changes needed**, versione `mix.exs`, `mix.lock` e
+os caminhos que o instalador listou. Abra uma nova sessão do agente e peça que
+siga `.elixir-agent-kit/START.md` para uma tarefa do projeto.
+
+Veja o [guia de instalação](instalacao.md) para Git, atualizações e CI, ou use o
+[prompt de instalação com IA](INSTALL_WITH_AI.md).
 
 <p align="center">
   <img src="assets/how-it-works.svg" alt="Como funciona: o projeto fixa o kit como dependência Mix; o instalador escreve referências pequenas; a sessão do agente segue essas referências até a dependência e lê um workflow." width="960">
@@ -15,7 +47,7 @@ modelo, nada vai para produção.
 ## Por que uma dependência
 
 - **Uma fonte, muitos agentes, muitos projetos.** Um workflow melhora uma vez, em
-  `priv/library/`, sai como tag, e cada aplicação o adota num PR de dependência
+  `priv/library/`, sai em uma versão, e cada aplicação o adota num PR de dependência
   comum. Dois agentes no mesmo checkout leem texto idêntico.
 - **Workflows que dizem o que fazer, não como se sentir.** Cada `SKILL.md` nomeia
   as entradas a inspecionar, os pontos de decisão, os critérios de qualidade, a
@@ -26,65 +58,6 @@ modelo, nada vai para produção.
   drift ou quando falta um arquivo da biblioteca apontado pelos links. Nada aqui
   afirma que um modelo seguiu o texto; isso se verifica em uma sessão nova, como
   descreve [compatibilidade](compatibility.md).
-
-## Começo rápido
-
-Requer Elixir 1.15+ e Erlang/OTP compatível. Para instalar esta release do
-GitHub, use Git. A tag pública dispensa credenciais.
-
-**1. Escolha uma fonte** em `deps/0` no `mix.exs`. Para Git, fixe a tag:
-
-```elixir
-{:elixir_agent_kit,
- git: "https://github.com/sallaumen/elixir-agent-kit.git",
- tag: "v1.2.2",
- only: [:dev, :test],
- runtime: false}
-```
-
-Para usar o Hex, substitua a entrada Git pelo exemplo abaixo **somente depois
-que a versão 1.2.2 estiver publicada no hex.pm**. Até lá, use a tag acima.
-
-```elixir
-{:elixir_agent_kit, "== 1.2.2", only: [:dev, :test], runtime: false}
-```
-
-**2. Escolha agentes e workflows** em `project/0`:
-
-```elixir
-elixir_agent_kit: [agents: [:codex, :claude, :generic], skills: :all]
-```
-
-**3. Instale** a partir da raiz do projeto Mix (confira os seus aliases antes; o
-kit não inicia aplicação, banco nem `mix setup`):
-
-```sh
-mix deps.get
-mix agent_kit.install
-mix agent_kit.check
-```
-
-Você verá os caminhos que o instalador escreveu e o próximo passo:
-
-```text
-Changed 7 paths:
-  .agents/skills/elixir-agent-kit/SKILL.md
-  .claude/skills/elixir-agent-kit/SKILL.md
-  .elixir-agent-kit/START.md
-  .elixir-agent-kit/plans/.gitignore
-  .elixir-agent-kit/state.tsv
-  AGENTS.md
-  CLAUDE.md
-
-Next: run mix agent_kit.check, commit these paths, then ask a fresh agent
-session to follow .elixir-agent-kit/START.md and name the workflow it selects.
-```
-
-Versione `mix.exs`, `mix.lock` e esses caminhos. Não versione `deps/`. Coloque
-`mix agent_kit.check` no gate que roda depois de `mix deps.get`. Prefira
-`mix agent_kit.install --dry-run` quando quiser ver o plano antes, e o
-[prompt de instalação com IA](INSTALL_WITH_AI.md) quando um agente fizer a
-configuração.
 
 ## O que um agente faz com ele
 
@@ -218,7 +191,7 @@ inicia a sua aplicação nem chama um modelo.
 ## Atualizações e uma fonte só
 
 1. Leia o [changelog](../CHANGELOG.md); `mix agent_kit.outdated` diz se existe tag mais nova.
-2. No `mix.exs`, troque a tag Git ou, para Hex, fixe a versão depois de confirmar sua publicação no hex.pm. Rode `mix deps.update elixir_agent_kit`.
+2. Para Hex, mantenha `~> 1.2` para versões 1.x compatíveis; para Git, troque a tag. Rode `mix deps.update elixir_agent_kit`.
 3. Rode `mix agent_kit.sync --dry-run`, inspecione, depois `mix agent_kit.sync`.
 4. Rode `mix agent_kit.check` e os gates do seu projeto; versione o diff.
 
