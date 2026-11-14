@@ -174,3 +174,10 @@ reference in the same way: no passage was consulted for wording or reproduced.
 The [catalog field round](https://github.com/sallaumen/elixir-agent-kit/blob/c2ff7e5be2a08fdfab757d101e95036069634396/evals/results/2026-11-13-catalog-field-round.md) records original, application-derived experiments behind the 2026-11-13 workflow corrections. The application snapshots and the evaluator's answers are not installed as client instructions.
 
 The [class handover holdout](https://github.com/sallaumen/elixir-agent-kit/blob/c2ff7e5be2a08fdfab757d101e95036069634396/evals/results/2026-11-13-ui-identity-handover.md) supports the additional UI identity decision points. The installed text is the general candidate tested across screens; no application rule or fixture is shipped.
+
+The subsequent concept review compared executable Elixir counterexamples with
+the actions/calculations/data distinction in [Eric Normand’s overview](https://ericnormand.me/grokking-simplicity),
+the discussion of boundary data in [Robert C. Martin’s architecture essay](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html),
+and Elixir’s [guard semantics](https://hexdocs.pm/elixir/1.15.5/patterns-and-guards.html#errors-in-guards).
+The two guide corrections are original applications of those ideas. No new
+framework, mandatory layer or workflow was introduced.

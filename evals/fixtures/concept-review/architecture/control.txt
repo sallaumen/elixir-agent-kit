@@ -1,0 +1,18 @@
+Review this proposed rehearsal-scheduling change as a maintainer. Would you ship it as written? Give the smallest correction if any, who owns it, and what evidence would settle the decision. Keep the existing commands and their outputs compatible. Use only the supplied material; do not edit files or call tools. Up to 320 words.
+Studio has one Mix app, no library dependencies. Both batch preview commands must classify a rehearsal of at least 90 minutes as :long, otherwise :standard. Both formats are in use concurrently. Inputs to these commands have already passed integer and range validation. Public command examples from the partner fixtures:
+    Studio.Legacy.preview(%{"minutes" => 90}) # :long
+    Studio.Mixer.preview(%{"time" => 5400})   # :long
+    Studio.Mixer.preview(%{"time" => 5399})   # :standard
+CI ran a smoke check for legacy 90 and mixer 5400, and a file dependency cycle check. All three passed. Here is the entire code for the two entry paths, one module per file.
+defmodule Studio.Legacy do
+  def preview(%{"minutes" => n}), do: Studio.Schedule.classify(n * 60)
+end
+
+defmodule Studio.Mixer do
+  def preview(%{"time" => n}), do: Studio.Schedule.classify(n)
+end
+
+defmodule Studio.Schedule do
+  def classify(seconds) when is_integer(seconds) and seconds >= 5400, do: :long
+  def classify(seconds) when is_integer(seconds), do: :standard
+end

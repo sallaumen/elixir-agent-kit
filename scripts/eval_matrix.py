@@ -41,12 +41,14 @@ def matrix_workflows(root=ROOT):
     return [row[0] for row in _catalog(root) if row[3] in ("code", "backend")]
 
 
-def validate(text, source, cases, routes):
+def validate(text, source, cases, routes, seen=None):
     """Return the valid rows of one result file and a list of 'source:line: reason' errors."""
     lines = list(csv.reader(io.StringIO(text), delimiter="\t", quoting=csv.QUOTE_NONE))
     if not lines or lines[0] != COLUMNS:
         return [], [f"{source}:1: header must be: {' '.join(COLUMNS)}"]
     rows, errors = [], []
+    if seen is None:
+        seen = {}
     for number, values in enumerate(lines[1:], start=2):
         if not any(value.strip() for value in values):
             continue
@@ -55,8 +57,11 @@ def validate(text, source, cases, routes):
             continue
         row = dict(zip(COLUMNS, values))
         problems = []
-        if not row["run"]:
-            problems.append("run is empty")
+        identity = tuple(row[field].strip() for field in ("client", "model", "kit", "run"))
+        if not all(identity):
+            problems.append("client, model, kit and run must identify the execution")
+        if identity in seen:
+            problems.append(f"duplicate execution, first recorded at {seen[identity]}")
         if row["case"] not in cases:
             problems.append(f"unknown case {row['case']}")
         if row["routed"] not in routes:
@@ -72,6 +77,7 @@ def validate(text, source, cases, routes):
                 problems.append(f"{key} must be an integer or empty")
         errors.extend(f"{source}:{number}: {problem}" for problem in problems)
         if not problems:
+            seen[identity] = f"{source}:{number}"
             rows.append(row)
     return rows, errors
 
@@ -137,6 +143,12 @@ def self_check(root=ROOT):
     rows, errors = validate(invalid, "sample-invalid", cases, routes)
     if rows or len(errors) != 3:
         failures.append(f"eval_matrix self-check: invalid sample should give 3 errors, got {errors}")
+    seen = {}
+    _, first_errors = validate(valid, "first", cases, routes, seen)
+    repeated, duplicate_errors = validate(valid, "copy", cases, routes, seen)
+    distinct, other_errors = validate(valid.replace("E18-r1", "E18-r2"), "repeat", cases, routes, seen)
+    if first_errors or repeated or not duplicate_errors or other_errors or len(distinct) != 1:
+        failures.append("eval_matrix self-check: duplicate evidence and independent repeats must differ")
     if "E18" not in coverage_matrix(cases, matrix_workflows(root)):
         failures.append("eval_matrix self-check: coverage matrix misses NONE cases")
     return failures
@@ -150,8 +162,9 @@ def main(argv):
         return 0
     routes = known_routes()
     rows, errors = [], []
+    seen = {}
     for name in argv:
-        file_rows, file_errors = validate(Path(name).read_text(), name, cases, routes)
+        file_rows, file_errors = validate(Path(name).read_text(), name, cases, routes, seen)
         rows.extend(file_rows)
         errors.extend(file_errors)
     if errors:

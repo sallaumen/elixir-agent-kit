@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Architecture reviews now check whether a policy knows an adapter’s fields
+  or units even when the call graph is acyclic. Functional refactoring now
+  distinguishes functions from the data they transform and preserves when a
+  deferred read happens. No workflow IDs or installer behavior changed.
+
 ## 1.2.1 — 2026-11-14
 
 - Patch release: English, Portuguese and agent installation guides distinguish
