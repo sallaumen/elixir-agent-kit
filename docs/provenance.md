@@ -154,7 +154,7 @@ documentation or source of the version named; no passage is reproduced. The
 review added `pipelines.md`, `architecture.md`, `library-authoring.md` and
 `agent-loop.md`, expanded `code-shape.md` with the anti-pattern vocabulary, and
 added the `data-pipelines` workflow for flows of many items, whose CI namesake
-`pipeline-design` now points to it.
+`pipeline-design` now points to it. A later [paired engineering exercise](../evals/results/2026-11-13-engineering-ab.md) contributed the distinction between records examined and records changed in a paged repair.
 
 ## Refactoring workflows in 0.8
 
@@ -170,3 +170,5 @@ the workflow is written in the kit's own words.
 detail, comments that carry information, visible error flow) through the Elixir
 anti-pattern vocabulary in `elixir/code-shape.md`. The book is a concept-only
 reference in the same way: no passage was consulted for wording or reproduced.
+
+The [catalog field round](../evals/results/2026-11-13-catalog-field-round.md) records original, application-derived experiments behind the 2026-11-13 workflow corrections. The application snapshots and the evaluator's answers are not installed as client instructions.

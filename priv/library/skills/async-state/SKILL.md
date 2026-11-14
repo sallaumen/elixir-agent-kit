@@ -46,6 +46,7 @@ The question this workflow answers is: who owns each state transition, how is a 
 
 - One durable owner per state; the interface is a view of it, never the source. If the only record of completion is a flash or a toast, the state is lost on reload.
 - Push, do not poll: subscribe once in the connected mount, dedupe broadcasts by content or sequence, and let the server tell the view. Polling the database from the browser is a last resort and must be justified.
+- For a command whose meaning depends on the rendered state, preserve the existing gesture. Carry what the user saw to the owner, compare it with current state, and distinguish a replay from a conflicting transition. Keep any confirmation the fresh interaction would require.
 - Match results by stable key (entity id plus revision or request id). "Most recent" is not a key.
 - Accepted is not done: an HTTP 200 for the enqueue, a job inserted, or a message sent are each one transition, not success.
 - One job of a kind at a time per owner: a second submit while the job runs is refused where the state lives (the LiveView, the context), not only by disabling the button; the running job is the receipt.

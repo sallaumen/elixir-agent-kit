@@ -43,6 +43,8 @@ This workflow governs **interface motion**. Rendered video, motion graphics and 
 
 ## Decision points
 
+- Check the final computed state as well as the transition that reaches it, including styles from the component and its outer surface. Shortening a duration does not remove a transform applied by an interaction state. Under reduced motion, remove decorative displacement or scale while retaining a stationary signal of the same state; keep movement required for direct manipulation and verify both the normal and reduced branches.
+
 - If the motion explains a state change, keep it and make it exact. If it only decorates, cut it or remove it.
 - Prefer a cut or a short in-place change for text, rows and counters. A crafted travel is for a new context or a signature moment, not for every section.
 - Use a spring only for direct manipulation or physical arrival (sheet, drag, add and remove). Overshoot is a choice; decelerating curves suit most product surfaces.
