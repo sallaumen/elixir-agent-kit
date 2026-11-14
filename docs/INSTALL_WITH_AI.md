@@ -5,11 +5,11 @@ consuming Elixir project. Review the resulting diff and evidence under your
 project's existing delivery policy. The prompt grants no new paid calls or deploys.
 
 ```text
-Install or migrate Elixir Agent Kit v1.1.0 in this Elixir project using its
+Install or migrate Elixir Agent Kit v1.2.0 in this Elixir project using its
 reference-only layout. Read the project's instructions and the versioned guide:
-https://github.com/sallaumen/elixir-agent-kit/blob/v1.1.0/README.md
+https://github.com/sallaumen/elixir-agent-kit/blob/v1.2.0/README.md
 and compatibility:
-https://github.com/sallaumen/elixir-agent-kit/blob/v1.1.0/docs/compatibility.md
+https://github.com/sallaumen/elixir-agent-kit/blob/v1.2.0/docs/compatibility.md
 
 1. Inspect the working tree, Mix project, existing instruction files, dependency
    aliases and any previous .elixir-agent-kit/state.tsv. Preserve unrelated work;
@@ -17,7 +17,7 @@ https://github.com/sallaumen/elixir-agent-kit/blob/v1.1.0/docs/compatibility.md
 2. In the existing deps/0 add or update exactly one dependency:
    {:elixir_agent_kit,
     git: "https://github.com/sallaumen/elixir-agent-kit.git",
-    tag: "v1.1.0", only: [:dev, :test], runtime: false}
+    tag: "v1.2.0", only: [:dev, :test], runtime: false}
    It is public: no token in source. Do not claim it is published to Hex.
 3. In project/0 set elixir_agent_kit: [agents: [:codex, :claude, :generic], skills: :all],
    unless this project already has a deliberately narrower selection.
