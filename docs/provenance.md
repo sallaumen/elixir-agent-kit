@@ -170,3 +170,5 @@ the workflow is written in the kit's own words.
 detail, comments that carry information, visible error flow) through the Elixir
 anti-pattern vocabulary in `elixir/code-shape.md`. The book is a concept-only
 reference in the same way: no passage was consulted for wording or reproduced.
+
+The [catalog field round](../evals/results/2026-11-13-catalog-field-round.md) records original, application-derived experiments behind the 2026-11-13 workflow corrections. The application snapshots and the evaluator's answers are not installed as client instructions.
