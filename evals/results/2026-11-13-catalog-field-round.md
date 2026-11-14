@@ -29,3 +29,22 @@ not tag a release on this evidence. A useful next test is a new independent
 source of expected product hierarchy (for example a designer-approved set
 of simultaneous states and their permitted actions), frozen before proposing
 new wording; do not tune against these three screens again.
+
+## Candidate identity and limits
+
+The following SHA-256 values identify the full installed workflow files used
+in the final candidate runs, including the inline guide in the pipeline test.
+A match identifies the instructions; it does not establish repeatability.
+In particular, pipeline outcomes varied across sessions. The 37 dispositions
+above concern the named cases only, not complete acceptance across every
+criterion or superiority to an unaided agent.
+
+| Workflow | SHA-256 |
+|---|---|
+| `data-pipelines` | `9b184ffdb3fd41fde659131cf05b4b47b95ec04670f882e06ab0db836a161426` |
+| `async-state` | `67fdeacafaefb058c4e79f60dc561cceaf35c23fc5cf5ee22310af344e618066` |
+| `commercial-eligibility` | `3e58a79797c7192e255ab5a4b68b01bd25052e65a850684aa2fa1a5709795f71` |
+| `revision-lineage` | `88ee9430c14b55ffcd2913c3d1e3047a080b6fd57b99b348cd73f39e7adc4022` |
+| `accessibility` | `235a9a2d72b7a43bd51b1ea6cd22b699ad51b68d3107ddd2efd624759099763f` |
+| `navigation-ux` | `0ea2ec6236b3f234540ee6e03120c64e64d18c7ed382d814878c55ae2c1a413a` |
+| `motion-design` | `b9d95147fcbd8a5aab67081762a92c68f94f8aec6fab70e0dea3c83395a689c0` |
