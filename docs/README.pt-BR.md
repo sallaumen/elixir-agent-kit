@@ -37,16 +37,16 @@ GitHub, use Git. A tag pública dispensa credenciais.
 ```elixir
 {:elixir_agent_kit,
  git: "https://github.com/sallaumen/elixir-agent-kit.git",
- tag: "v1.2.1",
+ tag: "v1.2.2",
  only: [:dev, :test],
  runtime: false}
 ```
 
 Para usar o Hex, substitua a entrada Git pelo exemplo abaixo **somente depois
-que a versão 1.2.1 estiver publicada no hex.pm**. Até lá, use a tag acima.
+que a versão 1.2.2 estiver publicada no hex.pm**. Até lá, use a tag acima.
 
 ```elixir
-{:elixir_agent_kit, "== 1.2.1", only: [:dev, :test], runtime: false}
+{:elixir_agent_kit, "== 1.2.2", only: [:dev, :test], runtime: false}
 ```
 
 **2. Escolha agentes e workflows** em `project/0`:

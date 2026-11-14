@@ -1,11 +1,13 @@
 # Changelog
 
-## Unreleased
+## 1.2.2 — 2026-11-14
 
-- Architecture reviews now check whether a policy knows an adapter’s fields
+- Patch release: architecture reviews now check whether a policy knows an adapter’s fields
   or units even when the call graph is acyclic. Functional refactoring now
   distinguishes functions from the data they transform and preserves when a
   deferred read happens. No workflow IDs or installer behavior changed.
+- Evaluation reports now reject duplicate execution records. The [concept
+  review](https://github.com/sallaumen/elixir-agent-kit/blob/a2e8382276225bcc4f3a48dbb27a09a70c6b0ec6/evals/results/2026-11-14-concepts.md) records the comparisons and their limits.
 
 ## 1.2.1 — 2026-11-14
 
