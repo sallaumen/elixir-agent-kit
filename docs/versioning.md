@@ -180,8 +180,8 @@ No workflow ID is removed without this record, and no published tag is moved.
 
 1. Read the [changelog](../CHANGELOG.md); `mix agent_kit.outdated` tells whether a
    newer tag exists.
-2. Set the Git tag or exact Hex version in `mix.exs`. For Hex, verify that the version
-   is published on hex.pm; the Git tag check does not query the registry. Run `mix deps.update elixir_agent_kit`.
+2. For Git, change the tag. For Hex, keep the existing compatible requirement
+   (for example, `~> 1.2`) and verify the release on hex.pm; the Git tag check does not query the registry. Run `mix deps.update elixir_agent_kit`.
 3. Run `mix agent_kit.sync --dry-run`, inspect the paths and removals, then
    `mix agent_kit.sync`.
 4. Run `mix agent_kit.check` and the project's own gates; commit the diff.

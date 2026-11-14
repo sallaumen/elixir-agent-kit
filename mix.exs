@@ -7,7 +7,11 @@ defmodule ElixirAgentKit.MixProject do
       version: "1.2.2",
       elixir: "~> 1.15",
       start_permanent: Mix.env() == :prod,
-      deps: [],
+      deps:
+        if(Mix.env() == :docs,
+          do: [{:ex_doc, "~> 0.40.0", only: :docs, runtime: false}],
+          else: []
+        ),
       description: "Versioned coding-agent practices and safe project setup for Elixir teams",
       source_url: "https://github.com/sallaumen/elixir-agent-kit",
       package: [
@@ -16,19 +20,11 @@ defmodule ElixirAgentKit.MixProject do
         files:
           ~w(lib priv docs mix.exs README.md LICENSE CHANGELOG.md CONTRIBUTING.md SECURITY.md)
       ],
-      # No dependency is declared for ex_doc: a nested dev dependency is fetched by
-      # every consumer's mix deps.get. Publish with mix hex.publish package, or add
-      # ex_doc to a local checkout to build these extras.
       docs: [
-        main: "readme",
-        extras: [
-          "README.md",
-          "CHANGELOG.md",
-          "docs/README.pt-BR.md",
-          "docs/INSTALL_WITH_AI.md",
-          "docs/architecture.md",
-          "docs/compatibility.md"
-        ]
+        main: "installation",
+        source_ref: System.get_env("DOCS_SOURCE_REF", "main"),
+        footer: false,
+        extras: ["docs/installation.md", "docs/instalacao.md"]
       ],
       aliases: [check: ["format --check-formatted", "compile --warnings-as-errors", "test"]]
     ]

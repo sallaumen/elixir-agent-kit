@@ -1,5 +1,7 @@
 # Documentation map
 
+Start with the installation guide in [English](installation.md) or [Português](instalacao.md).
+
 | Need | Start here |
 |---|---|
 | Install or migrate an existing Elixir application | [AI installation prompt](INSTALL_WITH_AI.md) and [Portuguese quick start](README.pt-BR.md) |
