@@ -43,6 +43,8 @@ This workflow owns history, URLs, overlays that act as navigation, back behavior
 
 ## Decision points
 
+- When a direct link seems to lose its location, first distinguish missing route state from a correctly identified destination outside the visible portion of a navigation container. Check the container and document separately. If the navigation already works, try the smallest local reveal on entry or changed selection; keep focus and scroll where they are when the item is already visible or the container fits. If the page itself cannot fit, route that layout defect to responsive-layout instead of scrolling it away.
+
 - A place has a URL; a choice does not. Decide per overlay, never with a global history interceptor or a reflex history entry on every open.
 - State the user would expect in a shared link lives in the URL; personal transient state lives in assigns; state that must outlive the socket lives in the database or session.
 - `push_patch` for a change within the same LiveView, `push_navigate` when the process must restart, `redirect` only when leaving LiveView; a remount that drops the user's work is a finding.

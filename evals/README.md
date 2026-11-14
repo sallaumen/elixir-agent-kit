@@ -44,6 +44,9 @@ fails CI. Runs are manual and paid; nothing here calls a model.
 
 ## Case notes
 
+The [catalog field round](results/2026-11-13-catalog-field-round.md) maps all
+38 workflows to their paired evidence and records the release decision.
+
 The [test-strategy pilot](results/2026-11-13-test-strategy-baseline.md) pairs a
 missing assertion that shipped with an inverse control that needed no edit.
 The [debugging baseline](results/2026-11-13-debugging-baseline.md) starts a
