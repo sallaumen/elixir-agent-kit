@@ -13,7 +13,8 @@ mix check
 python3 scripts/check_library.py
 python3 scripts/smoke_install.py
 python3 scripts/smoke_migration.py
-mix hex.build
+mix hex.build --output elixir_agent_kit-local.tar
+python3 scripts/check_package_links.py elixir_agent_kit-local.tar
 ```
 
 `mix check` checks formatting, compiles with warnings as errors and runs ExUnit

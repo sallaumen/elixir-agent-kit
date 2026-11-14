@@ -6,7 +6,8 @@ One Mix project contains CLI tasks, an installer and canonical `priv/library/`
 guidance. No application callback, supervision tree, database, model client or
 third-party dependency is installed. `:crypto` supplies ownership checksums.
 
-Consumers pin an immutable tag and commit the lockfile. Mix downloads the source;
+Consumers pin a Git tag or a published Hex version and commit the lockfile.
+Mix fetches the chosen dependency;
 agents read it directly from the dependency. `catalog.tsv` owns workflow metadata
 (ID, mode, trigger and primary area), `ROUTING.md` explains area choice,
 `CATALOG.md` is the grouped human index, `skills/` contains the workflow bodies, and
@@ -38,7 +39,7 @@ Configuration selects instruction adapters and workflow IDs for routing. It does
 not prevent reading other workflows. Clients must load project instructions and
 be able to read the ignored dependency directory after `mix deps.get`.
 
-Mix resolves custom dependency paths. Git dependencies normally generate relative,
+Mix resolves custom dependency paths. Git and Hex dependencies inside the project generate relative,
 portable links; an external local path dependency needs a machine-local absolute
 link and resync after relocation. Markdown destinations encode special characters.
 

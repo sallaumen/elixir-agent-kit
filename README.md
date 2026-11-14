@@ -34,17 +34,24 @@ shipped to production.
 
 ## Quick start
 
-Requires Elixir 1.15+, a compatible Erlang/OTP and Git. Releases are public Git
-tags, **not Hex**; no token is needed.
+Requires Elixir 1.15+ and a compatible Erlang/OTP. Use Git to install this
+GitHub release; a public tag does not require credentials.
 
-**1. Add the dependency** to `deps/0` in `mix.exs`:
+**1. Choose one dependency** for `deps/0` in `mix.exs`. For Git, pin the tag:
 
 ```elixir
 {:elixir_agent_kit,
  git: "https://github.com/sallaumen/elixir-agent-kit.git",
- tag: "v1.2.0",
+ tag: "v1.2.1",
  only: [:dev, :test],
  runtime: false}
+```
+
+For Hex, use the following **instead of** the Git entry only after version
+1.2.1 is published on hex.pm. Until then, use the Git tag above.
+
+```elixir
+{:elixir_agent_kit, "== 1.2.1", only: [:dev, :test], runtime: false}
 ```
 
 **2. Choose the agents and workflows** in `project/0`:
@@ -124,7 +131,7 @@ is opened:
    scope, changes persisted data or a public contract, or has an irreversible step;
    authority rules, the mode and the workflow's own stop conditions still apply.
 
-The routing cases in [`evals/`](evals/README.md) hold 87 requests like that one,
+The routing cases in [`evals/`](https://github.com/sallaumen/elixir-agent-kit/blob/c2ff7e5be2a08fdfab757d101e95036069634396/evals/README.md) hold 87 requests like that one,
 with the expected workflow and the signals of a good or bad answer. They stay out
 of the installed payload so an agent never sees the answer key.
 
@@ -212,7 +219,7 @@ your application or calls a model.
 ## Upgrades and one shared source
 
 1. Read the [changelog](CHANGELOG.md); `mix agent_kit.outdated` tells you whether a newer tag exists.
-2. Change the tag in `mix.exs` and run `mix deps.update elixir_agent_kit`.
+2. For Git, change the tag; for Hex, first confirm the release on hex.pm, then change the version requirement in `mix.exs`. Run `mix deps.update elixir_agent_kit`.
 3. Run `mix agent_kit.sync --dry-run`, inspect, then `mix agent_kit.sync`.
 4. Run `mix agent_kit.check` and your project gates; commit the diff.
 

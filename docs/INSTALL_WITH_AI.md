@@ -5,20 +5,23 @@ consuming Elixir project. Review the resulting diff and evidence under your
 project's existing delivery policy. The prompt grants no new paid calls or deploys.
 
 ```text
-Install or migrate Elixir Agent Kit v1.2.0 in this Elixir project using its
+Install or migrate Elixir Agent Kit v1.2.1 in this Elixir project using its
 reference-only layout. Read the project's instructions and the versioned guide:
-https://github.com/sallaumen/elixir-agent-kit/blob/v1.2.0/README.md
+https://github.com/sallaumen/elixir-agent-kit/blob/v1.2.1/README.md
 and compatibility:
-https://github.com/sallaumen/elixir-agent-kit/blob/v1.2.0/docs/compatibility.md
+https://github.com/sallaumen/elixir-agent-kit/blob/v1.2.1/docs/compatibility.md
 
 1. Inspect the working tree, Mix project, existing instruction files, dependency
    aliases and any previous .elixir-agent-kit/state.tsv. Preserve unrelated work;
    use an isolated branch/worktree under this project's rules.
-2. In the existing deps/0 add or update exactly one dependency:
+2. In the existing deps/0 keep exactly one declaration. For the GitHub release use:
    {:elixir_agent_kit,
     git: "https://github.com/sallaumen/elixir-agent-kit.git",
-    tag: "v1.2.0", only: [:dev, :test], runtime: false}
-   It is public: no token in source. Do not claim it is published to Hex.
+    tag: "v1.2.1", only: [:dev, :test], runtime: false}
+   For Hex, verify that hex.pm lists 1.2.1 before using this alternative:
+   {:elixir_agent_kit, "== 1.2.1", only: [:dev, :test], runtime: false}
+   If the version is unavailable, use Git for a new installation. For an existing
+   Hex dependency, report the unavailable version; do not silently switch sources.
 3. In project/0 set elixir_agent_kit: [agents: [:codex, :claude, :generic], skills: :all],
    unless this project already has a deliberately narrower selection.
 4. Fetch dependencies (deps.get for new install; deps.update elixir_agent_kit for
@@ -49,7 +52,7 @@ https://github.com/sallaumen/elixir-agent-kit/blob/v1.2.0/docs/compatibility.md
    name does not establish compatibility. Do not claim live compliance from file checks.
 10. Explain maintenance: reusable lessons are proposed upstream through the kit's
    EVOLUTION.md; product-specific rules remain local. Use mix agent_kit.outdated
-   explicitly to discover stable releases; no background or unpinned update.
+   to check stable Git tags; it does not check Hex availability.
 11. Run project-required checks, inspect the diff and stage files by name. Commit
     dependency, lock, index/state, plans/.gitignore, references and removal of obsolete owned files
     together. Follow existing PR/merge authority. Report exact files/counts,
