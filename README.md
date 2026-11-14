@@ -42,16 +42,16 @@ GitHub release; a public tag does not require credentials.
 ```elixir
 {:elixir_agent_kit,
  git: "https://github.com/sallaumen/elixir-agent-kit.git",
- tag: "v1.2.1",
+ tag: "v1.2.2",
  only: [:dev, :test],
  runtime: false}
 ```
 
 For Hex, use the following **instead of** the Git entry only after version
-1.2.1 is published on hex.pm. Until then, use the Git tag above.
+1.2.2 is published on hex.pm. Until then, use the Git tag above.
 
 ```elixir
-{:elixir_agent_kit, "== 1.2.1", only: [:dev, :test], runtime: false}
+{:elixir_agent_kit, "== 1.2.2", only: [:dev, :test], runtime: false}
 ```
 
 **2. Choose the agents and workflows** in `project/0`:
