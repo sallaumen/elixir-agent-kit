@@ -184,8 +184,9 @@ import eval_matrix  # noqa: E402
 
 eval_cases = eval_matrix.load_cases(ROOT)
 eval_routes = eval_matrix.known_routes(ROOT)
+seen_runs = {}
 for result in sorted((ROOT / "evals/results").glob("*.tsv")):
-    _, problems = eval_matrix.validate(result.read_text(), str(result.relative_to(ROOT)), eval_cases, eval_routes)
+    _, problems = eval_matrix.validate(result.read_text(), str(result.relative_to(ROOT)), eval_cases, eval_routes, seen_runs)
     errors.extend(problems)
 errors.extend(eval_matrix.self_check(ROOT))
 

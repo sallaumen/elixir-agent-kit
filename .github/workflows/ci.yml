@@ -27,6 +27,11 @@ jobs:
           otp-version: ${{ matrix.otp }}
       - run: mix check
       - run: python3 scripts/check_library.py
+      - name: Replay the three concept counterexamples without a model
+        run: |
+          elixir evals/fixtures/concept-review/architecture/verify.exs
+          python3 evals/fixtures/concept-review/functional/replay.py
+          elixir evals/fixtures/concept-review/clarity/check.exs
       - run: python3 -m pip install --user pyflakes==4.1.0
       - run: python3 -m pyflakes scripts/
       - run: python3 scripts/smoke_install.py

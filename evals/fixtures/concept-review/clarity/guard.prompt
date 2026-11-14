@@ -1,0 +1,15 @@
+The production editor reads PrintSlot.select/1 when laying out a page. A reviewer had to trace the nested branch twice. Make this lookup easier to read while keeping its public behavior. The existing tests cover an ordinary proof mark, an ordinary draft mark and a record with no marks. Supply the complete revised module in an elixir fenced block, then an executable ExUnit test module in a second elixir fenced block with the extra examples you think are worth keeping. Use the standard library only. You have the complete relevant source below. Do not run tools or claim you ran checks.
+
+defmodule PrintSlot do
+  def select(r) do
+    case r do
+      %{mark: :fixed, slot: n} -> {:fixed, n}
+      %{markers: x} ->
+        case x do
+          t when elem(t, 0) == :proof -> :proof
+          _ -> :normal
+        end
+      _ -> :normal
+    end
+  end
+end

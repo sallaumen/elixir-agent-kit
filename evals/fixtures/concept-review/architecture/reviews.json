@@ -1,0 +1,122 @@
+{
+  "pinned_tag": "v1.2.1",
+  "commit": "858d1522700495b5b916399633074b39230dc0ae",
+  "client": "codex exec",
+  "model": "gpt-6.1-sol",
+  "reasoning": "medium",
+  "sessions": [
+    {
+      "case": "positive",
+      "blind_position": 1,
+      "guide": "base",
+      "replicate": 1,
+      "marks": [
+        1,
+        0,
+        0,
+        0,
+        1
+      ],
+      "answer": "I would not ship it as written. **`Studio.Schedule.classify/1` misclassifies Mixer’s 5399-second fixture as `:long`.** Dividing by 60 and rounding produces 90, then multiplying produces 5400. This also promotes durations from 5370 through 5399 seconds prematurely.\n\nThe smallest correction is one line:\n\n```elixir\ndef classify(%{\"time\" => n}), do: classify_length(n)\n```\n\nThe partner fixtures establish that `\"time\"` is already in seconds. Keep the `\"minutes\"` conversion, both public `preview/1` commands, and the `:long` / `:standard` outputs.\n\nOwnership and dependency map:\n\n| Concept | Owner | Callers / direction |\n|---|---|---|\n| Input normalization and duration classification | `Studio.Schedule` | `Studio.Legacy → Studio.Schedule`; `Studio.Mixer → Studio.Schedule` |\n| Public command entry points | `Studio.Legacy`, `Studio.Mixer` | Each delegates to `Studio.Schedule.classify/1` |\n\nThe scheduling maintainer/change author owns this correction. The supplied code shows one authoritative threshold and no reverse dependency. No new context, behaviour, dependency, or app split is warranted.\n\nThe representative trace is `Mixer.preview → Schedule.classify → classify_length → atom`. It is pure and synchronous; the supplied paths contain no persistence, processes, retries, or external effects.\n\n**Evidence to settle the decision:** regression tests through both public commands covering Legacy 89/90 minutes and Mixer 5370/5399/5400 seconds, including all supplied fixtures; then a clean compile and project gate. The reported smoke checks cover successful threshold cases but miss premature promotion. The passing file-cycle check does not establish classification correctness.\n\nWorkflow: `architecture-review`, Small, review-only. This is a proposed correction based on supplied code; no tools were called or checks executed."
+    },
+    {
+      "case": "positive",
+      "blind_position": 2,
+      "guide": "candidate",
+      "replicate": 1,
+      "marks": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "answer": "**I would not ship it as written.** `Studio.Schedule.classify/1` rounds Mixer seconds to whole minutes: `5399` becomes `5400`, returning `:long` where the supplied partner fixture requires `:standard`. This is a concrete correctness defect.\n\nUsing the supplied `architecture-review` guidance, this is a **Small, review-only** change. The ownership map is:\n\n| Responsibility | Owner | Dependency |\n|---|---|---|\n| Legacy `\"minutes\"` format and conversion | `Studio.Legacy` | → `Studio.Schedule` |\n| Mixer `\"time\"` format, already seconds | `Studio.Mixer` | → `Studio.Schedule` |\n| Duration classification and threshold | `Studio.Schedule` | No outgoing dependency |\n\nThe current shared rule also knows both commands’ field names and units. Removing rounding alone fixes the demonstrated output, but leaves that boundary coupling. The smallest coherent correction is to translate each format at entry and give the shared decision integer seconds:\n\n```elixir\n# Studio.Legacy\ndef preview(%{\"minutes\" => n}),\n  do: Studio.Schedule.classify(n * 60)\n\n# Studio.Mixer\ndef preview(%{\"time\" => n}),\n  do: Studio.Schedule.classify(n)\n\n# Studio.Schedule\ndef classify(seconds) when seconds >= 5400, do: :long\ndef classify(_seconds), do: :standard\n```\n\nBoth existing command interfaces and required outputs remain compatible. No dependency, behaviour, struct or process is needed. The change author owns the correction; the Schedule maintainer owns the shared seconds contract.\n\nEvidence that would settle shipment:\n\n- Command-level tests for Legacy `89 → :standard`, `90 → :long`; Mixer `5399 → :standard`, `5400 → :long`, `5401 → :long`.\n- Shared classification tests using seconds around `5400`.\n- Successful compilation and applicable project gates, including before/after cycle evidence.\n\nThe reported smoke checks exercise values that survive rounding unchanged. The passing file-cycle check establishes no unit correctness. From the supplied code, Mixer `5399` traces through rounding to `:long`; I have not executed checks."
+    },
+    {
+      "case": "positive",
+      "blind_position": 3,
+      "guide": "candidate",
+      "replicate": 2,
+      "marks": [
+        1,
+        1,
+        1,
+        0,
+        1
+      ],
+      "answer": "**I would not ship it as written.** `Studio.Mixer.preview(%{\"time\" => 5399})` reaches `round(5399 / 60) * 60`, becomes 5400, and returns `:long`. That contradicts the supplied partner fixture. The two smoke checks miss this boundary error.\n\nThere is also a visible ownership issue: `Studio.Schedule` knows both command formats and their units. The smallest coherent boundary correction is to translate each format at its entry point and give Schedule integer seconds:\n\n```elixir\ndefmodule Studio.Legacy do\n  def preview(%{\"minutes\" => n}),\n    do: Studio.Schedule.classify(n * 60)\nend\n\ndefmodule Studio.Mixer do\n  def preview(%{\"time\" => n}),\n    do: Studio.Schedule.classify(n)\nend\n\ndefmodule Studio.Schedule do\n  def classify(seconds) when seconds >= 5400, do: :long\n  def classify(_seconds), do: :standard\nend\n```\n\nThis preserves both supplied command interfaces and their required outputs. No additional validation, dependency, behaviour or process is needed.\n\nOwnership is explicit:\n\n- `Studio.Legacy` owns the minutes-format translation.\n- `Studio.Mixer` owns the seconds-format translation.\n- `Studio.Schedule` owns the classification rule. The change author should implement the correction and regression tests; the scheduling maintainer should approve the rule.\n\nDependencies remain `Legacy → Schedule ← Mixer`. The supplied cycle check supports the absence of file dependency cycles; it does not establish correct units or classification.\n\nEvidence to settle shipment: execute public-command tests for Legacy minutes **89/90/91** and Mixer seconds **5399/5400/5401**, expecting `:standard/:long/:long` respectively; test Schedule directly at the seconds boundary; then pass compilation with warnings as errors and the existing project gates. Keep both partner formats tested concurrently.\n\nAssessment: **architecture-review, Medium**, limited to a proposed correction. The failure above is derived from the supplied code; no checks were executed."
+    },
+    {
+      "case": "positive",
+      "blind_position": 4,
+      "guide": "base",
+      "replicate": 2,
+      "marks": [
+        1,
+        0,
+        0,
+        0,
+        1
+      ],
+      "answer": "I would **not ship this as written**. The shared rule is appropriate, but the Mixer conversion violates a supplied public example.\n\n`Studio.Schedule.classify/1` rounds seconds to whole minutes before classification. For `%{\"time\" => 5399}`, `round(5399 / 60) * 60` becomes `5400`, returning `:long` instead of the required `:standard`. In fact, 5370 seconds already rounds up to the threshold.\n\nThe smallest correction is one line:\n\n```elixir\ndef classify(%{\"time\" => n}), do: classify_length(n)\n```\n\nKeep the minutes conversion, threshold, command entry points and output atoms unchanged.\n\nOwnership and dependency map:\n\n| Concept | Owner | Dependencies |\n|---|---|---|\n| Legacy command | `Studio.Legacy` | → `Studio.Schedule` |\n| Mixer command | `Studio.Mixer` | → `Studio.Schedule` |\n| Input normalization and duration classification | `Studio.Schedule` | No outgoing module calls shown |\n\nThe maintainer responsible for `Studio.Schedule` owns the correction and regression coverage; no individual owner is identified in the supplied material. Both formats can continue using the same authoritative rule. No new abstraction, dependency or application split is needed.\n\nThe decisive evidence would be passing tests through the public commands:\n\n- Legacy: 89 → `:standard`, 90 → `:long`, 91 → `:long`.\n- Mixer: 5370 and 5399 → `:standard`; 5400 and 5401 → `:long`.\n\nThe existing smoke checks cover values that pass even with this bug. The passing file dependency cycle check supports the dependency structure, but cannot establish classification correctness.\n\nThis is a **Small, architecture-review** assessment with a proposed correction only. The failure follows directly from the supplied code; I ran no commands or tests. Passing boundary regressions and the existing project gates would settle shipment."
+    },
+    {
+      "case": "control",
+      "blind_position": 1,
+      "guide": "base",
+      "replicate": 1,
+      "marks": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "answer": "**I would ship the implementation as written.** The supplied code satisfies all three partner examples. There is no demonstrated correctness or ownership defect; CI coverage is the remaining weakness.\n\nArchitecture-review, Medium; review only. Ownership map:\n\n| Responsibility | Owner | Dependencies |\n|---|---|---|\n| Minutes input and conversion to seconds | `Studio.Legacy.preview/1` | Legacy → Schedule |\n| Seconds input | `Studio.Mixer.preview/1` | Mixer → Schedule |\n| Inclusive 5,400-second classification threshold | `Studio.Schedule.classify/1` | No outgoing dependencies |\n\nBoth formats remain supported concurrently, with unchanged input keys and atom outputs. The adapters normalize units; Schedule owns the single business rule.\n\nTracing the boundary from the supplied source: Legacy’s `90` becomes `5400`, which returns `:long`. Mixer’s `5400` returns `:long`; `5399` fails the first guard and returns `:standard`. These are source-derived conclusions, not additional executed tests. These paths have no persistence, processes, asynchronous effects, or retry behavior.\n\n**Smallest correction:** no production-code change. Have the change author add public-entry regression assertions for Legacy `89 → :standard`, `90 → :long`, and Mixer `5399 → :standard`, `5400 → :long`. The Studio maintainer owns acceptance; `Studio.Schedule` remains the behavior owner. No new behaviour, dependency, or application split is warranted.\n\n**Evidence to settle shipment:** passing those boundary assertions and the project’s normal compile/test gate. The reported smoke checks establish only the two threshold examples. The passing file-cycle check supports dependency hygiene; it does not establish classification correctness. No supplied evidence justifies an architectural blocker."
+    },
+    {
+      "case": "control",
+      "blind_position": 2,
+      "guide": "base",
+      "replicate": 2,
+      "marks": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "answer": "I would ship this implementation as written. The supplied code satisfies the contract; no production-code correction is needed.\n\nUsing `architecture-review` in review mode, size **Small**, the ownership map is:\n\n| Responsibility | Owner | Dependency |\n|---|---|---|\n| Legacy minutes input and conversion | `Studio.Legacy` | → `Studio.Schedule` |\n| Mixer seconds input | `Studio.Mixer` | → `Studio.Schedule` |\n| Classification threshold and result atoms | `Studio.Schedule` | No outgoing calls |\n\nBoth formats remain supported concurrently. The adapters normalize their inputs to seconds; the business rule has one owner. Different input formats do not require separate implementations, behaviours, dependencies, or Mix apps.\n\nTracing the supplied code:\n\n- Legacy `90` becomes `5400`, yielding `:long`.\n- Mixer `5400` yields `:long`.\n- Mixer `5399` reaches the second clause, yielding `:standard`.\n\nThese paths have no persistence, processes, external effects, or retry behavior. Integer and range validation are already upstream.\n\nThe smallest useful addition is **boundary regression coverage**, owned by the change author, with the scheduling maintainer accountable for the shared rule. Exercise the public commands and assert:\n\n| Command | Input → expected output |\n|---|---|\n| Legacy | `89 → :standard`, `90 → :long`, `91 → :long` |\n| Mixer | `5399 → :standard`, `5400 → :long`, `5401 → :long` |\n\nKeep the existing command names, map keys, input units, and output atoms unchanged.\n\nThe reported smoke checks establish the two exact-threshold cases. The reported cycle check supports dependency health but cannot establish classification correctness. Passing public-entry boundary tests would settle the remaining validation gap, especially the partner’s `5399` example. That result is inferred from the supplied code here; it was not reported as executed."
+    },
+    {
+      "case": "control",
+      "blind_position": 3,
+      "guide": "candidate",
+      "replicate": 1,
+      "marks": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "answer": "I would ship the implementation unchanged. The supplied code satisfies the contract; the remaining gap is boundary-test evidence.\n\n**Architecture review — Small, review only.**\n\n| Owner | Responsibility | Dependency |\n|---|---|---|\n| `Studio.Legacy` | Accept `\"minutes\"` and convert to seconds | → `Studio.Schedule` |\n| `Studio.Mixer` | Accept `\"time\"` in seconds | → `Studio.Schedule` |\n| `Studio.Schedule` | Own the classification rule over seconds | No outgoing calls |\n\nThe two entry paths preserve their existing contracts:\n\n- Legacy: `90` → `5400` seconds → `:long`.\n- Mixer: `5400` → `:long`; `5399` → `:standard`.\n\nThese are deductions from the supplied code, not checks I executed. Both adapters translate their input at entry, including Mixer’s identity conversion. `Schedule.classify/1` already provides an adequate shared API with an explicit unit. There is no demonstrated reason to introduce a behaviour, struct, process, dependency, or different canonical unit.\n\n**Smallest correction:** no production-code change. Add regression assertions covering Legacy `89 → :standard`, `90 → :long`, and Mixer `5399 → :standard`, `5400 → :long`. Keep both commands, input keys, and output atoms unchanged. Do not add validation already guaranteed upstream.\n\n**Ownership:** the change author should add these assertions; the scheduling maintainer owns the shared threshold, while each command adapter owns its external format and unit translation.\n\n**Evidence that settles shipment:** passing assertions through both public commands, plus the existing project gate. The reported smoke checks establish only the two `:long` cases. The passing file-cycle check supports the dependency structure but cannot establish unit correctness or the below-threshold behavior. No persistence, retry path, or runtime process appears in the supplied entry paths."
+    },
+    {
+      "case": "control",
+      "blind_position": 4,
+      "guide": "candidate",
+      "replicate": 2,
+      "marks": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "answer": "I would ship this implementation as written. The supplied code satisfies all three partner examples and keeps both command formats compatible. No production-code correction is needed.\n\nUsing `architecture-review` in review mode, this is a small, bounded review. The ownership map is:\n\n| Responsibility | Owner | Dependency |\n|---|---|---|\n| Interpret `\"minutes\"` and convert to seconds | `Studio.Legacy` | Legacy → Schedule |\n| Interpret `\"time\"` as seconds | `Studio.Mixer` | Mixer → Schedule |\n| Decide `:long` versus `:standard` | `Studio.Schedule` | No outgoing dependency |\n\nThe traced operations are straightforward: legacy `90` becomes `5400`, then `:long`; mixer `5400` becomes `:long`, while `5399` reaches the fallback and becomes `:standard`. There are no persistence, process, retry, or external-service paths in the supplied code.\n\nThe important contract is the unit accepted by `Schedule.classify/1`. Both entry paths already translate their formats into seconds correctly. A passing cycle check alone cannot establish that semantic agreement, but the supplied code does. There is no reason here to introduce a behaviour, struct, process, dependency, or new API.\n\nThe smallest useful addition is regression coverage, owned by the change author and reviewed by the Studio maintainer:\n\n- Preserve the three public fixture examples, especially mixer `5399`, which the reported smoke checks omitted.\n- Check legacy `89` → `:standard`.\n- Check `Schedule.classify/1` at `5399`, `5400`, and `5401`.\n\nPassing those assertions and the normal project compile/test gates would settle the remaining regression concern. Only the two smoke checks and cycle check are reported as executed; this assessment otherwise rests on static inspection of the supplied material."
+    }
+  ],
+  "judge": {
+    "positive": "Scored against P1–P5 for the supplied positive case. Replies are assessed independently; no arm assignments inferred.\n\n| Criterion | Reply 1 | Reply 2 | Reply 3 | Reply 4 |\n|---|---|---|---|---|\n| **P1** | **1** — Rejects; “5399-second fixture” incorrectly becomes `:long` through rounding. | **1** — Rejects; explicitly traces `5399` to `5400` and incorrect `:long`. | **1** — Rejects; explicitly traces `5399` through rounding to incorrect `:long`. | **1** — Rejects; explicitly identifies `5399 → 5400 → :long` as incorrect. |\n| **P2** | **0** — Assigns “Input normalization and duration classification” to Schedule. Does not identify format ownership as a separate problem. | **1** — “Shared rule also knows both commands’ field names and units” identifies boundary coupling; ownership table explicitly shows one-way dependencies. | **1** — Explicit “ownership issue”: Schedule knows “both command formats and their units.” Also gives `Legacy → Schedule ← Mixer` and explains the cycle check’s limits. | **0** — Keeps normalization in Schedule and treats the dependency structure as supported. No distinct shape/meaning ownership problem identified. |\n| **P3** | **0** — Removes rounding inside Schedule; does not move translations to the input edges. | **1** — Legacy converts `n * 60`, Mixer forwards `n`, Schedule retains one `5400` threshold; commands remain compatible. | **1** — Explicit code places both translations at entry points and preserves the shared seconds threshold and command results. | **0** — One-line Schedule correction leaves both wire formats handled inside Schedule. |\n| **P4** | **0** — Covers both public paths, including Mixer `5399`, but proposes no direct shared-rule check with an independent seconds value. | **1** — Public Legacy `89/90`, Mixer `5399/5400/5401`, plus “Shared classification tests using seconds around `5400`.” | **0** — Public boundary coverage is explicit, but “test Schedule directly at the seconds boundary” supplies no independent seconds value for that direct check. | **0** — Public boundary coverage includes Mixer `5399`, but no direct shared-rule check is proposed. |\n| **P5** | **1** — One-line correction; explicitly rejects additional infrastructure. | **1** — Uses existing modules; “No dependency, behaviour, struct or process is needed.” | **1** — Uses existing modules; no new infrastructure required. | **1** — One-line correction; “No new abstraction, dependency or application split.” |\n\nWorkflow labels and claims about unexecuted checks receive no technical credit. No control-case material was supplied, so N1–N4 are not assessed.",
+    "control": "CASE=control. Each reply is scored independently using N1–N4; no arm assignments inferred.\n\n**Reply 1**\n\n- **N1: 1** — “ship the implementation as written”; “no production-code change.”\n- **N2: 1** — Legacy owns “conversion to seconds,” Mixer owns “Seconds input,” and Schedule owns the “Inclusive 5,400-second classification threshold.”\n- **N3: 1** — Requests Legacy `89 → :standard`, `90 → :long` and Mixer `5399 → :standard`, `5400 → :long`; identifies smoke coverage as limited to threshold examples.\n- **N4: 1** — “No new behaviour, dependency, or application split is warranted.”\n\n**Reply 2**\n\n- **N1: 1** — “ship this implementation as written”; “no production-code correction is needed.”\n- **N2: 1** — Identifies Legacy minutes conversion, Mixer seconds input, and Schedule’s shared threshold: “The adapters normalize their inputs to seconds.”\n- **N3: 1** — Explicit public regressions include Legacy `89/90/91` and Mixer `5399/5400/5401`; explains that smoke checks cover only exact-threshold cases.\n- **N4: 1** — Says the formats do not require “separate implementations, behaviours, dependencies, or Mix apps.”\n\n**Reply 3**\n\n- **N1: 1** — “ship the implementation unchanged”; “no production-code change.”\n- **N2: 1** — Legacy converts minutes to seconds; Mixer accepts seconds with an “identity conversion”; Schedule owns “the classification rule over seconds.”\n- **N3: 1** — Requests Legacy `89/90` and Mixer `5399/5400`; states smoke checks establish only the two `:long` cases.\n- **N4: 1** — Explicitly rejects introducing a “behaviour, struct, process, dependency, or different canonical unit.”\n\n**Reply 4**\n\n- **N1: 1** — “ship this implementation as written”; “No production-code correction is needed.”\n- **N2: 1** — Assigns minutes conversion to Legacy, seconds interpretation to Mixer, and classification to Schedule; confirms both paths translate into seconds.\n- **N3: 1** — Requests all three fixture examples, “especially mixer `5399`, which the reported smoke checks omitted,” plus Legacy `89 → :standard`.\n- **N4: 1** — “No reason here to introduce a behaviour, struct, process, dependency, or new API.”\n\nThe replies’ `architecture-review` labels do not establish live helper execution or adherence. These scores concern only explicit technical content."
+  },
+  "tag_object": "eed4c0f86ffc98865a9dc8cbe90b272e39d69564"
+}

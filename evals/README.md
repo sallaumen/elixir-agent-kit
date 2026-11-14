@@ -40,9 +40,13 @@ cell. A live round fills that matrix with observed runs:
    the `.tsv` with a short Markdown summary beside it.
 
 `scripts/check_library.py` validates every committed `.tsv`, so a malformed row
-fails CI. Runs are manual and paid; nothing here calls a model.
+fails CI. Within one client, model and kit revision, a run ID identifies one
+execution across input files. Give an independent repeat a new run ID; copying a
+transcript into another file must not increase the reported sample size. Runs are manual and paid; nothing here calls a model.
 
 ## Case notes
+
+The [concept review](results/2026-11-14-concepts.md) separates live routing and guided comparisons from offline counterexamples for architecture, functional refactoring and readable code.
 
 The [catalog field round](results/2026-11-13-catalog-field-round.md) maps all
 38 workflows to their paired evidence and records the release decision.
